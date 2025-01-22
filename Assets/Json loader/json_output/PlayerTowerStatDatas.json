@@ -1,0 +1,19 @@
+{
+  "Items": [
+    {
+      "key": 1,
+      "baseHealth": 100,
+      "baseAttack": 10
+    },
+    {
+      "key": 2,
+      "baseHealth": 120,
+      "baseAttack": 12
+    },
+    {
+      "key": 3,
+      "baseHealth": 140,
+      "baseAttack": 14
+    }
+  ]
+}

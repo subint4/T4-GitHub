@@ -1,0 +1,39 @@
+{
+  "Items": [
+    {
+      "key": 1,
+      "baseHealth": 100,
+      "baseAttack": 5,
+      "baseSpeed": 2,
+      "experienceGiven": 20
+    },
+    {
+      "key": 2,
+      "baseHealth": 80,
+      "baseAttack": 5,
+      "baseSpeed": 4,
+      "experienceGiven": 15
+    },
+    {
+      "key": 3,
+      "baseHealth": 120,
+      "baseAttack": 12,
+      "baseSpeed": 3,
+      "experienceGiven": 25
+    },
+    {
+      "key": 4,
+      "baseHealth": 150,
+      "baseAttack": 20,
+      "baseSpeed": 3,
+      "experienceGiven": 30
+    },
+    {
+      "key": 5,
+      "baseHealth": 200,
+      "baseAttack": 25,
+      "baseSpeed": 15,
+      "experienceGiven": 35
+    }
+  ]
+}

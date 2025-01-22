@@ -1,0 +1,44 @@
+{
+  "Items": [
+    {
+      "key": 1,
+      "type": "Monster",
+      "name": "Slow Zombie",
+      "statsId": 1,
+      "dropRate": 10,
+      "prefabId": 101
+    },
+    {
+      "key": 2,
+      "type": "Monster",
+      "name": "Fast Zombie",
+      "statsId": 2,
+      "dropRate": 5,
+      "prefabId": 101
+    },
+    {
+      "key": 3,
+      "type": "Monster",
+      "name": "Basic Prisoner",
+      "statsId": 3,
+      "dropRate": 15,
+      "prefabId": 102
+    },
+    {
+      "key": 4,
+      "type": "Monster",
+      "name": "Elite Prisoner",
+      "statsId": 4,
+      "dropRate": 20,
+      "prefabId": 102
+    },
+    {
+      "key": 1005,
+      "type": "Boss",
+      "name": "Strong Zombie",
+      "statsId": 5,
+      "dropRate": 12,
+      "prefabId": 1005
+    }
+  ]
+}
