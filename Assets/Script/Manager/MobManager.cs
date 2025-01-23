@@ -12,18 +12,8 @@ public class MobManager : MonoBehaviour
         if (other.CompareTag("TowerAttack") && !isDead)
         {
             isDead = true;
-            Die();
+
         }
     }
-    void Die()
-    {
-        PlayerManager player = FindObjectOfType<PlayerManager>();
-        if (player != null)
-        {
-            {
-                player.AddMoney(RewardMoney);
-            }
-        }
-        Destroy(gameObject);
-    }
+
 }

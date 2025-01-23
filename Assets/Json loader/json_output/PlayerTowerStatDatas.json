@@ -7,13 +7,13 @@
     },
     {
       "key": 2,
-      "baseHealth": 120,
-      "baseAttack": 12
+      "baseHealth": 150,
+      "baseAttack": 15
     },
     {
       "key": 3,
-      "baseHealth": 140,
-      "baseAttack": 14
+      "baseHealth": 200,
+      "baseAttack": 20
     }
   ]
 }
