@@ -194,7 +194,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -309,8 +309,8 @@ GameObject:
   - component: {fileID: 647687451}
   - component: {fileID: 647687452}
   - component: {fileID: 647687454}
-  - component: {fileID: 647687455}
   - component: {fileID: 647687456}
+  - component: {fileID: 647687457}
   m_Layer: 6
   m_Name: Tower
   m_TagString: Tower
@@ -351,6 +351,9 @@ MonoBehaviour:
   UpgradeCost: 50
   CurrentTier: 1
   MaxTier: 3
+  baseStats:
+    damage: 10
+    attackSpeed: 1
 --- !u!61 &647687454
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -396,19 +399,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &647687455
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 647687449}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8fcb793c20fb364ea3ca280cf9738b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  towerData: {fileID: 11400000, guid: 55fbc438cc7c61c4c99fa3c44daf7374, type: 2}
 --- !u!114 &647687456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -425,11 +415,25 @@ MonoBehaviour:
   projectilePrefab: {fileID: 8146716313167790763, guid: b35df4d5447c8384abdefbe399a59ce9, type: 3}
   attackRange: 10
   attackCooldown: 1
-  attackDamage: 10
   targetLayer:
     serializedVersion: 2
     m_Bits: 128
+  towerStatHandler: {fileID: 647687457}
   lastAttackTime: 0
+  upgradeSystem: {fileID: 647687452}
+--- !u!114 &647687457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 647687449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8fcb793c20fb364ea3ca280cf9738b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  towerData: {fileID: 11400000, guid: 55fbc438cc7c61c4c99fa3c44daf7374, type: 2}
 --- !u!1 &675336967
 GameObject:
   m_ObjectHideFlags: 0
@@ -587,7 +591,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -100
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0.028925598, y: 0.028925598, z: 0}
   m_MaxChunkCount: 16
@@ -2676,13 +2680,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1785432723949201606, guid: b35df4d5447c8384abdefbe399a59ce9, type: 3}
+      propertyPath: speed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1785432723949201606, guid: b35df4d5447c8384abdefbe399a59ce9, type: 3}
+      propertyPath: damage
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3627032711260476043, guid: b35df4d5447c8384abdefbe399a59ce9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.4020185
+      value: -16.37
       objectReference: {fileID: 0}
     - target: {fileID: 3627032711260476043, guid: b35df4d5447c8384abdefbe399a59ce9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.9702492
+      value: 8.97
       objectReference: {fileID: 0}
     - target: {fileID: 3627032711260476043, guid: b35df4d5447c8384abdefbe399a59ce9, type: 3}
       propertyPath: m_LocalPosition.z

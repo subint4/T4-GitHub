@@ -14,6 +14,7 @@ public class TowerStatHandler : MonoBehaviour
         if (towerData == null)
         {
             Debug.LogError("TowerData is not assigned");
+            return;
         }
         InitializedTower();
     }

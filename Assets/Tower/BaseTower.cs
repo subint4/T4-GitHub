@@ -9,14 +9,40 @@ public class BaseTower : MonoBehaviour
     public GameObject projectilePrefab;
     public float attackRange = 5f;
     public float attackCooldown = 1f;
-    public int attackDamage = 10;
+    private int attackDamage;
     public LayerMask targetLayer;
 
+    public TowerStatHandler towerStatHandler;
     public float lastAttackTime = 0f;
     private Transform currentTarget;
+    private UpgradeSystem.TowerStat currentStats;
+    public UpgradeSystem upgradeSystem;
 
+    private void Start()
+    {
+        if(towerStatHandler==null)
+        {
+            Debug.LogError("TowerStatHandler is not assigned");
+            return;
+        }
+        if(towerStatHandler.CurrentStat==null)
+        {
+            Debug.LogError("TowerStatHandler.CurrentStat is not initialized.");
+            return;
+        }
+        attackDamage = towerStatHandler.CurrentStat.TowerBaseDamage;
+        Debug.Log($"Initialized attackDamage: {attackDamage} (Expected: {towerStatHandler.CurrentStat.TowerBaseDamage})");
+
+    }
     private void Update()
     {
+        if(upgradeSystem != null)
+        {
+            var currentStats = upgradeSystem.GetCurrentStats();
+            attackDamage = currentStats.damage;
+            attackCooldown = 1f / currentStats.attackSpeed;
+        }
+        //float attackSpeed = towerStatHandler.CurrentStat.TowerBaseAttackSpeed;
     if(Time.time>lastAttackTime+attackCooldown)
         {
                 FindAndAttackEnemy();
@@ -82,8 +108,9 @@ public class BaseTower : MonoBehaviour
 
         if(projectile != null)
         {
-            projectile.Initialize(target);
-            Debug.Log($"projectile fired at target: {target.name}");
+            int damageToApply = attackDamage;
+            projectile.Initialize(target,damageToApply);
+            Debug.Log($"projectile fired at target: {target.name} with damage: {attackDamage}");
         }
     }
     private void OnDrawGizmosSelected()

@@ -8,8 +8,13 @@ public class UpgradeSystem : MonoBehaviour
     public int UpgradeCost = 50;
     public int CurrentTier = 1;
     public int MaxTier = 3;
+    [Header("Tower Tiers")]
+    public TowerStat baseStats;
+    private TowerStat currentStats;
+
     private void Start()
     {
+        currentStats = new TowerStat(baseStats);
         Debug.Log($"현재 재화 : {CurrentMoney}, 업그레이드 단계 : {CurrentTier}");
     }
     public void Upgrade()
@@ -25,6 +30,9 @@ public class UpgradeSystem : MonoBehaviour
             CurrentTier++;
             UpgradeCost = Mathf.CeilToInt(UpgradeCost * 1.5f);
 
+            currentStats.damage = Mathf.CeilToInt(currentStats.damage * 1.5f);
+            currentStats.attackSpeed *= 1.5f;
+            Debug.Log($"Upgraded Damage: {currentStats.damage}, AttackSpeed: {currentStats.attackSpeed}");
             Debug.Log($"업그레이드 완료. 현재 단계: {CurrentTier},남은 재화 : {CurrentMoney}");
         }
         else
@@ -39,4 +47,26 @@ public class UpgradeSystem : MonoBehaviour
                 Upgrade();
             }
         }
+    public TowerStat GetCurrentStats()
+    {
+        return currentStats;
+    }
+    [System.Serializable]
+    public class TowerStat
+    {
+        public int damage;
+        public float attackSpeed;
+
+    public TowerStat(int damage,  float attackSpeed)
+    {
+        this.damage = damage;
+        this.attackSpeed = attackSpeed;
+    }
+
+    public TowerStat(TowerStat other)
+    {
+        this.damage = other.damage;
+        this.attackSpeed = other.attackSpeed;
+    }
+    }
 }

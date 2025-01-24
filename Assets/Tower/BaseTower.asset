@@ -15,8 +15,7 @@ MonoBehaviour:
   TowerName: "\uD0C0\uC6CC1"
   BaseStat:
     TowerBaseHealth: 100
-    TowerBaseDamage: 20
+    TowerBaseDamage: 10
     TowerBaseDeployCost: 15
     TowerBaseAttackSpeed: 1.5
-  AttackRange: 0
   Description: 

@@ -7,12 +7,13 @@ using UnityEngine.UIElements;
 public class Projectile : MonoBehaviour
 {
     [SerializeField]public float speed = 10f;
-    [SerializeField]public int damage = 10;
+    private int damage = 10;
     private Transform target;
 
-    public void Initialize(Transform target)
+    public void Initialize(Transform target,int damage)
     {
         this.target = target;
+        this.damage = damage;
         if (target == null)
         {
             Debug.LogError("Projectile initialiezd with a null target");
@@ -30,6 +31,7 @@ public class Projectile : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+        Vector2 direction = (target.position - transform.position).normalized;
         transform.Translate(Vector2.right * speed * Time.deltaTime);
         if (Vector2.Distance(transform.position, target.position) < 0.1f)
         {
