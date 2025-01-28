@@ -21,11 +21,11 @@ public class TowerStatHandler : MonoBehaviour
     private void InitializedTower()
     {
         CurrentStat.Initialize(
-            towerData.BaseStat.TowerBaseHealth,
-            towerData.BaseStat.TowerBaseDamage,
-            towerData.BaseStat.TowerBaseDeployCost,
-            towerData.BaseStat.TowerBaseAttackSpeed
+            towerData.BaseStat.baseHealth,
+            towerData.BaseStat.baseDamage,
+            towerData.BaseStat.baseDeployCost,
+            towerData.BaseStat.baseAttackSpeed
             );
-        Debug.Log($"Tower '{towerData.TowerName}' initialized. Health: {CurrentStat.TowerBaseHealth}, Attack: {CurrentStat.TowerBaseDamage}");
+        Debug.Log($"Tower '{towerData.TowerName}' initialized. Health: {CurrentStat.baseHealth}, Attack: {CurrentStat.baseDamage}");
     }
 }

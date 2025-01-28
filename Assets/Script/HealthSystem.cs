@@ -5,7 +5,11 @@ using UnityEngine;
 public class HealthSystem : MonoBehaviour
 {
     public int maxHealth = 100;
+    public int rewardMoney = 50;
     private int currentHealth;
+
+    [Header("Object Type")]
+    public bool isEnemy = true; // 이 객체가 적인지 여부 (true: 적, false: 타워)
 
     private void Start()
     {
@@ -24,6 +28,16 @@ public class HealthSystem : MonoBehaviour
     private void Die()
     {
         Debug.Log($"{gameObject.name} died");
+        if(isEnemy)
+        {
+            GiveReward();
+        }
+        
         Destroy(gameObject);
+    }
+    private void GiveReward()
+    {
+        PlayerSystem.Instance.AddMoney(rewardMoney);
+        Debug.Log($"Player received {rewardMoney} money from {gameObject.name}.");
     }
 }

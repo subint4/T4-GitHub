@@ -5,24 +5,24 @@ using UnityEngine;
 [System.Serializable]
 public class TowerStat 
 {
-    public int TowerBaseHealth { get; private set; }
-    public int TowerBaseDamage { get; private set; }
-    public int TowerBaseDeployCost { get; private set; }
-    public float TowerBaseAttackSpeed { get; private set; }
+    public int baseHealth { get; private set; }
+    public int baseDamage { get; private set; }
+    public int baseDeployCost { get; private set; }
+    public float baseAttackSpeed { get; private set; }
 
     public TowerStat()
     {
-        TowerBaseHealth = 100;
-        TowerBaseDamage = 10;
-        TowerBaseDeployCost = 50;
-        TowerBaseAttackSpeed = 1f;
+        baseHealth = 0;
+        baseDamage = 0;
+        baseDeployCost = 0;
+        baseAttackSpeed = 1f;
     }
     public void Initialize(int health,int damage, int deployCost,float attackSpeed)
     {
         Debug.Log($"Initializing TowerStat with: Health={health}, Damage={damage}, DeployCost={deployCost}, AttackSpeed={attackSpeed}");
-        TowerBaseHealth = health;
-        TowerBaseDamage= damage;
-        TowerBaseDeployCost= deployCost;
-        TowerBaseAttackSpeed= attackSpeed;
+        baseHealth = health;
+        baseDamage= damage;
+        baseDeployCost= deployCost;
+        baseAttackSpeed= attackSpeed;
     }
 }
