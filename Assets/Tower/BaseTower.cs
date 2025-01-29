@@ -7,12 +7,10 @@ public class BaseTower : MonoBehaviour
     [Header("Tower Settings")]
     public Transform firePoint;
     public GameObject projectilePrefab;
-    public float attackRange = 0f;
+    public float attackRange = 5f;
     public float attackCooldown = 1f;
-    public LayerMask targetLayer;
-    public TowerSO towerData;
     private int attackDamage;
-    private HealthSystem _healthSystem;
+    public LayerMask targetLayer;
 
     public TowerStatHandler towerStatHandler;
     public float lastAttackTime = 0f;
@@ -22,35 +20,19 @@ public class BaseTower : MonoBehaviour
 
     private void Start()
     {
-        if(towerData != null)
+        if(towerStatHandler==null)
         {
-           _healthSystem = new HealthSystem(towerData: towerData, onDeath: Die);
+            Debug.LogError("TowerStatHandler is not assigned");
+            return;
         }
-
-        // 같은 GameObject에서 UpgradeSystem 컴포넌트 검색
-        upgradeSystem = GetComponent<UpgradeSystem>();
-
-        // 다른 GameObject에 연결된 UpgradeSystem 검색 (필요할 경우)
-        if (upgradeSystem == null)
+        if(towerStatHandler.CurrentStat==null)
         {
-            upgradeSystem = FindObjectOfType<UpgradeSystem>();
+            Debug.LogError("TowerStatHandler.CurrentStat is not initialized.");
+            return;
         }
+        attackDamage = towerStatHandler.CurrentStat.TowerBaseDamage;
+        Debug.Log($"Initialized attackDamage: {attackDamage} (Expected: {towerStatHandler.CurrentStat.TowerBaseDamage})");
 
-        if (upgradeSystem == null)
-        {
-            Debug.LogError("UpgradeSystem을 찾을 수 없습니다!");
-        }
-        UpdateAttackDamage();
-
-    }
-    public void TakeDamage(int damage)
-    {
-        _healthSystem.TakeDamage(damage);
-        Debug.Log($" 타워 체력 감소 후: {_healthSystem.GetHealth()}");
-        if(_healthSystem.GetHealth() <= 0)
-        {
-            Die();
-        }
     }
     private void Update()
     {
@@ -58,6 +40,7 @@ public class BaseTower : MonoBehaviour
         {
             var currentStats = upgradeSystem.GetCurrentStats();
             attackDamage = currentStats.damage;
+            attackCooldown = 1f / currentStats.attackSpeed;
         }
         //float attackSpeed = towerStatHandler.CurrentStat.TowerBaseAttackSpeed;
     if(Time.time>lastAttackTime+attackCooldown)
@@ -65,33 +48,9 @@ public class BaseTower : MonoBehaviour
                 FindAndAttackEnemy();
         }
     }
-    private void UpdateAttackDamage()
-    {
-        if(upgradeSystem != null)
-        {
-            var currentStats = upgradeSystem.GetCurrentStats();
-            if(currentStats != null)
-            {
-                attackDamage = currentStats.damage;
-                Debug.Log($"현재 공격력 : {attackDamage}");
-            }
-            else
-            {
-                Debug.LogWarning("currentStats가 초기화되지 않았습니다.");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("upgradeSystem이 연결되지 않았습니다.");
-        }
-    }
     private void FindAndAttackEnemy()
     {
-        float verticalRange = 0.5f;
-        Vector2 boxSize = new Vector2(attackRange, verticalRange);
-        Vector2 boxCenter = (Vector2)transform.position + Vector2.right * (attackRange / 2);
-
-        Collider2D[] hitColliders = Physics2D.OverlapBoxAll(boxCenter,boxSize,0f, targetLayer);
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, attackRange, targetLayer);
 
         if (hitColliders.Length > 0)
         {
@@ -154,18 +113,9 @@ public class BaseTower : MonoBehaviour
             Debug.Log($"projectile fired at target: {target.name} with damage: {attackDamage}");
         }
     }
-
-    private void Die()
-    {
-        Destroy(gameObject);
-    }
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-
-        float verticalRange = 0.5f;
-        Vector2 boxSize = new Vector2(attackRange, verticalRange);
-        Vector2 boxCenter = (Vector2)transform.position + Vector2.right * (attackRange / 2);
-        Gizmos.DrawWireCube(boxCenter, boxSize);
+        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 }
