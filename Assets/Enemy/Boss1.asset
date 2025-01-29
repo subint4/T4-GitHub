@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Boss1
+  m_EditorClassIdentifier: Assembly-CSharp::BossSO
+  enemyName: Boss1
+  enemyPrefab: {fileID: 0}
+  baseHealth: 300
+  baseDamage: 0
+  moveSpeed: 0.5
+  giveRewardOnDeath: 0
+  rewardAmount: 0
+  scaleMultiplier: 1.5
+  areaDamage: 20

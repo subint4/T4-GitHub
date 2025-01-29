@@ -6,6 +6,7 @@ using UnityEngine;
 public class TowerSO : ScriptableObject
 {
         public string TowerName;
+        public GameObject towerPrefab;
         public TowerStat BaseStat;
         public string Description;
 

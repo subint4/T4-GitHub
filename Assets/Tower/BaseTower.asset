@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: BaseTower
   m_EditorClassIdentifier: 
   TowerName: "\uD0C0\uC6CC1"
+  towerPrefab: {fileID: 0}
   BaseStat:
     baseHealth: 100
-    baseDamage: 10
+    baseDamage: 0
     baseDeployCost: 50
     baseAttackSpeed: 1.5
   Description: 

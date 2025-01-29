@@ -43,10 +43,15 @@ public class Projectile : MonoBehaviour
     {
         if(target!=null)
         {
-            var health = target.GetComponent<HealthSystem>();
-            if (health != null) 
+            var enemy = target.GetComponent<EnemyController>();
+            var tower = target.GetComponent<BaseTower>();
+            if (enemy != null) 
             {
-                health.TakeDamage(damage);
+                enemy.TakeDamage(damage);
+            }
+            else if(tower != null)
+            {
+                tower.TakeDamage(damage);
             }
         }
         Destroy(gameObject);

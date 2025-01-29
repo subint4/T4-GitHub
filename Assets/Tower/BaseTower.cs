@@ -7,10 +7,12 @@ public class BaseTower : MonoBehaviour
     [Header("Tower Settings")]
     public Transform firePoint;
     public GameObject projectilePrefab;
-    public float attackRange = 5f;
+    public float attackRange = 0f;
     public float attackCooldown = 1f;
-    private int attackDamage;
     public LayerMask targetLayer;
+    public TowerSO towerData;
+    private int attackDamage;
+    private HealthSystem _healthSystem;
 
     public TowerStatHandler towerStatHandler;
     public float lastAttackTime = 0f;
@@ -20,6 +22,11 @@ public class BaseTower : MonoBehaviour
 
     private void Start()
     {
+        if(towerData != null)
+        {
+           _healthSystem = new HealthSystem(towerData: towerData, onDeath: Die);
+        }
+
         // 같은 GameObject에서 UpgradeSystem 컴포넌트 검색
         upgradeSystem = GetComponent<UpgradeSystem>();
 
@@ -35,6 +42,15 @@ public class BaseTower : MonoBehaviour
         }
         UpdateAttackDamage();
 
+    }
+    public void TakeDamage(int damage)
+    {
+        _healthSystem.TakeDamage(damage);
+        Debug.Log($" 타워 체력 감소 후: {_healthSystem.GetHealth()}");
+        if(_healthSystem.GetHealth() <= 0)
+        {
+            Die();
+        }
     }
     private void Update()
     {
@@ -71,7 +87,11 @@ public class BaseTower : MonoBehaviour
     }
     private void FindAndAttackEnemy()
     {
-        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, attackRange, targetLayer);
+        float verticalRange = 0.5f;
+        Vector2 boxSize = new Vector2(attackRange, verticalRange);
+        Vector2 boxCenter = (Vector2)transform.position + Vector2.right * (attackRange / 2);
+
+        Collider2D[] hitColliders = Physics2D.OverlapBoxAll(boxCenter,boxSize,0f, targetLayer);
 
         if (hitColliders.Length > 0)
         {
@@ -134,9 +154,18 @@ public class BaseTower : MonoBehaviour
             Debug.Log($"projectile fired at target: {target.name} with damage: {attackDamage}");
         }
     }
+
+    private void Die()
+    {
+        Destroy(gameObject);
+    }
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
+
+        float verticalRange = 0.5f;
+        Vector2 boxSize = new Vector2(attackRange, verticalRange);
+        Vector2 boxCenter = (Vector2)transform.position + Vector2.right * (attackRange / 2);
+        Gizmos.DrawWireCube(boxCenter, boxSize);
     }
 }

@@ -22,26 +22,6 @@ public class UpgradeSystem : MonoBehaviour
     }
     public void Upgrade()
     {
-    /*if (CurrentTier >= MaxTier)
-    //{
-    //    Debug.Log("최대 단계에 도달했습니다.");
-    //    return;
-    //}
-    //if (CurrentMoney >= UpgradeCost)
-    //{
-    //    CurrentMoney -= UpgradeCost;
-    //    CurrentTier++;
-    //    UpgradeCost = Mathf.CeilToInt(UpgradeCost * 1.5f);
-
-    //    currentStats.damage = Mathf.CeilToInt(currentStats.damage * 1.5f);
-    //    currentStats.health = Mathf.CeilToInt(currentStats.health * 1.5f);
-    //    Debug.Log($"Upgraded Damage: {currentStats.damage}, Health: {currentStats.health}");
-    //    Debug.Log($"업그레이드 완료. 현재 단계: {CurrentTier},남은 재화 : {CurrentMoney}");
-    //}
-    //else
-    //{
-    //    Debug.Log("돈이 모자랍니다.");
-    }*/
             if(CurrentTier >= MaxTier)
         {
             Debug.Log("최대 단계입니다.");
@@ -52,9 +32,9 @@ public class UpgradeSystem : MonoBehaviour
             PlayerSystem.Instance.AddMoney(-UpgradeCost);
         
             CurrentTier++;
-            UpgradeCost = Mathf.CeilToInt(UpgradeCost * 1.5f);
-            currentStats.damage = Mathf.CeilToInt(currentStats.damage * 1.5f);
-            currentStats.health = Mathf.CeilToInt(currentStats.health * 1.5f);
+            UpgradeCost = Mathf.CeilToInt(UpgradeCost+(towerSO.BaseStat.baseDeployCost*0.5f));
+            currentStats.damage = Mathf.CeilToInt(currentStats.damage + (towerSO.BaseStat.baseDamage * 0.5f));
+            currentStats.health = Mathf.CeilToInt(currentStats.health + (towerSO.BaseStat.baseHealth * 0.5f));
         
             Debug.Log($"업그레이드 완료: Tier {CurrentTier},Damage = {currentStats.damage}, Health={currentStats.health}");
         }
