@@ -1,0 +1,44 @@
+[
+  {
+    "Column0": "key",
+    "Column1": "name",
+    "Column2": "spawnPoint",
+    "Column3": "spawnInterval",
+    "Column4": "movementPattern"
+  },
+  {
+    "Column0": 4001.0,
+    "Column1": "SpawnPoint_left",
+    "Column2": "List<Enum<SpawnPoint>>.[left]",
+    "Column3": 2.0,
+    "Column4": "Enum<MovementPattern>.Linear"
+  },
+  {
+    "Column0": 4002.0,
+    "Column1": "SpawnPoint_left",
+    "Column2": "List<Enum<SpawnPoint>>.[left]",
+    "Column3": 2.5,
+    "Column4": "Enum<MovementPattern>.Linear"
+  },
+  {
+    "Column0": 4003.0,
+    "Column1": "SpawnPoint_right",
+    "Column2": "List<Enum<SpawnPoint>>.[right]",
+    "Column3": 3.0,
+    "Column4": "Enum<MovementPattern>.Random"
+  },
+  {
+    "Column0": 4004.0,
+    "Column1": "SpawnPoint_left",
+    "Column2": "List<Enum<SpawnPoint>>.[left]",
+    "Column3": 1.5,
+    "Column4": "Enum<MovementPattern>.Linear"
+  },
+  {
+    "Column0": 4005.0,
+    "Column1": "SpawnPoint_right",
+    "Column2": "List<Enum<SpawnPoint>>.[right]",
+    "Column3": 2.2,
+    "Column4": "Enum<MovementPattern>.Zigzag"
+  }
+]

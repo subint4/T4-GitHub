@@ -1,0 +1,25 @@
+{
+  "WaveStages": [
+    {
+      "key": 1,
+      "EnemyType": "Zombie",
+      "SpawnCount": 5,
+      "SpawnRate": 2.0,
+      "EnemyPrefab": "ZombiePrefab"
+    },
+    {
+      "key": 2,
+      "EnemyType": "Zombie",
+      "SpawnCount": 10,
+      "SpawnRate": 2.0,
+      "EnemyPrefab": "ZombiePrefab"
+    },
+    {
+      "key": 3,
+      "EnemyType": "Boss",
+      "SpawnCount": 1,
+      "SpawnRate": 5.0,
+      "EnemyPrefab": "BossPrefab"
+    }
+  ]
+}
