@@ -8,6 +8,7 @@ public class Enemy : MonoBehaviour
 {
     public EnemySO enemyStats;
     private Tower tower;
+    private bool isDead = false;
 
     private Rigidbody2D rb;
     private int health;
@@ -42,10 +43,21 @@ public class Enemy : MonoBehaviour
         {
         transform.Translate(Vector3.left * movementSpeed * Time.deltaTime);
         }
+
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log($"충돌 감지됨: {collision.gameObject.name} (Tag: {collision.gameObject.tag})");
+
+        if(collision.CompareTag("EndLine"))
+        {
+            Debug.Log($"{gameObject.name}이(가) EndLine에 도달하여 게임 오버!");
+            if (GameManager.instance != null)
+            {
+                GameManager.instance.GameOver();
+            }
+            Destroy(gameObject);
+        }
 
         // 1. 현재 오브젝트에서 Tower 스크립트 찾기
         Tower tower = collision.GetComponent<Tower>();
@@ -90,6 +102,8 @@ public class Enemy : MonoBehaviour
     }
     public void TakeDamage(int damage)
     {
+        if (isDead) return;
+
         health -= damage;
         if(health<=0)
         {
@@ -98,7 +112,12 @@ public class Enemy : MonoBehaviour
     }
     public void Die()
     {
+        if (isDead) return;
+        isDead = true;
+        if(PlayerSystem.instance != null)
+        {
         PlayerSystem.instance.AddMoney(rewardMoney);
+        }
         StopCoroutine(AttackTower(tower)); // 공격 루틴 종료
         Destroy(gameObject);
     }

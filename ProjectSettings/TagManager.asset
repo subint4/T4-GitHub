@@ -7,6 +7,8 @@ TagManager:
   - Enemy
   - Tower
   - Projectile
+  - EndLine
+  - SpawnableArea
   layers:
   - Default
   - TransparentFX
@@ -14,12 +16,12 @@ TagManager:
   - 
   - Water
   - UI
+  - 
   - Tower
-  - Enemy
   - Projectile
-  - 
-  - 
-  - 
+  - EndLine
+  - Enemy
+  - SpawnableArea
   - 
   - 
   - 
