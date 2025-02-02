@@ -17,7 +17,7 @@
       "RewardMoney": 20,
       "EnemyType": "Zombie",
       "SpawnCount": 0,
-      "MovementSpeed": 2.0,
+      "MovementSpeed": 1.0,
       "SpawnRate": 0.0,
       "key": 2002,
       "UnitName": "2_zombie",
