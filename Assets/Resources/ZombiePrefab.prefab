@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -6406206781620478883}
   - component: {fileID: 3538306792262835736}
   - component: {fileID: 5419687302756438685}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: ZombiePrefab
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -118,7 +118,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -144,7 +144,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6357064106867269085}
   - component: {fileID: 7639784341963966500}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: SpriteRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}

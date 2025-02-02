@@ -18,3 +18,4 @@ MonoBehaviour:
   AttackPower: 50
   AttackSpeed: 1
   DeployCost: 120
+  Range: 0

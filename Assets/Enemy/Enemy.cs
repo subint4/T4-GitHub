@@ -47,6 +47,16 @@ public class Enemy : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("SpawnableArea"))
+        {
+            Debug.Log($"{gameObject.name}이(가) {collision.gameObject.name} (Layer: SpawnableArea)을(를) 무시함.");
+            return; // 아무 동작도 하지 않고 리턴
+        }
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Projectile"))
+        {
+            Debug.Log($"{gameObject.name}이(가) {collision.gameObject.name} (Layer: Projectile)을(를) 무시함.");
+            return; // 아무 동작도 하지 않고 리턴
+        }
         Debug.Log($"충돌 감지됨: {collision.gameObject.name} (Tag: {collision.gameObject.tag})");
 
         if(collision.CompareTag("EndLine"))
@@ -58,23 +68,10 @@ public class Enemy : MonoBehaviour
             }
             Destroy(gameObject);
         }
-
-        // 1. 현재 오브젝트에서 Tower 스크립트 찾기
         Tower tower = collision.GetComponent<Tower>();
+        if (tower == null) tower = collision.GetComponentInParent<Tower>();
+        if (tower == null) tower = collision.GetComponentInChildren<Tower>();
 
-        // 2. 부모 오브젝트에서 Tower 스크립트 찾기
-        if (tower == null)
-        {
-            tower = collision.GetComponentInParent<Tower>();
-        }
-
-        // 3. 자식 오브젝트에서 Tower 스크립트 찾기
-        if (tower == null)
-        {
-            tower = collision.GetComponentInChildren<Tower>();
-        }
-
-        // 4. Tower가 발견되었는지 체크
         if (tower != null)
         {
             Debug.Log("Tower 컴포넌트를 찾았습니다!");

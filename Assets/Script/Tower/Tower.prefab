@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3616390627942122568}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: FirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 3795820038351227161}
   - component: {fileID: 534829281914593320}
   - component: {fileID: 4884937699343179044}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Tower
   m_TagString: Tower
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ MonoBehaviour:
   projectilePrefab: {fileID: 6417698670388423150, guid: 03d5cc79257dbe44fb7918e6ff95b1d9, type: 3}
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 1024
 --- !u!61 &534829281914593320
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -181,7 +181,7 @@ GameObject:
   m_Component:
   - component: {fileID: 565056623588591907}
   - component: {fileID: 2405588066386614115}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: SpriteRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
