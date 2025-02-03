@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 [System.Serializable]
-public class WaveStageData
+public class WaveStageData : ScriptableObject
 {
     public int key;      // 웨이브 단계 (기존 key)
     public string EnemyType;   // 적 유형 (예: "Zombie", "Skeleton")

@@ -2,153 +2,73 @@ using System;
 using System.Data;
 using System.IO;
 using UnityEngine;
-using Newtonsoft.Json;
-using UnityEditor;
-using System.Collections.Generic;
+using ExcelDataReader;
 
-public class ExcelToJson : EditorWindow
+public static class ExcelToJson
 {
-    public enum DataType { EnemyData, UnitData, WaveData }
-    private DataType selectedDataType;
-
-
-    private void OnGUI()
+    public static string ConvertExcelToJson(string filePath, ExcelConverterEditor.DataType dataType)
     {
-        GUILayout.Label("Excel to JSON 변환기", EditorStyles.boldLabel);
-
-        selectedDataType = (DataType)EditorGUILayout.EnumPopup("데이터 타입 선택", selectedDataType);
-
-        if (GUILayout.Button("엑셀 파일 선택 및 변환"))
+        if (!File.Exists(filePath))
         {
-            ConvertExcelToJson(selectedDataType);
-        }
-    }
-
-    public static void ConvertExcelToJson(DataType dataType)
-    {
-        string excelFilePath = EditorUtility.OpenFilePanel("엑셀 파일 선택", "", "xlsx,csv");
-
-        if (string.IsNullOrEmpty(excelFilePath))
-        {
-            Debug.LogWarning("파일 선택이 취소되었습니다.");
-            return;
+            Debug.LogError($"Excel 파일을 찾을 수 없습니다: {filePath}");
+            return null;
         }
 
-        Debug.Log($"선택된 엑셀 파일: {excelFilePath}");
+        System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
-        DataTable excelData = ExcelLoader.LoadExcel(excelFilePath);
-        if (excelData == null || excelData.Rows.Count == 0)
+        using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
         {
-            Debug.LogError("Error: 엑셀 데이터가 비어 있습니다.");
-            return;
-        }
-
-        switch (dataType)
-        {
-            case DataType.EnemyData:
-                ConvertToEnemyJson(excelData);
-                break;
-            case DataType.UnitData:
-                ConvertToUnitJson(excelData);
-                break;
-            case DataType.WaveData:
-                ConvertToWaveJson(excelData);
-                break;
-        }
-    }
-
-    private static void ConvertToEnemyJson(DataTable excelData)
-    {
-        var jsonList = new List<EnemyData>();
-
-        foreach (DataRow row in excelData.Rows)
-        {
-            try
+            using (var reader = ExcelReaderFactory.CreateReader(stream))
             {
-                jsonList.Add(new EnemyData
+                var config = new ExcelDataSetConfiguration
                 {
-                    key = Convert.ToInt32(row["key"]),
-                    UnitName = row["UnitName"].ToString(),
-                    Health = Convert.ToInt32(row["Health"]),
-                    AttackPower = Convert.ToInt32(row["AttackPower"]),
-                    AttackSpeed = Convert.ToSingle(row["AttackSpeed"]),
-                    RewardMoney = Convert.ToInt32(row["RewardMoney"]),
-                    MovementSpeed = Convert.ToSingle(row["MovementSpeed"]),
-                    EnemyType = row["EnemyType"].ToString(),
-                });
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Error: 적 데이터 변환 중 오류 발생! ({ex.Message})");
-                continue;
-            }
-        }
+                    ConfigureDataTable = _ => new ExcelDataTableConfiguration
+                    {
+                        UseHeaderRow = true
+                    }
+                };
 
-        SaveJson(new EnemyConfig { Enemies = jsonList }, "enemy_data.json");
-    }
-
-    private static void ConvertToUnitJson(DataTable excelData)
-    {
-        var jsonList = new List<UnitData>();
-
-        foreach (DataRow row in excelData.Rows)
-        {
-            try
-            {
-                jsonList.Add(new UnitData
+                DataSet result = reader.AsDataSet(config);
+                if (result.Tables.Count == 0)
                 {
-                    key = Convert.ToInt32(row["key"]),
-                    UnitName = row["UnitName"].ToString(),
-                    Health = Convert.ToInt32(row["Health"]),
-                    AttackPower = Convert.ToInt32(row["AttackPower"]),
-                    AttackSpeed = Convert.ToSingle(row["AttackSpeed"]),
-                    DeployCost = Convert.ToInt32(row["DeployCost"])
-                });
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Error: 유닛 데이터 변환 중 오류 발생! ({ex.Message})");
-                continue;
+                    Debug.LogError("Excel 파일에 데이터가 없습니다.");
+                    return null;
+                }
+
+                DataTable table = result.Tables[0];
+                string json = DataTableToJson(table, dataType);
+
+                // JSON 파일 저장
+                string outputPath = $"Assets/Resources/JsonData/{dataType}.json";
+                File.WriteAllText(outputPath, json);
+
+                Debug.Log($"Excel → JSON 변환 완료: {outputPath}");
+                return outputPath;
             }
         }
-
-        SaveJson(new UnitConfig { Units = jsonList }, "unit_data.json");
     }
 
-    private static void ConvertToWaveJson(DataTable excelData)
+    private static string DataTableToJson(DataTable table, ExcelConverterEditor.DataType dataType)
     {
-        var jsonList = new List<WaveStageData>();
+        var jsonArray = new System.Text.StringBuilder();
+        jsonArray.Append("[");
 
-        foreach (DataRow row in excelData.Rows)
+        for (int i = 0; i < table.Rows.Count; i++)
         {
-            try
+            jsonArray.Append("{");
+            for (int j = 0; j < table.Columns.Count; j++)
             {
-                jsonList.Add(new WaveStageData
-                {
-                    key = Convert.ToInt32(row["key"]),
-                    EnemyType = row["EnemyType"].ToString(),
-                    SpawnCount = Convert.ToInt32(row["SpawnCount"]),
-                    SpawnRate = Convert.ToSingle(row["SpawnRate"]),
-                    EnemyPrefab = row["EnemyPrefab"].ToString()
-                });
+                jsonArray.AppendFormat("\"{0}\": \"{1}\"", table.Columns[j].ColumnName, table.Rows[i][j].ToString());
+                if (j < table.Columns.Count - 1)
+                    jsonArray.Append(", ");
             }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Error: 웨이브 데이터 변환 중 오류 발생! ({ex.Message})");
-                continue;
-            }
+            jsonArray.Append("}");
+
+            if (i < table.Rows.Count - 1)
+                jsonArray.Append(", ");
         }
+        jsonArray.Append("]");
 
-        SaveJson(new WaveStageConfig { WaveStages = jsonList }, "wave_data.json");
-    }
-
-    private static void SaveJson(object data, string fileName)
-    {
-        string jsonData = JsonConvert.SerializeObject(data, Formatting.Indented);
-        string outputJsonPath = Path.Combine(Application.dataPath, fileName);
-        File.WriteAllText(outputJsonPath, jsonData);
-
-        Debug.Log($"JSON 변환 완료: {outputJsonPath}");
-        EditorUtility.RevealInFinder(outputJsonPath);
+        return jsonArray.ToString();
     }
 }
