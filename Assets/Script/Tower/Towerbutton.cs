@@ -7,6 +7,8 @@ public class Towerbutton : MonoBehaviour,IPointerClickHandler
 {
     public TowerSpawner towerSpawner;
     public int towerIndex;
+    public TowerAnimatorController towerAnimatorController;
+
 
     public void OnPointerClick(PointerEventData eventData)
     {

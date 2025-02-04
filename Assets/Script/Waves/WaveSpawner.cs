@@ -123,15 +123,53 @@ public class WaveSpawner : MonoBehaviour
 
     private GameObject GetEnemyPrefabByType(string enemyPrefabName)
     {
-        foreach(GameObject enemyPrefab in enemyPrefabs)
+        if (string.IsNullOrEmpty(enemyPrefabName))
         {
-            if(enemyPrefab.name == enemyPrefabName)
+            Debug.LogError("적 프리팹 이름이 비어 있습니다.");
+            return null;
+        }
+
+        enemyPrefabName = enemyPrefabName.Trim().ToLower();
+
+        if (enemyPrefabName == "zombieprefab")
+        {
+            //"ZombiePrefab"일 경우, zombie1~zombie3 중 하나 랜덤 선택
+            List<GameObject> zombiePrefabs = new List<GameObject>();
+
+            foreach (GameObject enemyPrefab in enemyPrefabs)
+            {
+                string prefabName = enemyPrefab.name.Trim().ToLower();
+                if (prefabName.StartsWith("zombie")) //"zombie1", "zombie2", "zombie3" 필터링
+                {
+                    zombiePrefabs.Add(enemyPrefab);
+                }
+            }
+
+            if (zombiePrefabs.Count > 0)
+            {
+                int randomIndex = Random.Range(0, zombiePrefabs.Count);
+                return zombiePrefabs[randomIndex]; //랜덤 좀비 프리팹 반환
+            }
+            else
+            {
+                Debug.LogError("좀비 프리팹을 찾을 수 없습니다.");
+                return null;
+            }
+        }
+
+        //일반적인 경우 (BossPrefab 등)
+        foreach (GameObject enemyPrefab in enemyPrefabs)
+        {
+            string prefabName = enemyPrefab.name.Trim().ToLower();
+
+            if (prefabName == enemyPrefabName)
             {
                 return enemyPrefab;
             }
         }
-        Debug.LogError($"적 프리팹을 찾을 수 없습니다: {enemyPrefabName}");
 
+        Debug.LogError($"적 프리팹을 찾을 수 없습니다: {enemyPrefabName}");
         return null;
     }
+
 }

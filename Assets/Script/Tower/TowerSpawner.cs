@@ -6,10 +6,12 @@ public class TowerSpawner : MonoBehaviour
 {
     public GameObject[] towerPrefabs;
     private GameObject selectedTowerPrefab;
-    private bool isTowerSelected=false;
+    private bool isTowerSelected = false;
 
     public LayerMask SpawnableArea; // 타일이 있는 레이어 설정
     public float raycastDistance = 10f;
+
+    private PlayerSystem playerSystem;
     public void SelectedTower(int index)
     {
         if (index >= 0 && index < towerPrefabs.Length)
@@ -25,7 +27,7 @@ public class TowerSpawner : MonoBehaviour
     }
     private void Update()
     {
-        if(isTowerSelected && Input.GetMouseButtonDown(0))
+        if (isTowerSelected && Input.GetMouseButtonDown(0))
         {
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             worldPosition.z = 0;
@@ -34,8 +36,31 @@ public class TowerSpawner : MonoBehaviour
 
             if (hit.collider != null) // 타일 위를 클릭했을 경우
             {
-                Vector3 spawnPosition = hit.collider.transform.position; // 타일의 위치를 가져옴
-                spawnTower(spawnPosition);
+                Tiles targetTile = hit.collider.GetComponent<Tiles>();
+                if (targetTile != null)
+                {
+                    if (targetTile.isOccupied)
+                    {
+                        Debug.LogWarning("해당 타일에는 이미 타워가 있습니다!");
+                        return;
+                    }
+
+                    Tower towerComponent = selectedTowerPrefab.GetComponent<Tower>();
+                    if (towerComponent != null)
+                    {
+                        if (playerSystem.Money < towerComponent.towerStats.DeployCost)
+                        {
+                            Debug.LogWarning("돈이 부족하여 타워를 배치할 수 없습니다!");
+                            return;
+                        }
+
+                        // 비용 차감
+                        playerSystem.Money -= towerComponent.towerStats.DeployCost;
+
+                        // 타워 배치
+                        spawnTower(targetTile);
+                    }
+                }
             }
             else
             {
@@ -43,18 +68,28 @@ public class TowerSpawner : MonoBehaviour
             }
         }
     }
-    public void spawnTower(Vector3 position)
+    public void spawnTower(Tiles targetTile)
     {
         if (isTowerSelected && selectedTowerPrefab != null)
         {
-            Instantiate(selectedTowerPrefab,position,Quaternion.identity);
-            isTowerSelected = false;
-            Debug.Log($"타워 배치 완료 : {position}");
-        }
-        else
-        {
-            Debug.LogWarning("타워가 선택되지 않았거나 프리팹이 설정되지 않음");
+            if(targetTile.isOccupied)
+            {
+                Debug.LogWarning("해당 타일에는 이미 타워가 있습니다.");
+            }
+            Tower newTower = Instantiate(selectedTowerPrefab, targetTile.transform.position, Quaternion.identity).GetComponent<Tower>();
+            if (newTower != null)
+            {
+                targetTile.isOccupied = true;
+                isTowerSelected = false;
+                Debug.Log($"타워 배치 완료: {targetTile.transform.position}");
+            }
+            else
+            {
+                {
+                    Debug.LogWarning("타워가 선택되지 않았거나 프리팹이 설정되지 않음");
+
+                }
+            }
         }
     }
-   
 }

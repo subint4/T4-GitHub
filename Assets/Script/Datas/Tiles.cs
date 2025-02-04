@@ -6,7 +6,7 @@ using UnityEngine;
 public class Tiles : MonoBehaviour
 {
     private TowerSpawner towerSpawner;
-
+    public bool isOccupied = false;
     private void Start()
     {
         towerSpawner = FindObjectOfType<TowerSpawner>();
@@ -15,8 +15,12 @@ public class Tiles : MonoBehaviour
     {
         if (towerSpawner != null)
         {
-            Vector3 tilePosition = transform.position;
-            towerSpawner.spawnTower(tilePosition);
+            if (isOccupied)
+            {
+                Debug.LogWarning("이미 타워가 있습니다.");
+                return;
+            }
+            towerSpawner.spawnTower(this);
         }
     }
 }

@@ -1,33 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    private GameObject target;
+    private Vector3 direction = Vector3.right;
     private int attackPower;
     private float speed = 10f;
 
-    public void SetTarget(GameObject enemy, int damage)
+
+
+    public void SetAttackPower(int power)
     {
-        target = enemy;
-        attackPower = damage;
+        attackPower = power;
+    }
+    public void Launch()
+    {
+        Debug.Log("투사체 발사");
     }
     private void Update()
     {
-        if (target == null)
-        {
-            // 타겟이 null이면 계속 앞으로 이동 후 일정 거리에서 파괴
-            transform.position += transform.right * speed * Time.deltaTime;
-
+            transform.position += direction * speed * Time.deltaTime;
+            // 충돌시 삭제
+            
             // 일정 거리 이상 이동하면 삭제
             if (Vector3.Distance(transform.position, Vector3.zero) > 50f) // 50f는 예시 거리
             {
                 Destroy(gameObject);
             }
             return;
-        }
-        transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed * Time.deltaTime);
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
