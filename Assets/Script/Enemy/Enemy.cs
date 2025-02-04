@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -10,8 +11,8 @@ public class Enemy : MonoBehaviour
     private int rewardMoney;
     private int attackPower;
     private float attackSpeed;
-    private float movementSpeed; //이동 속도 값 유지
-    private float originalSpeed; //공격 종료 후 원래 속도로 복구
+    private float movementSpeed;
+    private float originalSpeed;
     private bool isAttacking = false;
 
     private Tower currentTarget;
@@ -19,6 +20,11 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
+        if (controller == null)
+        {
+            controller = GetComponent<EnemyAnimatorController>();
+        }
+
         rb = GetComponent<Rigidbody2D>();
 
         if (enemyStats != null)
@@ -27,67 +33,107 @@ public class Enemy : MonoBehaviour
             rewardMoney = enemyStats.RewardMoney;
             attackPower = enemyStats.AttackPower;
             attackSpeed = enemyStats.AttackSpeed;
-            movementSpeed = enemyStats.MovementSpeed; //이동 속도 가져오기
-            originalSpeed = movementSpeed; //원래 속도 저장
+            movementSpeed = enemyStats.MovementSpeed;
+            originalSpeed = movementSpeed;
         }
         else
         {
             Debug.LogError("적 스탯이 연결되지 않았습니다!");
         }
 
-        //방향 고정 (왼쪽으로 이동)
-        transform.localScale = new Vector3(-1, 1, 1);
+        transform.localScale = new Vector3(-1, 1, 1); // 왼쪽으로 이동
     }
 
     private void Update()
     {
         if (!isAttacking && !isDead)
         {
-            //이동 속도가 유지되도록 설정
             transform.Translate(Vector3.left * movementSpeed * Time.deltaTime);
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("SpawnableArea") ||
-            collision.gameObject.layer == LayerMask.NameToLayer("Projectile"))
+        if (collision.CompareTag("EndLine"))
         {
+            GameManager.instance?.GameOver();
+            Debug.Log("적이 EndLine에 도달하여 게임 종료!");
+            Destroy(gameObject);
             return;
         }
 
-        if (collision.CompareTag("EndLine"))
-        {
-            if (GameManager.instance != null)
-            {
-                GameManager.instance.GameOver();
-            }
-            Destroy(gameObject);
-        }
-
         Tower tower = collision.GetComponent<Tower>();
-        if (tower == null) tower = collision.GetComponentInParent<Tower>();
-        if (tower == null) tower = collision.GetComponentInChildren<Tower>();
-
-        if (tower != null && !isAttacking)
+        if (tower != null && !isDead)
         {
             currentTarget = tower;
-            controller.SetAttackState(true);
-            isAttacking = true;
-
-            //공격 시 이동 멈춤
-            movementSpeed = 0;
+            if (!isAttacking)
+            {
+                StartCoroutine(AttackTower());
+            }
         }
     }
 
-    //공격 애니메이션이 끝날 때 실행됨 (애니메이션 이벤트에서 호출)
-    public void ApplyDamage()
+    private IEnumerator AttackTower()
     {
-        if (currentTarget != null && !isDead)
+        isAttacking = true;
+        movementSpeed = 0f;
+        rb.isKinematic = true;
+
+        if (controller != null)
         {
-            currentTarget.TakeDamage(attackPower);
-            Debug.Log($"타워에 {attackPower}의 데미지를 입힘");
+            controller.SetAttackState(true); // 공격 애니메이션 시작
+            Debug.Log($"[Enemy] {gameObject.name}: 공격 애니메이션 실행!");
         }
+
+        yield return new WaitForSeconds(attackSpeed); // 공격 간격 유지
+
+        if (!isDead && currentTarget != null && !currentTarget.IsDestroyed())
+        {
+            Debug.Log($"[Enemy] {gameObject.name}: 타워에 {attackPower}의 데미지를 입힘!");
+            currentTarget.TakeDamage(attackPower);
+        }
+
+        StartCoroutine(ResetAttack()); // 다음 공격 실행 준비
+    }
+
+    public IEnumerator ResetAttack()
+    {
+        Debug.Log($"[Enemy] {gameObject.name}: 공격 대기 중...");
+
+        yield return new WaitForSeconds(0.1f); // 애니메이션 트랜지션을 고려한 짧은 대기 시간
+
+        isAttacking = false;
+
+        if (controller != null)
+        {
+            controller.SetAttackState(false); // 공격 종료 애니메이션
+        }
+
+        yield return new WaitForSeconds(attackSpeed); // 공격 속도 반영하여 대기
+
+        if (!isDead && currentTarget != null && !currentTarget.IsDestroyed())
+        {
+            Debug.Log($"[Enemy] {gameObject.name}: 다음 공격 시작!");
+            StartCoroutine(AttackTower()); // 다음 공격 실행
+        }
+        else
+        {
+            StopAttack();
+        }
+    }
+
+    private void StopAttack()
+    {
+        isAttacking = false;
+        movementSpeed = originalSpeed;
+        rb.isKinematic = false;
+
+        if (controller != null)
+        {
+            controller.SetAttackState(false); // 공격 상태 종료
+        }
+
+        Debug.Log("공격 종료, 이동 상태 복구");
     }
 
     public void TakeDamage(int damage)
@@ -101,28 +147,20 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void Die()
+    private void Die()
     {
         if (isDead) return;
+
         isDead = true;
+        movementSpeed = 0f;
+        rb.velocity = Vector2.zero;
+        rb.isKinematic = true;
 
-        controller.PlayDeathAnimation();
-
-        if (PlayerSystem.instance != null)
+        if (controller != null)
         {
-            PlayerSystem.instance.AddMoney(rewardMoney);
+            controller.PlayDeathAnimation();
         }
 
-        Destroy(gameObject, 1.5f);
-    }
-
-    //공격 애니메이션이 끝나면 이동 속도 복구
-    public void OnAttackAnimationEnd()
-    {
-        if (!isDead)
-        {
-            movementSpeed = originalSpeed; //원래 이동 속도로 복구
-            isAttacking = false;
-        }
+        Destroy(gameObject, 1.5f); // 사망 애니메이션 후 제거
     }
 }

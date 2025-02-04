@@ -62,7 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyStats: {fileID: 11400000, guid: 1b735cdc222b8624ebf9aa858c4d7228, type: 2}
-  controller: {fileID: 0}
+  controller: {fileID: 3800284140812706936}
 --- !u!50 &3538306792262835736
 Rigidbody2D:
   serializedVersion: 4
@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 6357064106867269085}
   - component: {fileID: 7639784341963966500}
   - component: {fileID: 8033119548705708455}
-  - component: {fileID: 2547918392502089925}
+  - component: {fileID: 3800284140812706936}
   m_Layer: 10
   m_Name: SpriteRenderer
   m_TagString: Untagged
@@ -242,7 +242,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &2547918392502089925
+--- !u!114 &3800284140812706936
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -251,8 +251,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 7590949469664139509}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc6d1298c1624984da6bfcf7530bf06e, type: 3}
+  m_Script: {fileID: 11500000, guid: 816d555551c0dd44194c8fe217002396, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tower: {fileID: 0}
-  towerAnimator: {fileID: 8033119548705708455}
+  enemy: {fileID: -6406206781620478883}
+  enemyAnimator: {fileID: 8033119548705708455}
