@@ -17,9 +17,9 @@ MonoBehaviour:
   Health: 50
   AttackPower: 25
   AttackSpeed: 1
-  MovementSpeed: 2
+  MovementSpeed: 1
   DeployCost: 0
-  RewardMoney: 20
+  RewardMoney: 10
   EnemyType: Zombie
   SpawnCount: 0
   SpawnRate: 0

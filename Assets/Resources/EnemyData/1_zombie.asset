@@ -19,7 +19,7 @@ MonoBehaviour:
   AttackSpeed: 1
   MovementSpeed: 3
   DeployCost: 0
-  RewardMoney: 15
+  RewardMoney: 5
   EnemyType: Zombie
   SpawnCount: 0
   SpawnRate: 0
