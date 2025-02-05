@@ -5,16 +5,16 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public EnemySO enemyStats;
+    public Rigidbody2D enemyRigidbody;
     private bool isDead = false;
-    private Rigidbody2D enemyRigidbody;
     private Collider2D enemyCollider;
     private int health;
     private int rewardMoney;
     private int attackPower;
-    private float attackSpeed;
-    private float movementSpeed;
-    private float originalSpeed;
-    private bool isAttacking = false;
+    public float attackSpeed;
+    public float movementSpeed;
+    public float originalSpeed;
+    public bool isAttacking = false;
 
     private Tower currentTarget;
     public EnemyAnimatorController controller;

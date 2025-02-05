@@ -1,6 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum TowerType
+{
+    Default,
+    Explosive,
+    Piercing,
+    Slow
+}
+
+
 [CreateAssetMenu(fileName = "NewTowerData", menuName = "New Tower/Tower")]
 public class TowerSO : ScriptableObject
 {
@@ -11,6 +20,8 @@ public class TowerSO : ScriptableObject
     public float AttackSpeed;
     public int DeployCost;
     public float Range;
+
+    public TowerType TowerType;
 
     // JSON 데이터를 불러와 `TowerSO`를 생성하는 메서드
     public void LoadFromUnitData(UnitData unitData)

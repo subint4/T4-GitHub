@@ -756,7 +756,7 @@ GameObject:
   m_Component:
   - component: {fileID: 72707617}
   m_Layer: 0
-  m_Name: SpawnPoint (4)
+  m_Name: FifthLineSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1262,7 +1262,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 288452032}
-  - component: {fileID: 288452033}
+  - component: {fileID: 288452034}
   m_Layer: 0
   m_Name: PlayerSystem
   m_TagString: Untagged
@@ -1285,7 +1285,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &288452033
+--- !u!114 &288452034
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1294,10 +1294,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 288452030}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8fa86696b428005409011965a38e41e1, type: 3}
+  m_Script: {fileID: 11500000, guid: 6f6f4779d0fe6b34a90cc6af8196e000, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Money: 70
+  currentGold: 25
+  goldText: {fileID: 0}
+  goldIncrement: 10
 --- !u!1 &342192125
 GameObject:
   m_ObjectHideFlags: 0
@@ -1980,7 +1982,7 @@ GameObject:
   m_Component:
   - component: {fileID: 469889828}
   m_Layer: 0
-  m_Name: SpawnPoint (2)
+  m_Name: FirstLineSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3930,37 +3932,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &1137692690
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1137692691}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1137692691
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1137692690}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.440811, y: -0.50120986, z: -0.061119717}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1154198999
 GameObject:
   m_ObjectHideFlags: 0
@@ -5373,7 +5344,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1401152980}
   m_Layer: 0
-  m_Name: SpawnPoint (1)
+  m_Name: SecondLineSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5624,7 +5595,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1420659930}
   m_Layer: 0
-  m_Name: SpawnPoint (3)
+  m_Name: FuorthLineSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7118,6 +7089,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentGold: 100
   goldText: {fileID: 0}
+  goldIncrement: 10
 --- !u!1 &1612692814
 GameObject:
   m_ObjectHideFlags: 0
@@ -9175,7 +9147,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2080945646}
   m_Layer: 0
-  m_Name: SpawnPoint
+  m_Name: ThirdLineSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9432,4 +9404,3 @@ SceneRoots:
   - {fileID: 1549554031}
   - {fileID: 1577065558}
   - {fileID: 1804846536}
-  - {fileID: 1137692691}

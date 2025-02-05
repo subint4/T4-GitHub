@@ -12,7 +12,7 @@ public class TowerSpawner : MonoBehaviour
     public LayerMask SpawnableArea; // 타일이 있는 레이어 설정
     public float raycastDistance = 10f;
 
-    private PlayerSystem playerSystem;
+    private ResourceManager resourceManager;
 
     private void Update()
     {

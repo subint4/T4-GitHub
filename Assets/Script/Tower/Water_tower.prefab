@@ -95,12 +95,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   towerStats: {fileID: 11400000, guid: 80e5e15ee815da8489756035a5b94971, type: 2}
   firePoint: {fileID: 3616390627942122568}
-  projectilePrefab: {fileID: 6417698670388423150, guid: 03d5cc79257dbe44fb7918e6ff95b1d9, type: 3}
+  projectilePrefab: {fileID: 6417698670388423150, guid: 545a3629fcd23474985f6c98c38a5b7c, type: 3}
   animatorController: {fileID: 4051666925567174184}
+  currentTiles: {fileID: 0}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 1024
-  currentTiles: {fileID: 0}
 --- !u!61 &534829281914593320
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -72,9 +72,35 @@ public class Tower : MonoBehaviour
         GameObject projectile = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
         Projectile projectileScript = projectile.GetComponent<Projectile>();
 
+        ProjectileDataLoader.ProjectileData projectileData = ProjectileDataLoader.GetProjectileData(towerStats.TowerType);
+
+        projectileScript.SetProjectileProperties(
+            projectileData.Speed,
+            projectileData.CanPierce,
+            projectileData.HasExplosion,
+            projectileData.SlowEffect,
+            projectileData.SlowDuration);
+
         if (projectileScript != null)
         {
             projectileScript.SetAttackPower(towerStats.AttackPower);
+            if(towerStats.TowerType == TowerType.Explosive)
+            {
+                projectileScript.SetProjectileProperties(8f, false, true, 0f,0f);
+            }
+            else if(towerStats.TowerType == TowerType.Piercing)
+            {
+                projectileScript.SetProjectileProperties(12f, true, false, 0f,0f);
+            }
+            else if(towerStats.TowerType == TowerType.Slow)
+            {
+                projectileScript.SetProjectileProperties(10f, false, false, 0.5f, 2f);
+            }
+            else
+            {
+                projectileScript.SetProjectileProperties(10f, false, false, 0f, 0f);
+            }
+            
             projectileScript.Launch();
         }
     }

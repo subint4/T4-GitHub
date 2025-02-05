@@ -69,6 +69,7 @@ public class MoneyManager : MonoBehaviour
             yield return new WaitForSeconds(timeIntervals[i]); // CSV에서 설정한 시간 대기
             money += autoIncrements[i]; // 자동 증가 금액 추가
             UpdateMoneyUI();
+            Debug.Log($"돈 : {money}");
         }
     }
 
