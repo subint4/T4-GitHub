@@ -81,7 +81,7 @@ public class Enemy : MonoBehaviour
 
         if (controller != null)
         {
-            controller.SetAttackState(true); // 공격 애니메이션 시작
+            controller.SetAttackState(true); // 랜덤 공격 애니메이션 실행
             Debug.Log($"[Enemy] {gameObject.name}: 공격 애니메이션 실행!");
         }
 
@@ -161,6 +161,12 @@ public class Enemy : MonoBehaviour
             controller.PlayDeathAnimation();
         }
 
-        Destroy(gameObject, 1.5f); // 사망 애니메이션 후 제거
+        Debug.Log($"[Enemy] {gameObject.name}: 사망 애니메이션 실행!");
+    }
+
+    public void DestroyEnemy()
+    {
+        Debug.Log($"[Enemy] {gameObject.name}: 사망 애니메이션 종료 후 제거됨.");
+        Destroy(gameObject);
     }
 }
