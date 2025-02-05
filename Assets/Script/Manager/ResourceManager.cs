@@ -7,9 +7,9 @@ using TMPro;
 public class ResourceManager : MonoBehaviour
 {
     public static ResourceManager Instance;
-    public int currentGold = 100;
+    public int currentGold = 25;
     public TMP_Text goldText;
-
+    public int goldIncrement = 10;
 
 
     private void Awake()
@@ -26,6 +26,7 @@ public class ResourceManager : MonoBehaviour
     private void Start()
     {
         UpdateGoldUI();
+        StartCoroutine(AutoAddGold());
     }
     public void AddGold(int amount)
     {
@@ -52,6 +53,16 @@ public class ResourceManager : MonoBehaviour
         if (goldText != null)
         {
             goldText.text = $"{currentGold}";
+        }
+    }
+    private IEnumerator AutoAddGold()
+    {
+        while (true)
+        {
+            //5ÃÊ ÈÄ
+            yield return new WaitForSeconds(5f);
+            AddGold(goldIncrement);
+            Debug.Log($"5ÃÊ¸¶´Ù {goldIncrement} °ñµå Ãß°¡µÊ. ÇöÀç °ñµå: {currentGold}");
         }
     }
 }
