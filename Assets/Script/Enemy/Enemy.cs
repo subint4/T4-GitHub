@@ -6,7 +6,8 @@ public class Enemy : MonoBehaviour
 {
     public EnemySO enemyStats;
     private bool isDead = false;
-    private Rigidbody2D rb;
+    private Rigidbody2D enemyRigidbody;
+    private Collider2D enemyCollider;
     private int health;
     private int rewardMoney;
     private int attackPower;
@@ -25,7 +26,7 @@ public class Enemy : MonoBehaviour
             controller = GetComponent<EnemyAnimatorController>();
         }
 
-        rb = GetComponent<Rigidbody2D>();
+        enemyRigidbody = GetComponent<Rigidbody2D>();
 
         if (enemyStats != null)
         {
@@ -77,7 +78,7 @@ public class Enemy : MonoBehaviour
     {
         isAttacking = true;
         movementSpeed = 0f;
-        rb.isKinematic = true;
+        enemyRigidbody.isKinematic = true;
 
         if (controller != null)
         {
@@ -126,7 +127,7 @@ public class Enemy : MonoBehaviour
     {
         isAttacking = false;
         movementSpeed = originalSpeed;
-        rb.isKinematic = false;
+        enemyRigidbody.isKinematic = false;
 
         if (controller != null)
         {
@@ -153,9 +154,18 @@ public class Enemy : MonoBehaviour
 
         isDead = true;
         movementSpeed = 0f;
-        rb.velocity = Vector2.zero;
-        rb.isKinematic = true;
+        enemyRigidbody.velocity = Vector2.zero;
+        enemyRigidbody.isKinematic = true;
 
+
+        if(enemyCollider != null)
+        {
+            enemyCollider.enabled = false;
+        }
+        if(enemyRigidbody != null)
+        {
+            enemyRigidbody.simulated = false;
+        }
         if (controller != null)
         {
             controller.PlayDeathAnimation();

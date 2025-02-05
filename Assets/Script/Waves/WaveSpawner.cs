@@ -110,16 +110,30 @@ public class WaveSpawner : MonoBehaviour
             Debug.LogError("스폰할 적 프리팹 또는 위치가 없습니다.");
             return;
         }
-        int randomIndex = Random.Range(0, spawnRows.Length);
-        Transform spawnPoint = spawnRows[randomIndex];
-
-        Debug.Log($"스폰 위치 선택됨: {spawnPoint.position} (index: {randomIndex}");
 
         GameObject enemyPrefab = GetEnemyPrefabByType(wave.EnemyPrefab);
         if (enemyPrefab == null) return;
 
+        int spawnIndex;
+
+        // 보스인지 확인
+        if (wave.EnemyType.ToLower().Contains("boss"))
+        {
+            int[] bossRows = { 1, 3 }; // 2행(배열 인덱스 1), 4행(배열 인덱스 3)에서만 스폰
+            spawnIndex = bossRows[Random.Range(0, bossRows.Length)];
+        }
+        else
+        {
+            spawnIndex = Random.Range(0, spawnRows.Length); // 일반 적은 랜덤한 위치에서 스폰
+        }
+
+        Transform spawnPoint = spawnRows[spawnIndex];
+
+        Debug.Log($"스폰 위치 선택됨: {spawnPoint.position} (index: {spawnIndex}), EnemyType: {wave.EnemyType}");
+
         Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
     }
+
     private GameObject GetEnemyPrefabByType(string enemyPrefabName)
     {
         if (string.IsNullOrEmpty(enemyPrefabName))
