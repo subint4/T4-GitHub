@@ -97,6 +97,7 @@ public void TakeDamage(int damage)
         if (currentTiles != null)
         {
             currentTiles.isOccupied = false; // 타워가 파괴되면 타일의 점유 상태 해제
+            currentTiles.currentTower = null;
         }
 
         Destroy(gameObject);

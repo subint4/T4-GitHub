@@ -7,34 +7,23 @@ public class TowerSpawner : MonoBehaviour
     public GameObject[] towerPrefabs;
     private GameObject selectedTowerPrefab;
     private bool isTowerSelected = false;
+    private int selectedTowerIndex = -1; // 선택된 타워 인덱스 저장
 
     public LayerMask SpawnableArea; // 타일이 있는 레이어 설정
     public float raycastDistance = 10f;
 
     private PlayerSystem playerSystem;
-    public void SelectedTower(int index)
-    {
-        if (index >= 0 && index < towerPrefabs.Length)
-        {
-            selectedTowerPrefab = towerPrefabs[index];
-            isTowerSelected = true;
-            Debug.Log($"타워 선택: {selectedTowerPrefab.name}");
-        }
-        else
-        {
-            Debug.LogError("유효하지 않은 인덱스.");
-        }
-    }
+
     private void Update()
     {
-        if (isTowerSelected && Input.GetMouseButtonDown(0))
+        if (isTowerSelected && Input.GetMouseButtonDown(0)) // 타워 선택 후 클릭하면 배치
         {
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             worldPosition.z = 0;
 
             RaycastHit2D hit = Physics2D.Raycast(worldPosition, Vector2.zero, raycastDistance, SpawnableArea);
 
-            if (hit.collider != null) // 타일 위를 클릭했을 경우
+            if (hit.collider != null) // 타일 클릭 감지
             {
                 Tiles targetTile = hit.collider.GetComponent<Tiles>();
                 if (targetTile != null)
@@ -45,21 +34,8 @@ public class TowerSpawner : MonoBehaviour
                         return;
                     }
 
-                    Tower towerComponent = selectedTowerPrefab.GetComponent<Tower>();
-                    if (towerComponent != null)
-                    {
-                        if (playerSystem.Money < towerComponent.towerStats.DeployCost)
-                        {
-                            Debug.LogWarning("돈이 부족하여 타워를 배치할 수 없습니다!");
-                            return;
-                        }
-
-                        // 비용 차감
-                        playerSystem.Money -= towerComponent.towerStats.DeployCost;
-
-                        // 타워 배치
-                        spawnTower(targetTile);
-                    }
+                    // 타워 배치
+                    SpawnTower(targetTile);
                 }
             }
             else
@@ -68,28 +44,52 @@ public class TowerSpawner : MonoBehaviour
             }
         }
     }
-    public void spawnTower(Tiles targetTile)
+
+    // 버튼 클릭 시 실행되는 메서드 (타워 선택만 함)
+    public void SelectedTower(int towerIndex)
     {
+        if (towerIndex < 0 || towerIndex >= towerPrefabs.Length)
+        {
+            Debug.LogError("잘못된 타워 인덱스입니다.");
+            return;
+        }
+
+        selectedTowerPrefab = towerPrefabs[towerIndex];
+        selectedTowerIndex = towerIndex;
+        isTowerSelected = true; //  타워 배치 모드 활성화
+        Debug.Log($"타워 {towerIndex} 선택됨, 타일 클릭 대기 중...");
+    }
+
+    // 타일을 클릭하면 호출되는 타워 배치 함수
+    public void SpawnTower(Tiles targetTile)
+    {
+        Debug.Log($"SpawnTower 호출됨 - 타일 위치: {targetTile.transform.position}, isOccupied: {targetTile.isOccupied}");
+
         if (isTowerSelected && selectedTowerPrefab != null)
         {
-            if(targetTile.isOccupied)
+            if (targetTile.isOccupied)
             {
-                Debug.LogWarning("해당 타일에는 이미 타워가 있습니다.");
+                Debug.LogWarning($"해당 타일({targetTile.transform.position})에는 이미 타워가 있습니다! (isOccupied: {targetTile.isOccupied})");
+                return;
             }
+
+            Debug.Log($"타워 배치 시도: {targetTile.transform.position}");
+
             Tower newTower = Instantiate(selectedTowerPrefab, targetTile.transform.position, Quaternion.identity).GetComponent<Tower>();
             if (newTower != null)
             {
-                targetTile.isOccupied = true;
-                isTowerSelected = false;
-                Debug.Log($"타워 배치 완료: {targetTile.transform.position}");
+                targetTile.PlaceTower(newTower);
+                Debug.Log($"타워 배치 완료: {targetTile.transform.position} (isOccupied: {targetTile.isOccupied})");
             }
             else
             {
-                {
-                    Debug.LogWarning("타워가 선택되지 않았거나 프리팹이 설정되지 않음");
-
-                }
+                Debug.LogWarning("타워 배치에 실패했습니다.");
             }
+
+            isTowerSelected = false;
+            selectedTowerPrefab = null;
+            selectedTowerIndex = -1;
         }
     }
+
 }

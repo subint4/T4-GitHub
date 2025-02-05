@@ -19,7 +19,7 @@
       "EnemyType": "Boss",
       "SpawnCount": 1,
       "SpawnRate": 5.0,
-      "EnemyPrefab": "BossPrefab"
+      "EnemyPrefab": "boss_Prefab"
     }
   ]
 }

@@ -20,7 +20,7 @@ MonoBehaviour:
   MovementSpeed: 1
   DeployCost: 0
   RewardMoney: 300
-  EnemyType: Boss_zombie
+  EnemyType: boss_zombie
   SpawnCount: 0
   SpawnRate: 0
   EnemyPrefab: 

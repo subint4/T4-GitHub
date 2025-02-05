@@ -172,6 +172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!1 &17913584
 GameObject:
   m_ObjectHideFlags: 0
@@ -409,6 +410,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &54782123
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -553,6 +555,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &62040515
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -697,6 +700,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &63524383
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -947,6 +951,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &127642532
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1166,6 +1171,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &212096749
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1660,6 +1666,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &372770216
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2093,6 +2100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &476514803
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2237,6 +2245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &509642442
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2381,6 +2390,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &593120071
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2525,6 +2535,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &652323886
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2669,6 +2680,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &668728570
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2839,6 +2851,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!1 &741280989
 GameObject:
   m_ObjectHideFlags: 0
@@ -2938,6 +2951,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &741280993
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3328,6 +3342,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &852897689
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3640,6 +3655,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &1010399494
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3784,6 +3800,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &1078107276
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4043,6 +4060,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &1154199003
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4122,6 +4140,7 @@ MonoBehaviour:
   - {fileID: 5853100367652610122, guid: 45348f200772f4241a0415c9146bd5c2, type: 3}
   - {fileID: 5853100367652610122, guid: 2e806fd25fa816247a14d7c7992f152e, type: 3}
   - {fileID: 5853100367652610122, guid: 9a909427b2e619145a82248052434600, type: 3}
+  - {fileID: 5853100367652610122, guid: eac95f30e48d2d3418221e544840a0ed, type: 3}
   spawnRows:
   - {fileID: 2080945646}
   - {fileID: 1401152980}
@@ -4193,6 +4212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!1 &1207181633
 GameObject:
   m_ObjectHideFlags: 0
@@ -4414,6 +4434,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &1231779760
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4509,6 +4530,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!1 &1253295938
 GameObject:
   m_ObjectHideFlags: 0
@@ -4608,6 +4630,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &1253295942
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4752,6 +4775,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &1259433272
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5064,6 +5088,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &1392907886
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5468,6 +5493,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &1411416722
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5718,6 +5744,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &1474033307
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5937,6 +5964,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &1498753086
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6081,6 +6109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &1548204503
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6269,6 +6298,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &1550903662
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6413,6 +6443,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &1570467012
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6687,6 +6718,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &1577534786
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6940,6 +6972,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &1588742757
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7135,6 +7168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!1 &1646410410
 GameObject:
   m_ObjectHideFlags: 0
@@ -7692,6 +7726,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &1770809607
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7836,6 +7871,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &1786166642
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8243,6 +8279,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &1878521250
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8462,6 +8499,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &1940331029
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8752,6 +8790,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!1 &2007482028
 GameObject:
   m_ObjectHideFlags: 0
@@ -8935,6 +8974,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &2016239840
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -9079,6 +9119,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &2018245577
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -9329,6 +9370,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
+  currentTower: {fileID: 0}
 --- !u!61 &2147215345
 BoxCollider2D:
   m_ObjectHideFlags: 0
