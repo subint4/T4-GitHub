@@ -16,7 +16,7 @@ MonoBehaviour:
   UnitName: 1_zombie
   Health: 30
   AttackPower: 25
-  AttackSpeed: 0
+  AttackSpeed: 1
   MovementSpeed: 3
   DeployCost: 0
   RewardMoney: 0

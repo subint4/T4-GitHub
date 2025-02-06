@@ -17,7 +17,7 @@ public class Enemy : MonoBehaviour
     public bool isAttacking = false;
     public bool isSlowed = false;
 
-    private Tower currentTarget;
+    public Tower currentTarget;
     private ProjectileSO projectileStats;
     public EnemyAnimatorController controller;
 
@@ -78,58 +78,65 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator AttackTower()
     {
+        if (isAttacking) yield break; // 중복 실행 방지
+
         isAttacking = true;
         movementSpeed = 0f;
         enemyRigidbody.isKinematic = true;
 
         if (controller != null)
         {
-            controller.SetAttackState(true); // 랜덤 공격 애니메이션 실행
+            controller.SetAttackState(true); // 공격 애니메이션 실행
             Debug.Log($"[Enemy] {gameObject.name}: 공격 애니메이션 실행!");
         }
 
-        yield return new WaitForSeconds(attackSpeed); // 공격 간격 유지
+        yield return new WaitForSeconds(attackSpeed); // 공격 속도만큼 대기
 
-        Collider2D[] targets = Physics2D.OverlapBoxAll(transform.position, new Vector2(1f, 1f), 0f);
-        foreach (var target in targets)
+        // 타워가 파괴되었는지 다시 확인
+        if (currentTarget == null || currentTarget.IsDestroyed())
         {
-            Tower targetTower = target.GetComponent<Tower>();
-            if (targetTower != null && !targetTower.IsDestroyed())
-            {
-                targetTower.TakeDamage(attackPower);
-            }
+            StopAttack();
+            yield break;
         }
-
-        StartCoroutine(ResetAttack()); // 다음 공격 실행 준비
     }
+
 
     public IEnumerator ResetAttack()
     {
-        Debug.Log($"[Enemy] {gameObject.name}: 공격 대기 중...");
+        Debug.Log($"[Enemy] {gameObject.name}: ResetAttack() 호출됨");
 
-        yield return new WaitForSeconds(0.1f); // 애니메이션 트랜지션을 고려한 짧은 대기 시간
+        yield return new WaitForSeconds(attackSpeed); // 공격 속도만큼 대기
 
-        isAttacking = false;
+        isAttacking = false; // 공격 상태 초기화
 
         if (controller != null)
         {
             controller.SetAttackState(false); // 공격 종료 애니메이션
         }
-
-        yield return new WaitForSeconds(attackSpeed); // 공격 속도 반영하여 대기
-
-        if(currentTarget==null || currentTarget.IsDestroyed())
+        if (currentTarget == null || currentTarget.IsDestroyed())
         {
+            Debug.Log($"[Enemy] {gameObject.name}: 타겟이 사라짐, StopAttack() 실행");
             StopAttack();
+            yield break;
         }
-        else
-        {
-            Debug.Log($"[Enemy] {gameObject.name}: 다음 공격 시작!");
-            StartCoroutine(AttackTower()); // 다음 공격 실행
-        }
+        StartCoroutine(AttackTower());
     }
 
-    private void StopAttack()
+    public void ApplyDamage()
+    {
+        if (currentTarget == null || currentTarget.IsDestroyed())
+        {
+            StopAttack();
+            return;
+        }
+
+        currentTarget.TakeDamage(attackPower);
+        Debug.Log($"[Enemy] {gameObject.name}: {currentTarget.gameObject.name}에게 {attackPower} 데미지!");
+
+        StartCoroutine(ResetAttack()); // 공격 후 대기 후 다시 공격
+    }
+
+    public void StopAttack()
     {
         isAttacking = false;
         movementSpeed = originalSpeed;
@@ -139,8 +146,6 @@ public class Enemy : MonoBehaviour
         {
             controller.SetAttackState(false); // 공격 상태 종료
         }
-
-        Debug.Log("공격 종료, 이동 상태 복구");
     }
 
     public void TakeDamage(int damage)
@@ -204,25 +209,34 @@ public class Enemy : MonoBehaviour
 
         if (isSlowed)
         {
-
             movementSpeed = originalSpeed;
             isSlowed = false;
+
+            if (currentTarget == null || currentTarget.IsDestroyed())
+            {
+                StopAttack();
+            }
         }
     }
     public void ApplyStun(ProjectileSO projectileStats)
     {
-        if (isDead) return;   
+        if (isDead) return;
         originalSpeed = movementSpeed;
         movementSpeed = 0f;
         enemyRigidbody.isKinematic = false;
         isAttacking = false;
         Invoke("EndStun", projectileStats.StunDuration);
-        
+
     }
     public void EndStun()
     {
         movementSpeed = originalSpeed;
         enemyRigidbody.isKinematic = true;
-        
+
+        if (currentTarget == null || currentTarget.IsDestroyed())
+        {
+            StopAttack();
+        }
     }
+
 }

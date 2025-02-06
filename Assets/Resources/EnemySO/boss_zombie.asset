@@ -16,7 +16,7 @@ MonoBehaviour:
   UnitName: boss_zombie
   Health: 1000
   AttackPower: 300
-  AttackSpeed: 0
+  AttackSpeed: 1
   MovementSpeed: 1
   DeployCost: 0
   RewardMoney: 0

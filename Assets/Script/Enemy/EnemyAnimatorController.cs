@@ -1,3 +1,6 @@
+using Unity.VisualScripting;
+using System.Collections;
+
 using UnityEngine;
 
 public class EnemyAnimatorController : MonoBehaviour
@@ -18,6 +21,7 @@ public class EnemyAnimatorController : MonoBehaviour
             enemy = GetComponent<Enemy>(); // Enemy 스크립트 자동 연결
         }
     }
+
 
     public void SetAttackState(bool attacking)
     {
@@ -58,6 +62,8 @@ public class EnemyAnimatorController : MonoBehaviour
         {
             Debug.Log($"[EnemyAnimator] {gameObject.name}: 공격 애니메이션 종료 감지됨!");
             enemy.StartCoroutine(enemy.ResetAttack()); // 공격 반복 실행
+
+            enemy.StartCoroutine(DelayedApplyDamage(0.1f));
         }
     }
 
@@ -66,6 +72,15 @@ public class EnemyAnimatorController : MonoBehaviour
         if (enemy != null)
         {
             enemy.DestroyEnemy();
+        }
+    }
+    private IEnumerator DelayedApplyDamage(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        if (!isDead && enemy.currentTarget != null && !enemy.currentTarget.IsDestroyed())
+        {
+            enemy.ApplyDamage();
         }
     }
 }
