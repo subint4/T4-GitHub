@@ -61,26 +61,17 @@ public class EnemyAnimatorController : MonoBehaviour
         if (!isDead && enemy != null)
         {
             Debug.Log($"[EnemyAnimator] {gameObject.name}: 공격 애니메이션 종료 감지됨!");
+            enemy.isAttacking = false;
+            enemy.controller.SetAttackState(false);
             enemy.StartCoroutine(enemy.ResetAttack()); // 공격 반복 실행
-
-            enemy.StartCoroutine(DelayedApplyDamage(0.1f));
+            enemy.ApplyDamage();
         }
     }
-
     public void OnDeathAnimationEnd()
     {
         if (enemy != null)
         {
             enemy.DestroyEnemy();
-        }
-    }
-    private IEnumerator DelayedApplyDamage(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-
-        if (!isDead && enemy.currentTarget != null && !enemy.currentTarget.IsDestroyed())
-        {
-            enemy.ApplyDamage();
         }
     }
 }
