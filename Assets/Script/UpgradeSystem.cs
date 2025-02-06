@@ -4,47 +4,74 @@ using UnityEngine;
 
 public class UpgradeSystem : MonoBehaviour
 {
-    public int CurrentMoney = 100;
-    public int UpgradeCost = 50;
-    public int CurrentTier = 1;
-    public int MaxTier = 3;
-    [Header("Tower Tiers")]
+    public TowerSO towerStats;
+    private Tower selectedTower;
+    public ResourceManager resourceManager;
+    [HideInInspector]public int CurrentTier = 1;
+    [HideInInspector]public int MaxTier = 3;
+    [HideInInspector][Header("Tower Tiers")]
     public TowerStat baseStats;
-    private TowerStat currentStats;
+    [HideInInspector]private TowerStat currentStats;
+    [HideInInspector]private int upgradeCost;
+    [HideInInspector]private UpgradeUI upgradeUI;
 
     private void Start()
     {
-        currentStats = new TowerStat(baseStats);
-        Debug.Log($"현재 재화 : {CurrentMoney}, 업그레이드 단계 : {CurrentTier}");
+        if(towerStats == null || resourceManager == null)
+        {
+            return;
+        }
+        ApplyTowerData(towerStats);
+        Debug.Log($"현재 재화 : {resourceManager.currentGold}");
     }
-    public void Upgrade()
+
+    public void SelectTower(Tower tower)
     {
+        if(selectedTower ==tower)
+        {
+            DeselectTower();
+            return;
+        }
+        selectedTower = tower;
+        Debug.Log($"선택된 타워 : {selectedTower.towerStats.UnitName}");
+    }
+    public void UpgradeSelectedTower()
+    {
+        if(selectedTower == null)
+        {
+            Debug.Log("타워 선택 안됨");
+            return;
+        }
         if (CurrentTier >= MaxTier)
         {
             Debug.Log("최대 단계에 도달했습니다.");
             return;
         }
-        if (CurrentMoney >= UpgradeCost)
+        TowerSO towerData = selectedTower.towerStats;
+        int upgradeCost = towerData.UpgradeCost;
+        if (resourceManager.currentGold >= upgradeCost)
         {
-            CurrentMoney -= UpgradeCost;
-            CurrentTier++;
-            UpgradeCost = Mathf.CeilToInt(UpgradeCost * 1.5f);
-
-            currentStats.damage = Mathf.CeilToInt(currentStats.damage * 1.5f);
-            currentStats.attackSpeed *= 1.5f;
-            Debug.Log($"Upgraded Damage: {currentStats.damage}, AttackSpeed: {currentStats.attackSpeed}");
-            Debug.Log($"업그레이드 완료. 현재 단계: {CurrentTier},남은 재화 : {CurrentMoney}");
+            resourceManager.SpendGold(upgradeCost);
+            
+            if(towerData.nextTierTower != null)
+            {
+                Debug.Log($"타워 업그레이드 : {towerData.UnitName}=>{towerData.nextTierTower.UnitName}");
+                selectedTower.towerStats = towerData.nextTierTower;
+                upgradeUI.HideUpgradeButton();
+            }
         }
-        else
-        {
-            Debug.Log("돈이 모자랍니다.");
-        }
+    }
+    public void DeselectTower()
+    {
+        selectedTower = null;
+        upgradeUI.HideUpgradeButton();
+        Debug.Log("타워 선택 해제");
     }
         void Update()
         {
             if(Input.GetKeyDown(KeyCode.U))
             {
-                Upgrade();
+                UpgradeSelectedTower();
             }
         }
     public TowerStat GetCurrentStats()
@@ -68,5 +95,11 @@ public class UpgradeSystem : MonoBehaviour
         this.damage = other.damage;
         this.attackSpeed = other.attackSpeed;
     }
+}
+    private void ApplyTowerData(TowerSO newTower)
+    {
+        // 새로운 SO 데이터를 반영
+        currentStats = new TowerStat(newTower.AttackPower, newTower.AttackSpeed);
+        upgradeCost = newTower.UpgradeCost;
     }
 }

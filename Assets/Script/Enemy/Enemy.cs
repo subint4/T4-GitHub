@@ -11,9 +11,9 @@ public class Enemy : MonoBehaviour
     private int health;
     private int rewardMoney;
     private int attackPower;
-    [HideInInspector]public float attackSpeed;
-    [HideInInspector]public float movementSpeed;
-    [HideInInspector]public float originalSpeed;
+    [HideInInspector] public float attackSpeed;
+    [HideInInspector] public float movementSpeed;
+    [HideInInspector] public float originalSpeed;
     public bool isAttacking = false;
     public bool isSlowed = false;
 
@@ -94,7 +94,7 @@ public class Enemy : MonoBehaviour
         foreach (var target in targets)
         {
             Tower targetTower = target.GetComponent<Tower>();
-            if (targetTower != null&&!targetTower.IsDestroyed())
+            if (targetTower != null && !targetTower.IsDestroyed())
             {
                 targetTower.TakeDamage(attackPower);
             }
@@ -166,11 +166,11 @@ public class Enemy : MonoBehaviour
         enemyRigidbody.isKinematic = true;
 
 
-        if(enemyCollider != null)
+        if (enemyCollider != null)
         {
             enemyCollider.enabled = false;
         }
-        if(enemyRigidbody != null)
+        if (enemyRigidbody != null)
         {
             enemyRigidbody.simulated = false;
         }
@@ -190,26 +190,34 @@ public class Enemy : MonoBehaviour
     }
     public void ApplySlow(ProjectileSO projectileStats)
     {
-        if(!isSlowed)
+        if (!isSlowed)
         {
-        originalSpeed = movementSpeed;
-        movementSpeed *= (1f - projectileStats.SlowEffect);
-        isSlowed = true;
+            originalSpeed = movementSpeed;
+            movementSpeed *= (1f - projectileStats.SlowEffect);
+            isSlowed = true;
         }
         Invoke("EndSlow", projectileStats.SlowDuration);
     }
     public void EndSlow()
     {
-        movementSpeed = originalSpeed;
-        isSlowed = false;
+        if (isDead) return;
+
+        if (isSlowed)
+        {
+
+            movementSpeed = originalSpeed;
+            isSlowed = false;
+        }
     }
     public void ApplyStun(ProjectileSO projectileStats)
     {
+        if (isDead) return;   
         originalSpeed = movementSpeed;
         movementSpeed = 0f;
         enemyRigidbody.isKinematic = false;
         isAttacking = false;
         Invoke("EndStun", projectileStats.StunDuration);
+        
     }
     public void EndStun()
     {

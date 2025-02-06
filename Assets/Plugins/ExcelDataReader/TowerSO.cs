@@ -21,6 +21,7 @@ public class TowerSO : ScriptableObject
     public int DeployCost;
     public int UpgradeCost;
     public float Range;
+    public TowerSO nextTierTower;
 
     public TowerType TowerType;
 

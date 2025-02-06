@@ -8,6 +8,8 @@ public class Tower : MonoBehaviour
     public TowerAnimatorController animatorController;
     public Tiles currentTiles;
     public bool isDead = false;
+    private UpgradeSystem upgradeSystem;
+    private UpgradeUI upgradeUI;
 
     private int Health;
     private float attackCooldown = 0f;
@@ -20,6 +22,17 @@ public class Tower : MonoBehaviour
         if (towerStats != null)
         {
             Health = towerStats.Health;
+        }
+        upgradeSystem = FindObjectOfType<UpgradeSystem>();
+        upgradeUI = FindObjectOfType<UpgradeUI>();
+    }
+
+    private void OnMouseDown()
+    {
+        if(upgradeSystem != null && upgradeUI != null)
+        {
+            upgradeSystem.SelectTower(this);
+            upgradeUI.ShowUpgradeButton(this);
         }
     }
 

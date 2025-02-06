@@ -22,4 +22,3 @@ MonoBehaviour:
   CanSlow: 1
   SlowEffect: 0.5
   SlowDuration: 3
-  stunDuration: 0
