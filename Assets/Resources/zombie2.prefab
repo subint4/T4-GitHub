@@ -61,12 +61,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c90e63840947131459fd3fa8b81f71b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyStats: {fileID: 11400000, guid: 66ebd8c0c549e3f4897badf4a4bb0739, type: 2}
+  enemyStats: {fileID: 11400000, guid: 987e91b745fa1344a9283086fc1656ea, type: 2}
   enemyRigidbody: {fileID: 3538306792262835736}
   attackSpeed: 0
   movementSpeed: 0
   originalSpeed: 0
   isAttacking: 0
+  isSlowed: 0
   controller: {fileID: 6764469391364196977}
 --- !u!50 &3538306792262835736
 Rigidbody2D:

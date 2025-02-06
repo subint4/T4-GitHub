@@ -13,8 +13,7 @@
     "SlowEffect": 0.0,
     "SlowDuration": 0.0,
     "PierceCount": 1.0,
-    "StunDuration": 0.0,
-    "TowerTier": 1.0
+    "StunDuration": 0.0
   },
   {
     "key": 1002.0,
@@ -30,8 +29,7 @@
     "SlowEffect": 0.0,
     "SlowDuration": 0.0,
     "PierceCount": 1.0,
-    "StunDuration": 0.0,
-    "TowerTier": 2.0
+    "StunDuration": 0.0
   },
   {
     "key": 1003.0,
@@ -47,8 +45,7 @@
     "SlowEffect": 0.0,
     "SlowDuration": 0.0,
     "PierceCount": 1.0,
-    "StunDuration": 0.0,
-    "TowerTier": 3.0
+    "StunDuration": 0.0
   },
   {
     "key": 1004.0,
@@ -58,14 +55,13 @@
     "AttackPower": 5.0,
     "AttackSpeed": 1.0,
     "DeployCost": 30.0,
-    "CanSlow": false,
+    "CanSlow": true,
     "CanPierce": false,
     "CanStun": false,
-    "SlowEffect": 0.0,
-    "SlowDuration": 0.0,
+    "SlowEffect": 0.5,
+    "SlowDuration": 2.0,
     "PierceCount": 1.0,
-    "StunDuration": 0.0,
-    "TowerTier": 1.0
+    "StunDuration": 0.0
   },
   {
     "key": 1005.0,
@@ -75,14 +71,13 @@
     "AttackPower": 10.0,
     "AttackSpeed": 1.0,
     "UpgradeCost": 40.0,
-    "CanSlow": false,
+    "CanSlow": true,
     "CanPierce": false,
     "CanStun": false,
-    "SlowEffect": 0.0,
-    "SlowDuration": 0.0,
+    "SlowEffect": 0.5,
+    "SlowDuration": 2.0,
     "PierceCount": 1.0,
-    "StunDuration": 0.0,
-    "TowerTier": 2.0
+    "StunDuration": 0.0
   },
   {
     "key": 1006.0,
@@ -92,14 +87,13 @@
     "AttackPower": 20.0,
     "AttackSpeed": 1.0,
     "UpgradeCost": 50.0,
-    "CanSlow": false,
+    "CanSlow": true,
     "CanPierce": false,
     "CanStun": false,
-    "SlowEffect": 0.0,
-    "SlowDuration": 0.0,
+    "SlowEffect": 0.5,
+    "SlowDuration": 2.0,
     "PierceCount": 1.0,
-    "StunDuration": 0.0,
-    "TowerTier": 3.0
+    "StunDuration": 0.0
   },
   {
     "key": 1007.0,
@@ -110,13 +104,12 @@
     "AttackSpeed": 1.0,
     "DeployCost": 50.0,
     "CanSlow": false,
-    "CanPierce": false,
+    "CanPierce": true,
     "CanStun": false,
     "SlowEffect": 0.0,
     "SlowDuration": 0.0,
-    "PierceCount": 1.0,
-    "StunDuration": 0.0,
-    "TowerTier": 1.0
+    "PierceCount": 3.0,
+    "StunDuration": 0.0
   },
   {
     "key": 1008.0,
@@ -127,13 +120,12 @@
     "AttackSpeed": 1.0,
     "UpgradeCost": 60.0,
     "CanSlow": false,
-    "CanPierce": false,
+    "CanPierce": true,
     "CanStun": false,
     "SlowEffect": 0.0,
     "SlowDuration": 0.0,
-    "PierceCount": 1.0,
-    "StunDuration": 0.0,
-    "TowerTier": 2.0
+    "PierceCount": 3.0,
+    "StunDuration": 0.0
   },
   {
     "key": 1009.0,
@@ -144,13 +136,12 @@
     "AttackSpeed": 1.0,
     "UpgradeCost": 70.0,
     "CanSlow": false,
-    "CanPierce": false,
+    "CanPierce": true,
     "CanStun": false,
     "SlowEffect": 0.0,
     "SlowDuration": 0.0,
-    "PierceCount": 1.0,
-    "StunDuration": 0.0,
-    "TowerTier": 3.0
+    "PierceCount": 3.0,
+    "StunDuration": 0.0
   },
   {
     "key": 1010.0,
@@ -166,8 +157,7 @@
     "SlowEffect": 0.0,
     "SlowDuration": 0.0,
     "PierceCount": 1.0,
-    "StunDuration": 0.0,
-    "TowerTier": 1.0
+    "StunDuration": 0.0
   },
   {
     "key": 1011.0,
@@ -183,8 +173,7 @@
     "SlowEffect": 0.0,
     "SlowDuration": 0.0,
     "PierceCount": 1.0,
-    "StunDuration": 0.0,
-    "TowerTier": 2.0
+    "StunDuration": 0.0
   },
   {
     "key": 1012.0,
@@ -200,8 +189,7 @@
     "SlowEffect": 0.0,
     "SlowDuration": 0.0,
     "PierceCount": 1.0,
-    "StunDuration": 0.0,
-    "TowerTier": 3.0
+    "StunDuration": 0.0
   },
   {
     "key": 1013.0,
@@ -213,12 +201,11 @@
     "DeployCost": 100.0,
     "CanSlow": false,
     "CanPierce": false,
-    "CanStun": false,
+    "CanStun": true,
     "SlowEffect": 0.0,
     "SlowDuration": 0.0,
     "PierceCount": 1.0,
-    "StunDuration": 0.0,
-    "TowerTier": 1.0
+    "StunDuration": 2.0
   },
   {
     "key": 1014.0,
@@ -230,12 +217,11 @@
     "UpgradeCost": 110.0,
     "CanSlow": false,
     "CanPierce": false,
-    "CanStun": false,
+    "CanStun": true,
     "SlowEffect": 0.0,
     "SlowDuration": 0.0,
     "PierceCount": 1.0,
-    "StunDuration": 0.0,
-    "TowerTier": 2.0
+    "StunDuration": 2.0
   },
   {
     "key": 1015.0,
@@ -247,12 +233,11 @@
     "UpgradeCost": 120.0,
     "CanSlow": false,
     "CanPierce": false,
-    "CanStun": false,
+    "CanStun": true,
     "SlowEffect": 0.0,
     "SlowDuration": 0.0,
     "PierceCount": 1.0,
-    "StunDuration": 0.0,
-    "TowerTier": 3.0
+    "StunDuration": 2.0
   },
   {
     "key": 1016.0,
@@ -268,8 +253,7 @@
     "SlowEffect": 0.0,
     "SlowDuration": 0.0,
     "PierceCount": 1.0,
-    "StunDuration": 0.0,
-    "TowerTier": 1.0
+    "StunDuration": 0.0
   },
   {
     "key": 1017.0,
@@ -285,8 +269,7 @@
     "SlowEffect": 0.0,
     "SlowDuration": 0.0,
     "PierceCount": 1.0,
-    "StunDuration": 0.0,
-    "TowerTier": 2.0
+    "StunDuration": 0.0
   },
   {
     "key": 1018.0,
@@ -302,7 +285,6 @@
     "SlowEffect": 0.0,
     "SlowDuration": 0.0,
     "PierceCount": 1.0,
-    "StunDuration": 0.0,
-    "TowerTier": 3.0
+    "StunDuration": 0.0
   }
 ]

@@ -20,4 +20,5 @@ MonoBehaviour:
   DeployCost: 100
   UpgradeCost: 0
   Range: 0
+  nextTierTower: {fileID: 11400000, guid: 85e6e931ffb34a84eb617e458d75c0a4, type: 2}
   TowerType: 0

@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f9349827a760b6e4e99ad030baaeae48, type: 3}
-  m_Name: 3_zombie
+  m_Name: 2_zombie
   m_EditorClassIdentifier: 
-  key: 2003
-  UnitName: 3_zombie
-  Health: 100
+  key: 0
+  UnitName: 2_zombie
+  Health: 50
   AttackPower: 25
-  AttackSpeed: 1
-  MovementSpeed: 2
+  AttackSpeed: 0
+  MovementSpeed: 1
   DeployCost: 0
-  RewardMoney: 20
-  EnemyType: Zombie
+  RewardMoney: 0
+  EnemyType: 
   SpawnCount: 0
   SpawnRate: 0
   EnemyPrefab: 

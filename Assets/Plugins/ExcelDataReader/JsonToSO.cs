@@ -12,7 +12,7 @@ public static class JsonToSO
         string jsonFolder = "Assets/Resources/JsonData"; // JSON 파일 경로
 
         // 무조건 모든 데이터 변환 시도
-        if (!ConvertJsonToEnemySO(jsonFolder + "/Enemy.json"))
+        if (!ConvertJsonToEnemySO(jsonFolder + "/EnemyData.json"))
             Debug.LogWarning("Enemy.json 변환 실패 또는 파일 없음.");
 
         if (!ConvertJsonToTowerSO(jsonFolder + "/Tower.json"))
@@ -46,8 +46,8 @@ public static class JsonToSO
 
             enemySO.UnitName = enemyName;
             enemySO.Health = Convert.ToInt32(data["Health"]);
-            enemySO.MovementSpeed = Convert.ToSingle(data["Speed"]);
-            enemySO.AttackPower = Convert.ToInt32(data["AttackDamage"]);
+            enemySO.MovementSpeed = Convert.ToSingle(data["MovementSpeed"]);
+            enemySO.AttackPower = Convert.ToInt32(data["AttackPower"]);
 
             AssetDatabase.CreateAsset(enemySO, assetPath);
             EditorUtility.SetDirty(enemySO);

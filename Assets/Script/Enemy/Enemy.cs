@@ -118,14 +118,14 @@ public class Enemy : MonoBehaviour
 
         yield return new WaitForSeconds(attackSpeed); // 공격 속도 반영하여 대기
 
-        if (!isDead && currentTarget != null && !currentTarget.IsDestroyed())
+        if(currentTarget==null || currentTarget.IsDestroyed())
         {
-            Debug.Log($"[Enemy] {gameObject.name}: 다음 공격 시작!");
-            StartCoroutine(AttackTower()); // 다음 공격 실행
+            StopAttack();
         }
         else
         {
-            StopAttack();
+            Debug.Log($"[Enemy] {gameObject.name}: 다음 공격 시작!");
+            StartCoroutine(AttackTower()); // 다음 공격 실행
         }
     }
 
