@@ -1,1 +1,42 @@
-[{"key": "2001", "UnitName": "1_zombie", "Health": "30", "AttackPower": "25", "AttackSpeed": "1", "MovementSpeed": "3", "RewardMoney": "5", "EnemyType": "Zombie"}, {"key": "2002", "UnitName": "2_zombie", "Health": "50", "AttackPower": "25", "AttackSpeed": "1", "MovementSpeed": "1", "RewardMoney": "10", "EnemyType": "Zombie"}, {"key": "2003", "UnitName": "3_zombie", "Health": "100", "AttackPower": "25", "AttackSpeed": "1", "MovementSpeed": "2", "RewardMoney": "20", "EnemyType": "Zombie"}, {"key": "2004", "UnitName": "boss_zombie", "Health": "1000", "AttackPower": "300", "AttackSpeed": "0.5", "MovementSpeed": "1", "RewardMoney": "300", "EnemyType": "Boss_zombie"}]
+[
+  {
+    "key": 2001.0,
+    "UnitName": "1_zombie",
+    "Health": 30.0,
+    "AttackPower": 25.0,
+    "AttackSpeed": 1.0,
+    "MovementSpeed": 3.0,
+    "RewardMoney": 5.0,
+    "EnemyType": "Zombie"
+  },
+  {
+    "key": 2002.0,
+    "UnitName": "2_zombie",
+    "Health": 50.0,
+    "AttackPower": 25.0,
+    "AttackSpeed": 1.0,
+    "MovementSpeed": 1.0,
+    "RewardMoney": 10.0,
+    "EnemyType": "Zombie"
+  },
+  {
+    "key": 2003.0,
+    "UnitName": "3_zombie",
+    "Health": 100.0,
+    "AttackPower": 25.0,
+    "AttackSpeed": 1.0,
+    "MovementSpeed": 2.0,
+    "RewardMoney": 20.0,
+    "EnemyType": "Zombie"
+  },
+  {
+    "key": 2004.0,
+    "UnitName": "boss_zombie",
+    "Health": 1000.0,
+    "AttackPower": 300.0,
+    "AttackSpeed": 0.5,
+    "MovementSpeed": 1.0,
+    "RewardMoney": 300.0,
+    "EnemyType": "Boss_zombie"
+  }
+]

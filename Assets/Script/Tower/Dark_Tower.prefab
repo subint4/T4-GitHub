@@ -93,7 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e11748d549f7b844a0bd5cef0550cc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  towerStats: {fileID: 11400000, guid: 3a30d917a13e18a4b9a4d02d17d9831a, type: 2}
+  towerStats: {fileID: 11400000, guid: 9d449b9cf23979e42bb5a2acaeafb2fe, type: 2}
   firePoint: {fileID: 3616390627942122568}
   projectilePrefab: {fileID: 6417698670388423150, guid: 47c26fa302f5ea340b321005b2eb7d06, type: 3}
   animatorController: {fileID: 1511237542480347695}

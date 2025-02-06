@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class ExcelConverterEditor : EditorWindow
 {
-    public enum DataType { EnemyData, UnitData, WaveData } // 하나의 공통 열거형 사용
+    public enum DataType { EnemyData,TowerData, WaveData, ProjectileData } // 하나의 공통 열거형 사용
 
     private DataType selectedDataType;
     private string jsonFilePath = "";
@@ -65,7 +65,7 @@ public class ExcelConverterEditor : EditorWindow
                 }
                 else
                 {
-                    JsonToSO.UpdateSOFromJson(jsonFilePath, selectedDataType);
+                    JsonToSO.ConvertJsonToSO();
                 }
             }
             else

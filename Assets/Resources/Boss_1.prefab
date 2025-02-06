@@ -62,6 +62,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyStats: {fileID: 11400000, guid: 6405e15a76f0358499d0065b3699a602, type: 2}
+  enemyRigidbody: {fileID: 3538306792262835736}
+  attackSpeed: 0
+  movementSpeed: 0
+  originalSpeed: 0
+  isAttacking: 0
   controller: {fileID: 1958865530240314543}
 --- !u!50 &3538306792262835736
 Rigidbody2D:

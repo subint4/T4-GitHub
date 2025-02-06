@@ -15,7 +15,7 @@ public static class SODataTable
                 DisplayEnemyData(path);
                 break;
 
-            case ExcelConverterEditor.DataType.UnitData:
+            case ExcelConverterEditor.DataType.TowerData:
                 path = "Assets/Resources/TowerData/";
                 DisplayTowerData(path);
                 break;

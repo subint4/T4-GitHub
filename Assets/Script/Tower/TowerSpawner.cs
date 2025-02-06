@@ -34,31 +34,40 @@ public class TowerSpawner : MonoBehaviour
                         return;
                     }
 
-                    // 타워 배치
-                    SpawnTower(targetTile);
+                    Tower towerScript = selectedTowerPrefab.GetComponent<Tower>();
+                    if (towerScript != null)
+                    {
+                        TowerSO towerData = towerScript.towerStats;
+
+                        // 배치 비용 차감 시도 (성공하면 타워 배치, 실패하면 취소)
+                        if (!ResourceManager.Instance.SpendGoldForTower(towerData, false))
+                        {
+                            Debug.Log("골드 부족으로 타워 배치 불가!");
+                            return;
+                        }
+
+                        // 돈이 충분하면 타워 배치 진행
+                        SpawnTower(targetTile);
+                    }
                 }
-            }
-            else
-            {
-                Debug.LogWarning("타워는 스폰 타일 위에만 배치 가능합니다!");
             }
         }
     }
 
     // 버튼 클릭 시 실행되는 메서드 (타워 선택만 함)
     public void SelectedTower(int towerIndex)
-    {
-        if (towerIndex < 0 || towerIndex >= towerPrefabs.Length)
-        {
-            Debug.LogError("잘못된 타워 인덱스입니다.");
-            return;
-        }
+            {
+                if (towerIndex < 0 || towerIndex >= towerPrefabs.Length)
+                {
+                    Debug.LogError("잘못된 타워 인덱스입니다.");
+                    return;
+                }
 
-        selectedTowerPrefab = towerPrefabs[towerIndex];
-        selectedTowerIndex = towerIndex;
-        isTowerSelected = true; //  타워 배치 모드 활성화
-        Debug.Log($"타워 {towerIndex} 선택됨, 타일 클릭 대기 중...");
-    }
+                selectedTowerPrefab = towerPrefabs[towerIndex];
+                selectedTowerIndex = towerIndex;
+                isTowerSelected = true; //  타워 배치 모드 활성화
+                Debug.Log($"타워 {towerIndex} 선택됨, 타일 클릭 대기 중...");
+            }
 
     // 타일을 클릭하면 호출되는 타워 배치 함수
     public void SpawnTower(Tiles targetTile)
@@ -73,19 +82,25 @@ public class TowerSpawner : MonoBehaviour
                 return;
             }
 
-            Debug.Log($"타워 배치 시도: {targetTile.transform.position}");
-
-            Tower newTower = Instantiate(selectedTowerPrefab, targetTile.transform.position, Quaternion.identity).GetComponent<Tower>();
-            if (newTower != null)
+            Tower towerScript = selectedTowerPrefab.GetComponent<Tower>();
+            if(towerScript != null)
             {
-                targetTile.PlaceTower(newTower);
-                Debug.Log($"타워 배치 완료: {targetTile.transform.position} (isOccupied: {targetTile.isOccupied})");
-            }
-            else
-            {
-                Debug.LogWarning("타워 배치에 실패했습니다.");
+                TowerSO towerData = towerScript.towerStats;
+
+                if (!ResourceManager.Instance.SpendGoldForTower(towerData, false))
+                {
+                    Debug.Log("골드부족");
+                    return;
+                }
+                Tower newTower = Instantiate(selectedTowerPrefab, targetTile.transform.position,Quaternion.identity).GetComponent<Tower>();
+            
+                if(newTower != null)
+                {
+                    targetTile.PlaceTower(newTower);
+                }
             }
 
+            // 타워 선택 해제
             isTowerSelected = false;
             selectedTowerPrefab = null;
             selectedTowerIndex = -1;
@@ -93,3 +108,5 @@ public class TowerSpawner : MonoBehaviour
     }
 
 }
+
+

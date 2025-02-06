@@ -110,6 +110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01214b4a0efbbc349969296579096522, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  projectileStats: {fileID: 11400000, guid: f80988102408da84b9cbd13a89eb2d88, type: 2}
 --- !u!212 &3369861618565710676
 SpriteRenderer:
   m_ObjectHideFlags: 0

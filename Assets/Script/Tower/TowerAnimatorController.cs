@@ -5,7 +5,7 @@ public class TowerAnimatorController : MonoBehaviour
     public Tower tower;
     public Animator towerAnimator;
     private bool isAttacking = false;
-
+    private bool isDead = false;
     // 애니메이션 이벤트에서 호출되는 투사체 발사 메서드
     public void FireProjectile()
     {
@@ -39,4 +39,21 @@ public class TowerAnimatorController : MonoBehaviour
     {
         SetAttackState(false);
     }
+    public void PlayDeathAnimation()
+    {
+        if (towerAnimator != null && !isDead)
+        {
+            isDead = true;
+            towerAnimator.SetTrigger("isDead");
+            Debug.Log($"[EnemyAnimator] {gameObject.name}: 사망 애니메이션 실행!");
+        }
+    }
+    public void OnDeathAnimationEnd()
+    {
+        if (tower != null)
+        {
+            tower.DestroyTower();
+        }
+    }
+
 }

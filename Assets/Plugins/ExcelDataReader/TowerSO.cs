@@ -19,6 +19,7 @@ public class TowerSO : ScriptableObject
     public int AttackPower;
     public float AttackSpeed;
     public int DeployCost;
+    public int UpgradeCost;
     public float Range;
 
     public TowerType TowerType;
@@ -32,5 +33,6 @@ public class TowerSO : ScriptableObject
         AttackPower = unitData.AttackPower;
         AttackSpeed = unitData.AttackSpeed;
         DeployCost = unitData.DeployCost;
+        UpgradeCost = unitData.UpgradeCost;
     }
 }

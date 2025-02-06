@@ -10,6 +10,7 @@ public class UnitData
     public int AttackPower;
     public float AttackSpeed;
     public int DeployCost;
+    public int UpgradeCost;
 }
 
 [System.Serializable]

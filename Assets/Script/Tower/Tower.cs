@@ -7,6 +7,7 @@ public class Tower : MonoBehaviour
     public GameObject projectilePrefab;
     public TowerAnimatorController animatorController;
     public Tiles currentTiles;
+    public bool isDead = false;
 
     private int Health;
     private float attackCooldown = 0f;
@@ -73,36 +74,7 @@ public class Tower : MonoBehaviour
         Projectile projectileScript = projectile.GetComponent<Projectile>();
 
         ProjectileDataLoader.ProjectileData projectileData = ProjectileDataLoader.GetProjectileData(towerStats.TowerType);
-
-        projectileScript.SetProjectileProperties(
-            projectileData.Speed,
-            projectileData.CanPierce,
-            projectileData.HasExplosion,
-            projectileData.SlowEffect,
-            projectileData.SlowDuration);
-
-        if (projectileScript != null)
-        {
-            projectileScript.SetAttackPower(towerStats.AttackPower);
-            if(towerStats.TowerType == TowerType.Explosive)
-            {
-                projectileScript.SetProjectileProperties(8f, false, true, 0f,0f);
-            }
-            else if(towerStats.TowerType == TowerType.Piercing)
-            {
-                projectileScript.SetProjectileProperties(12f, true, false, 0f,0f);
-            }
-            else if(towerStats.TowerType == TowerType.Slow)
-            {
-                projectileScript.SetProjectileProperties(10f, false, false, 0.5f, 2f);
-            }
-            else
-            {
-                projectileScript.SetProjectileProperties(10f, false, false, 0f, 0f);
-            }
-            
-            projectileScript.Launch();
-        }
+        projectileScript.SetDamage(towerStats.AttackPower);
     }
 
 
@@ -113,10 +85,11 @@ public void TakeDamage(int damage)
 
         if (Health <= 0)
         {
-            DestroyTower();
+            isDead = true;
+            animatorController.PlayDeathAnimation();
         }
     }
-    private void DestroyTower()
+    public void DestroyTower()
     {
 
         Debug.Log("타워가 파괴되었습니다.");
@@ -128,4 +101,17 @@ public void TakeDamage(int damage)
 
         Destroy(gameObject);
     }
-}
+    public bool UpgradeTower()
+    {
+        if (ResourceManager.Instance.SpendGoldForTower(towerStats, true)) // 업그레이드 비용 차감
+        {
+            Debug.Log($"타워 업그레이드 완료! 업그레이드 비용: {towerStats.UpgradeCost}");
+            return true;
+        }
+        else
+        {
+            Debug.Log("골드 부족으로 타워 업그레이드 불가!");
+            return false;
+        }
+    }
+    }

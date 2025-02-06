@@ -1,0 +1,23 @@
+[
+  {
+    "key": 1.0,
+    "EnemyType": "Zombie",
+    "SpawnCount": 5.0,
+    "SpawnRate": 2.0,
+    "EnemyPrefab": "ZombiePrefab"
+  },
+  {
+    "key": 2.0,
+    "EnemyType": "Zombie",
+    "SpawnCount": 10.0,
+    "SpawnRate": 2.0,
+    "EnemyPrefab": "ZombiePrefab"
+  },
+  {
+    "key": 3.0,
+    "EnemyType": "Boss_zombie",
+    "SpawnCount": 1.0,
+    "SpawnRate": 5.0,
+    "EnemyPrefab": "BossPrefab"
+  }
+]

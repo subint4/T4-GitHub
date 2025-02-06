@@ -1,74 +1,114 @@
-using System;
-using System.Data;
-using System.IO;
-using UnityEngine;
 using ExcelDataReader;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.IO;
+using System;
+using UnityEngine;
 
 public static class ExcelToJson
 {
-    public static string ConvertExcelToJson(string filePath, ExcelConverterEditor.DataType dataType)
+    public static string ConvertExcelToJson(string excelFilePath, ExcelConverterEditor.DataType dataType)
     {
-        if (!File.Exists(filePath))
+        if (!File.Exists(excelFilePath))
         {
-            Debug.LogError($"Excel 파일을 찾을 수 없습니다: {filePath}");
+            Debug.LogError($"Excel 파일이 존재하지 않습니다: {excelFilePath}");
+            return null;
+        }
+        Debug.Log($"Excel 파일 로드 시도: {excelFilePath}");
+
+        string outputFolder = "Assets/Resources/JsonData";
+        if (!Directory.Exists(outputFolder))
+        {
+            Directory.CreateDirectory(outputFolder);
+        }
+
+        string outputJsonPath = null;
+
+        try
+        {
+            Debug.Log($"Excel 파일 분석 중: {excelFilePath}");
+
+            using (var stream = File.Open(excelFilePath, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    var result = reader.AsDataSet();
+                    Debug.Log($"액셀 파일 로드 완료, 총 시트 개수: {result.Tables.Count}");
+
+
+                    foreach (System.Data.DataTable table in result.Tables)
+                    {
+                        string sheetName = table.TableName.Trim();
+                        Debug.Log($"확인 중인 시트: '{sheetName}', 선택된 데이터 타입: {dataType}");
+
+                        if (!IsMatchingSheet(sheetName, dataType))
+                        {
+                            Debug.LogWarning($"{sheetName} 시트는 {dataType}과 일치하지 않아 건너뜀.");
+                            continue;
+                        }
+
+                        List<Dictionary<string, object>> dataList = new List<Dictionary<string, object>>();
+
+                        for (int i = 1; i < table.Rows.Count; i++) // 첫 번째 행(헤더) 제외
+                        {
+                            Dictionary<string, object> rowDict = new Dictionary<string, object>();
+
+                            for (int j = 0; j < table.Columns.Count; j++)
+                            {
+                                string columnName = table.Rows[0][j]?.ToString();
+                                object cellValue = table.Rows[i][j];
+
+                                if (columnName == null)
+                                {
+                                    Debug.LogError($"컬럼명이 null입니다! {i}번째 행, {j}번째 열");
+                                    continue;
+                                }
+
+                                if (cellValue == null || string.IsNullOrEmpty(cellValue.ToString()))
+                                    continue;
+
+                                rowDict[columnName] = cellValue;
+                            }
+
+                            if (rowDict.Count > 0)
+                            {
+                                dataList.Add(rowDict);
+                            }
+                        }
+
+                        string jsonOutput = JsonConvert.SerializeObject(dataList, Formatting.Indented);
+                        outputJsonPath = Path.Combine(outputFolder, $"{sheetName}.json");
+                        File.WriteAllText(outputJsonPath, jsonOutput);
+
+                        Debug.Log($"{sheetName} 시트 변환 완료! JSON 저장 위치: {outputJsonPath}");
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Excel 변환 중 오류 발생: {ex.Message}");
             return null;
         }
 
-        System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-
-        using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
-        {
-            using (var reader = ExcelReaderFactory.CreateReader(stream))
-            {
-                var config = new ExcelDataSetConfiguration
-                {
-                    ConfigureDataTable = _ => new ExcelDataTableConfiguration
-                    {
-                        UseHeaderRow = true
-                    }
-                };
-
-                DataSet result = reader.AsDataSet(config);
-                if (result.Tables.Count == 0)
-                {
-                    Debug.LogError("Excel 파일에 데이터가 없습니다.");
-                    return null;
-                }
-
-                DataTable table = result.Tables[0];
-                string json = DataTableToJson(table, dataType);
-
-                // JSON 파일 저장
-                string outputPath = $"Assets/Resources/JsonData/{dataType}.json";
-                File.WriteAllText(outputPath, json);
-
-                Debug.Log($"Excel → JSON 변환 완료: {outputPath}");
-                return outputPath;
-            }
-        }
+        return outputJsonPath;
     }
 
-    private static string DataTableToJson(DataTable table, ExcelConverterEditor.DataType dataType)
+    private static bool IsMatchingSheet(string sheetName, ExcelConverterEditor.DataType dataType)
     {
-        var jsonArray = new System.Text.StringBuilder();
-        jsonArray.Append("[");
-
-        for (int i = 0; i < table.Rows.Count; i++)
+        switch (dataType)
         {
-            jsonArray.Append("{");
-            for (int j = 0; j < table.Columns.Count; j++)
-            {
-                jsonArray.AppendFormat("\"{0}\": \"{1}\"", table.Columns[j].ColumnName, table.Rows[i][j].ToString());
-                if (j < table.Columns.Count - 1)
-                    jsonArray.Append(", ");
-            }
-            jsonArray.Append("}");
+            case ExcelConverterEditor.DataType.EnemyData:
+                return sheetName.Equals("EnemyData", StringComparison.OrdinalIgnoreCase);
+            case ExcelConverterEditor.DataType.TowerData:
+                return sheetName.Equals("TowerData", StringComparison.OrdinalIgnoreCase);
+            case ExcelConverterEditor.DataType.WaveData:
+                return sheetName.Equals("WaveData", StringComparison.OrdinalIgnoreCase);
+            case ExcelConverterEditor.DataType.ProjectileData: // ProjectileData 처리 추가
+                return sheetName.Equals("ProjectileData", StringComparison.OrdinalIgnoreCase);
 
-            if (i < table.Rows.Count - 1)
-                jsonArray.Append(", ");
+            default:
+                return false;
         }
-        jsonArray.Append("]");
-
-        return jsonArray.ToString();
     }
 }

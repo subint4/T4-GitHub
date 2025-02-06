@@ -65,4 +65,18 @@ public class ResourceManager : MonoBehaviour
             Debug.Log($"5초마다 {goldIncrement} 골드 추가됨. 현재 골드: {currentGold}");
         }
     }
+    public bool SpendGoldForTower(TowerSO tower, bool isUpgrade)
+    {
+        if (tower == null)
+        {
+            Debug.LogError("타워 정보가 없습니다!");
+            return false;
+        }
+
+        int cost = isUpgrade ? tower.UpgradeCost : tower.DeployCost;
+
+
+        return SpendGold(cost);
+    }
+
 }

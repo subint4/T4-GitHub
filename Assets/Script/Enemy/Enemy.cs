@@ -11,12 +11,14 @@ public class Enemy : MonoBehaviour
     private int health;
     private int rewardMoney;
     private int attackPower;
-    public float attackSpeed;
-    public float movementSpeed;
-    public float originalSpeed;
+    [HideInInspector]public float attackSpeed;
+    [HideInInspector]public float movementSpeed;
+    [HideInInspector]public float originalSpeed;
     public bool isAttacking = false;
+    public bool isSlowed = false;
 
     private Tower currentTarget;
+    private ProjectileSO projectileStats;
     public EnemyAnimatorController controller;
 
     private void Start()
@@ -88,10 +90,14 @@ public class Enemy : MonoBehaviour
 
         yield return new WaitForSeconds(attackSpeed); // 공격 간격 유지
 
-        if (!isDead && currentTarget != null && !currentTarget.IsDestroyed())
+        Collider2D[] targets = Physics2D.OverlapBoxAll(transform.position, new Vector2(1f, 1f), 0f);
+        foreach (var target in targets)
         {
-            Debug.Log($"[Enemy] {gameObject.name}: 타워에 {attackPower}의 데미지를 입힘!");
-            currentTarget.TakeDamage(attackPower);
+            Tower targetTower = target.GetComponent<Tower>();
+            if (targetTower != null&&!targetTower.IsDestroyed())
+            {
+                targetTower.TakeDamage(attackPower);
+            }
         }
 
         StartCoroutine(ResetAttack()); // 다음 공격 실행 준비
@@ -146,6 +152,8 @@ public class Enemy : MonoBehaviour
         {
             Die();
         }
+
+
     }
 
     private void Die()
@@ -171,6 +179,7 @@ public class Enemy : MonoBehaviour
             controller.PlayDeathAnimation();
         }
 
+        ResourceManager.Instance?.AddGold(rewardMoney);
         Debug.Log($"[Enemy] {gameObject.name}: 사망 애니메이션 실행!");
     }
 
@@ -178,5 +187,34 @@ public class Enemy : MonoBehaviour
     {
         Debug.Log($"[Enemy] {gameObject.name}: 사망 애니메이션 종료 후 제거됨.");
         Destroy(gameObject);
+    }
+    public void ApplySlow(ProjectileSO projectileStats)
+    {
+        if(!isSlowed)
+        {
+        originalSpeed = movementSpeed;
+        movementSpeed *= (1f - projectileStats.SlowEffect);
+        isSlowed = true;
+        }
+        Invoke("EndSlow", projectileStats.SlowDuration);
+    }
+    public void EndSlow()
+    {
+        movementSpeed = originalSpeed;
+        isSlowed = false;
+    }
+    public void ApplyStun(ProjectileSO projectileStats)
+    {
+        originalSpeed = movementSpeed;
+        movementSpeed = 0f;
+        enemyRigidbody.isKinematic = false;
+        isAttacking = false;
+        Invoke("EndStun", projectileStats.StunDuration);
+    }
+    public void EndStun()
+    {
+        movementSpeed = originalSpeed;
+        enemyRigidbody.isKinematic = true;
+        
     }
 }

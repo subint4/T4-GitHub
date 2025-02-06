@@ -1,0 +1,67 @@
+[
+  {
+    "ProjectileName": "DefaultProjectile",
+    "Speed": 10.0,
+    "Damage": 0.0,
+    "CanPierce": false,
+    "PierceCount": 0.0,
+    "CanStun": false,
+    "StunDuration": 0.0,
+    "CanSlow": false,
+    "SlowEffect": 0.0,
+    "SlowDuration": 0.0,
+    "stunDuration": 0.0
+  },
+  {
+    "ProjectileName": "DarkProjectile",
+    "Speed": 10.0,
+    "Damage": 0.0,
+    "CanPierce": false,
+    "PierceCount": 0.0,
+    "CanStun": false,
+    "StunDuration": 0.0,
+    "CanSlow": false,
+    "SlowEffect": 0.0,
+    "SlowDuration": 0.0,
+    "stunDuration": 0.0
+  },
+  {
+    "ProjectileName": "LightProjectile",
+    "Speed": 10.0,
+    "Damage": 0.0,
+    "CanPierce": false,
+    "PierceCount": 0.0,
+    "CanStun": true,
+    "StunDuration": 2.0,
+    "CanSlow": false,
+    "SlowEffect": 0.0,
+    "SlowDuration": 0.0,
+    "stunDuration": 1.0
+  },
+  {
+    "ProjectileName": "WaterProjectile",
+    "Speed": 10.0,
+    "Damage": 0.0,
+    "CanPierce": false,
+    "PierceCount": 0.0,
+    "CanStun": false,
+    "StunDuration": 0.0,
+    "CanSlow": true,
+    "SlowEffect": 0.5,
+    "SlowDuration": 3.0,
+    "stunDuration": 0.0
+  },
+  {
+    "ProjectileName": "WindProjectile",
+    "Speed": 10.0,
+    "Damage": 0.0,
+    "CanPierce": true,
+    "PierceCount": 3.0,
+    "CanStun": false,
+    "StunDuration": 0.0,
+    "CanSlow": false,
+    "SlowEffect": 0.0,
+    "SlowDuration": 0.0,
+    "stunDuration": 0.0
+  }
+]
