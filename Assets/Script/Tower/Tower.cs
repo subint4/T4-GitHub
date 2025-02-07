@@ -117,22 +117,45 @@ public void TakeDamage(int damage)
     }
     public void DestroyTower()
     {
-        if(Health <= 0)
+        if (Health <= 0)
         {
+            Debug.Log("타워가 파괴되었습니다.");
 
-        Debug.Log("타워가 파괴되었습니다.");
-        if (currentTiles != null)
-        {
-            currentTiles.isOccupied = false; // 타워가 파괴되면 타일의 점유 상태 해제
-            currentTiles.currentTower = null;
-        }
-        if(animatorController!=null)
+            // 타워의 콜라이더 비활성화 (즉시 충돌 제거)
+            Collider2D col = GetComponent<Collider2D>();
+            if (col != null)
+            {
+                col.enabled = false;
+            }
+
+            // 타워의 Layer를 "Ignore Raycast"로 변경 (적이 감지하지 않도록)
+            gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+
+            if (currentTiles != null)
+            {
+                currentTiles.isOccupied = false; // 타워가 파괴되면 타일의 점유 상태 해제
+                currentTiles.currentTower = null;
+            }
+
+            if (animatorController != null)
             {
                 animatorController.PlayDeathAnimation();
                 StartCoroutine(DestroyAfterAnimation());
             }
+
+            // 현재 이 타워를 공격 중인 적들에게 알림 (공격을 멈추고 새로운 타겟 탐색)
+            Enemy[] enemies = FindObjectsOfType<Enemy>();
+            foreach (Enemy enemy in enemies)
+            {
+                if (enemy.currentTarget == this)
+                {
+                    enemy.StopAttack(); // 적이 새로운 타겟을 찾거나 이동을 재개하도록 설정
+                }
+            }
         }
     }
+
+
     public bool UpgradeTower()
     {
         if (ResourceManager.Instance.SpendGoldForTower(towerStats, true)) // 업그레이드 비용 차감
