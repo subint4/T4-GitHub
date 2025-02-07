@@ -17,7 +17,7 @@ MonoBehaviour:
   Health: 30
   AttackPower: 25
   AttackSpeed: 1
-  MovementSpeed: 3
+  MovementSpeed: 1
   DeployCost: 0
   RewardMoney: 0
   EnemyType: 

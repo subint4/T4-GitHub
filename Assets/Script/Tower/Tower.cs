@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using System.Collections;
 public class Tower : MonoBehaviour
 {
     public TowerSO towerStats;
@@ -11,7 +11,7 @@ public class Tower : MonoBehaviour
     private UpgradeSystem upgradeSystem;
     private UpgradeUI upgradeUI;
 
-    private int Health;
+    public int Health;
     private float attackCooldown = 0f;
     private GameObject currentTarget;
     private float detectionRange = 1000f;
@@ -19,6 +19,19 @@ public class Tower : MonoBehaviour
 
     private void Start()
     {
+        if (animatorController == null)
+        {
+            animatorController = GetComponent<TowerAnimatorController>();
+            if (animatorController == null)
+            {
+            Animator animator = GetComponent<Animator>();
+                if(animator != null)
+                {
+                    animatorController = animator.GetComponent<TowerAnimatorController>();
+                }
+            }
+            Debug.LogError($"{gameObject}:null");
+        }
         if (towerStats != null)
         {
             Health = towerStats.Health;
@@ -104,6 +117,8 @@ public void TakeDamage(int damage)
     }
     public void DestroyTower()
     {
+        if(Health <= 0)
+        {
 
         Debug.Log("타워가 파괴되었습니다.");
         if (currentTiles != null)
@@ -111,8 +126,12 @@ public void TakeDamage(int damage)
             currentTiles.isOccupied = false; // 타워가 파괴되면 타일의 점유 상태 해제
             currentTiles.currentTower = null;
         }
-
-        Destroy(gameObject);
+        if(animatorController!=null)
+            {
+                animatorController.PlayDeathAnimation();
+                StartCoroutine(DestroyAfterAnimation());
+            }
+        }
     }
     public bool UpgradeTower()
     {
@@ -127,4 +146,9 @@ public void TakeDamage(int damage)
             return false;
         }
     }
+    private IEnumerator DestroyAfterAnimation()
+    {
+        yield return new WaitForSeconds(0.3f);
+        Destroy(gameObject);   
     }
+}

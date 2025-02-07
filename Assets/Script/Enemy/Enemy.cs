@@ -17,6 +17,7 @@ public class Enemy : MonoBehaviour
     [HideInInspector] public float originalSpeed;
     public bool isAttacking = false;
     public bool isSlowed = false;
+    public bool isStunned = false;
 
     public Tower currentTarget;
     private ProjectileSO projectileStats;
@@ -83,6 +84,12 @@ public class Enemy : MonoBehaviour
         isAttacking = true;
         movementSpeed = 0f;
         enemyRigidbody.isKinematic = true;
+        
+        if(currentTarget == null || currentTarget.IsDestroyed())
+        {
+            StopAttack();
+            yield break;
+        }
 
         if (controller != null)
         {
@@ -92,6 +99,7 @@ public class Enemy : MonoBehaviour
 
         yield return new WaitUntil(() => isAttacking == false);
         // 타워가 파괴되었는지 다시 확인
+        enemyRigidbody.isKinematic = false;
         if (currentTarget == null || currentTarget.IsDestroyed())
         {
             StopAttack();
@@ -115,10 +123,16 @@ public class Enemy : MonoBehaviour
         }
         if (currentTarget == null || currentTarget.IsDestroyed())
         {
+            currentTarget = null;
+            if(currentTarget == null)
+            {
+
             Debug.Log($"[Enemy] {gameObject.name}: 타겟이 사라짐, StopAttack() 실행");
             StopAttack();
             yield break;
+            }
         }
+        yield return new WaitForSeconds(0.1f);
         StartCoroutine(AttackTower());
     }
 
@@ -126,18 +140,31 @@ public class Enemy : MonoBehaviour
     public void StopAttack()
     {
         isAttacking = false;
-        movementSpeed = originalSpeed;
+        if (!isDead)
+        {
+            if (!isSlowed && !isStunned)
+            {
+            movementSpeed = originalSpeed;
+            }
+            currentTarget = null;
+        }
+
         enemyRigidbody.isKinematic = false;
 
         if (controller != null)
         {
             controller.SetAttackState(false); // 공격 상태 종료
         }
-        if (currentTarget != null && !currentTarget.IsDestroyed())
+
+        if(currentTarget == null)
         {
-            Debug.Log($"[Enemy] {gameObject.name}: 이동 후 다시 공격 시도");
-            StartCoroutine(AttackTower()); // 이동 후 다시 공격 실행
+            movementSpeed = originalSpeed;
         }
+        //if (currentTarget != null && !currentTarget.IsDestroyed())
+        //{
+        //    Debug.Log($"[Enemy] {gameObject.name}: 이동 후 다시 공격 시도");
+        //    StartCoroutine(AttackTower()); // 이동 후 다시 공격 실행
+        //}
     }
 
     public void TakeDamage(int damage)
@@ -152,7 +179,7 @@ public class Enemy : MonoBehaviour
     }
     public void ApplyDamage()
     {
-        currentTarget.towerStats.Health-= attackPower;
+        currentTarget.TakeDamage(attackPower);
         Debug.Log($"타겟 : {currentTarget} 체력 : {currentTarget.towerStats.Health}");
     }
 
@@ -196,6 +223,11 @@ public class Enemy : MonoBehaviour
             movementSpeed *= (1f - projectileStats.SlowEffect);
             isSlowed = true;
         }
+        if(currentTarget==null || currentTarget.IsDestroyed())
+        {
+            Debug.Log($"[Enemy] {gameObject.name}: 슬로우 상태에서 타겟이 파괴됨. 이동 재개");
+            ResetAttack();
+        }
         Invoke("EndSlow", projectileStats.SlowDuration);
     }
     public void EndSlow()
@@ -215,6 +247,12 @@ public class Enemy : MonoBehaviour
         movementSpeed = 0f;
         enemyRigidbody.isKinematic = false;
         isAttacking = false;
+        isStunned = true;
+        if (currentTarget == null || currentTarget.IsDestroyed())
+        {
+            Debug.Log($"[Enemy] {gameObject.name}: 스턴 상태에서 타겟이 파괴됨. 이동 재개");
+            StopAttack();
+        }
         Invoke("EndStun", projectileStats.StunDuration);
 
     }
@@ -222,6 +260,7 @@ public class Enemy : MonoBehaviour
     {
         movementSpeed = originalSpeed;
         enemyRigidbody.isKinematic = true;
+        isStunned = false;
     }
 
 }

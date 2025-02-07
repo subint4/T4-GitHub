@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class TowerAnimatorController : MonoBehaviour
 {
@@ -53,7 +54,7 @@ public class TowerAnimatorController : MonoBehaviour
         if (tower != null)
         {
             tower.DestroyTower();
-        }
+        } 
     }
-
 }
+

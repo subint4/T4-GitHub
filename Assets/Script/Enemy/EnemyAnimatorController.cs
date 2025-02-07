@@ -60,11 +60,16 @@ public class EnemyAnimatorController : MonoBehaviour
     {
         if (!isDead && enemy != null)
         {
+            if (enemy.currentTarget == null || enemy.currentTarget.IsDestroyed())
+            {
+                enemy.StopAttack();
+                return;
+            }
             Debug.Log($"[EnemyAnimator] {gameObject.name}: 공격 애니메이션 종료 감지됨!");
             enemy.isAttacking = false;
             enemy.controller.SetAttackState(false);
-            enemy.StartCoroutine(enemy.ResetAttack()); // 공격 반복 실행
             enemy.ApplyDamage();
+            enemy.StartCoroutine(enemy.ResetAttack()); // 공격 반복 실행
         }
     }
     public void OnDeathAnimationEnd()
