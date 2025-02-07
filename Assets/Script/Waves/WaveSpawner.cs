@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class Wave_Data
@@ -22,10 +23,14 @@ public class WaveSpawner : MonoBehaviour
 {
     [SerializeField]private List<Wave_Data> waves = new List<Wave_Data>();
     [SerializeField]private GameObject[] enemyPrefabs;
-    [SerializeField]private Transform[] spawnRows;
+    [SerializeField] private Transform[] spawnRows;
+    //게이지 매니저
+    [SerializeField] private GaugeManager gaugeManager;
 
     private bool isSpawning = false;
     private int currentWaveIndex = 0;
+    //남은 적 목록
+    private List<GameObject> activeEnemies = new List<GameObject>();
 
     private void Awake()
     {
@@ -59,15 +64,24 @@ public class WaveSpawner : MonoBehaviour
         Debug.Log("SpawnWave() 실행됨!");
 
         Wave_Data wave = waves[currentWaveIndex];
+        //웨이브 시작시 게이지 초기화
+        gaugeManager.InitializeGauge(wave.SpawnCount);
 
         for (int i = 0; i < wave.SpawnCount; i++)
         {
-            SpawnEnemy(wave);
+            GameObject enemy = SpawnEnemy(wave);
+            if (enemy != null)
+            {
+                //살아 있는 적 리스트에 추가
+                activeEnemies.Add(enemy);
+            }
             yield return new WaitForSeconds(wave.SpawnRate); // 적 스폰 간격 유지
         }
         Debug.Log($"웨이브 {currentWaveIndex + 1} 종료 대기...");
-        yield return new WaitForSeconds(5f); // 웨이브 간 대기 시간 추가
+        //모든 몬스터 죽을때 까지 대기
+        yield return new WaitUntil(() => activeEnemies.Count == 0);
 
+        Debug.Log("웨이브 종료!");
         isSpawning = false; // 웨이브가 끝났으므로 다음 웨이브 실행 가능
         currentWaveIndex++;
 
@@ -103,105 +117,43 @@ public class WaveSpawner : MonoBehaviour
             Debug.LogError("Json값의 웨이브데이터가 비어있습니다.");
         }
     }
-    private void SpawnEnemy(Wave_Data wave)
+    private GameObject SpawnEnemy(Wave_Data wave)
     {
         if (enemyPrefabs.Length == 0 || spawnRows.Length == 0)
         {
             Debug.LogError("스폰할 적 프리팹 또는 위치가 없습니다.");
-            return;
+            return null;
         }
+        int randomIndex = Random.Range(0, spawnRows.Length);
+        Transform spawnPoint = spawnRows[randomIndex];
+
+        Debug.Log($"스폰 위치 선택됨: {spawnPoint.position} (index: {randomIndex}");
 
         GameObject enemyPrefab = GetEnemyPrefabByType(wave.EnemyPrefab);
-        if (enemyPrefab == null) return;
+        if (enemyPrefab == null) return null;
 
-        int spawnIndex;
-
-        // 보스인지 확인
-        if (wave.EnemyType.ToLower().Contains("boss"))
-        {
-            int[] bossRows = { 1, 3 }; // 2행(배열 인덱스 1), 4행(배열 인덱스 3)에서만 스폰
-            spawnIndex = bossRows[Random.Range(0, bossRows.Length)];
-        }
-        else
-        {
-            spawnIndex = Random.Range(0, spawnRows.Length); // 일반 적은 랜덤한 위치에서 스폰
-        }
-
-        Transform spawnPoint = spawnRows[spawnIndex];
-
-        Debug.Log($"스폰 위치 선택됨: {spawnPoint.position} (index: {spawnIndex}), EnemyType: {wave.EnemyType}");
-
-        Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
+        GameObject enemy = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
+        enemy.GetComponent<Enemy>().OnEnemyDeath += UpdateEnemyCount;
+        return enemy;
     }
 
     private GameObject GetEnemyPrefabByType(string enemyPrefabName)
     {
-        if (string.IsNullOrEmpty(enemyPrefabName))
+        foreach(GameObject enemyPrefab in enemyPrefabs)
         {
-            Debug.LogError("적 프리팹 이름이 비어 있습니다.");
-            return null;
-        }
-
-        enemyPrefabName = enemyPrefabName.Trim().ToLower(); // 공백 제거 및 소문자 변환
-
-        // 특정 그룹(예: "zombieprefab", "goblinprefab")을 랜덤 선택 대상으로 지정
-        if (enemyPrefabName.EndsWith("prefab")) // "zombieprefab", "goblinprefab" 등과 매칭
-        {
-            string category = enemyPrefabName.Replace("prefab", ""); // "zombieprefab" -> "zombie"
-
-            List<GameObject> matchingPrefabs = new List<GameObject>();
-
-            foreach (GameObject enemyPrefab in enemyPrefabs)
+            if(enemyPrefab.name == enemyPrefabName)
             {
-                string prefabName = enemyPrefab.name.Trim().ToLower();
-                if (prefabName.StartsWith(category)) // "zombie1", "zombie2", "goblin1" 등을 찾기
-                {
-                    matchingPrefabs.Add(enemyPrefab);
-                }
-            }
-
-            if (matchingPrefabs.Count > 0)
-            {
-                int randomIndex = Random.Range(0, matchingPrefabs.Count);
-                Debug.Log($"[{category}] 몬스터 프리팹 랜덤 선택: {matchingPrefabs[randomIndex].name}");
-                return matchingPrefabs[randomIndex]; // 랜덤 프리팹 반환
-            }
-            else
-            {
-                Debug.LogError($"[{category}] 해당하는 몬스터 프리팹을 찾을 수 없습니다.");
-                return null;
-            }
-        }
-
-        // 보스 프리팹 처리: "boss_"로 시작하는 프리팹 찾기
-        if (enemyPrefabName.StartsWith("boss_"))
-        {
-            foreach (GameObject enemyPrefab in enemyPrefabs)
-            {
-                string prefabName = enemyPrefab.name.Trim().ToLower();
-                if (prefabName == enemyPrefabName)
-                {
-                    Debug.Log($"보스 프리팹 찾음: {prefabName}");
-                    return enemyPrefab;
-                }
-            }
-
-            Debug.LogError($"보스 프리팹을 찾을 수 없습니다: {enemyPrefabName}");
-            return null;
-        }
-
-        // 개별 프리팹 직접 검색
-        foreach (GameObject enemyPrefab in enemyPrefabs)
-        {
-            string prefabName = enemyPrefab.name.Trim().ToLower();
-            if (prefabName == enemyPrefabName)
-            {
-                Debug.Log($"프리팹 찾음: {prefabName}");
                 return enemyPrefab;
             }
         }
-
         Debug.LogError($"적 프리팹을 찾을 수 없습니다: {enemyPrefabName}");
+
         return null;
+    }
+    
+    private void UpdateEnemyCount(GameObject enemy)
+    {
+        activeEnemies.Remove(enemy);
+        gaugeManager.UpdateGage();
     }
 }

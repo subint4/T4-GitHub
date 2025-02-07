@@ -22,9 +22,21 @@ public class ResourceManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        if (goldText == null)
+        {
+            goldText = GameObject.Find("GoldText")?.GetComponent<TMP_Text>();
+            if (goldText == null)
+            {
+                Debug.LogError("GoldText 오브젝트를 찾을 수 없습니다! goldText를 수동으로 할당하거나 이름을 확인하세요.");
+            }
+        }
     }
     private void Start()
     {
+        if (goldText != null)
+        {
+            goldText.gameObject.SetActive(true); // goldText 오브젝트 활성화
+        }
         UpdateGoldUI();
         StartCoroutine(AutoAddGold());
     }

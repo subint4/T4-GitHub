@@ -1,6 +1,7 @@
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using System;
 
 public class Enemy : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class Enemy : MonoBehaviour
     private Tower currentTarget;
     private ProjectileSO projectileStats;
     public EnemyAnimatorController controller;
+
+    public event Action<GameObject> OnEnemyDeath;
 
     private void Start()
     {
@@ -181,6 +184,9 @@ public class Enemy : MonoBehaviour
 
         ResourceManager.Instance?.AddGold(rewardMoney);
         Debug.Log($"[Enemy] {gameObject.name}: 사망 애니메이션 실행!");
+
+        OnEnemyDeath?.Invoke(gameObject);
+        Destroy(gameObject);
     }
 
     public void DestroyEnemy()
