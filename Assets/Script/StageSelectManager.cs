@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class StageSelectManager : MonoBehaviour
 {
-    public Button[] StageButtons;  // 스테이지 버튼 (9개)
+    public Button[] StageButtons;  // 스테이지 버튼 (9개만 사용하여 페이지별로 업데이트)
+    public Image[] StagePlayImages; // 플레이 버튼 아이콘 (9개만 사용)
+
     public Button FowardArrow;  // 다음 페이지 버튼
     public Button BackArrow;  // 이전 페이지 버튼
 
@@ -14,7 +17,7 @@ public class StageSelectManager : MonoBehaviour
     private int stagesPerPage = 9;
     private int maxStage = 18;  // 전체 스테이지 개수
     private int unlockedStage = 1; // 플레이어가 해금한 최대 스테이지 (기본값 1)
-    private int maxUnlockedStage = 6; // **최대 해금 가능 스테이지 (6으로 제한)**
+    private int maxUnlockedStage = 6; // 최대 해금 가능 스테이지 (6으로 제한)
 
     void Start()
     {
@@ -26,20 +29,31 @@ public class StageSelectManager : MonoBehaviour
 
     private void LoadPlayerProgress()
     {
-        // 플레이어 진행도 로드, 단 최대 해금 가능 스테이지(6) 이상으로는 못 올라감
         unlockedStage = PlayerPrefs.GetInt("UnlockedStage", 1);
+
+        Debug.Log($"🔍 현재 저장된 해금된 스테이지: {unlockedStage}");
+
+        if (unlockedStage < 1)
+        {
+            unlockedStage = 1;
+            PlayerPrefs.SetInt("UnlockedStage", 1);
+            PlayerPrefs.Save();
+        }
+
         if (unlockedStage > maxUnlockedStage)
         {
-            unlockedStage = maxUnlockedStage; // 최대 6까지만 해금 가능
+            unlockedStage = maxUnlockedStage;
         }
+
+        Debug.Log($"🔍 최종 적용된 해금된 스테이지: {unlockedStage}");
     }
 
     public void NextPage()
     {
         if ((currentPage + 1) * stagesPerPage < maxStage)
         {
-            currentPage++; // 다음 페이지로 이동
-            UpdateStageButtons(); // 버튼 내용 업데이트
+            currentPage++;
+            UpdateStageButtons();
         }
     }
 
@@ -47,57 +61,72 @@ public class StageSelectManager : MonoBehaviour
     {
         if (currentPage > 0)
         {
-            currentPage--; // 이전 페이지로 이동
-            UpdateStageButtons(); // 버튼 내용 업데이트
+            currentPage--;
+            UpdateStageButtons();
         }
     }
 
     public void UpdateStageButtons()
     {
-        for (int i = 0; i < StageButtons.Length; i++)
+        int buttonCount = Mathf.Min(StageButtons.Length, StagePlayImages.Length, stagesPerPage); // 배열 크기 초과 방지
+
+        for (int i = 0; i < buttonCount; i++)
         {
-            if (StageButtons[i] == null)
+            int stageNumber = currentPage * stagesPerPage + i + 1;
+
+            if (StageButtons[i] == null || StagePlayImages[i] == null)
             {
-                Debug.LogError($"StageButtons[{i}]이(가) null입니다! Inspector에서 연결 확인 필요.");
+                Debug.LogError($"❌ StageButtons[{i}] 또는 StagePlayImages[{i}]이(가) null입니다! Inspector에서 연결 확인 필요.");
                 continue;
             }
-
-            int stageNumber = currentPage * stagesPerPage + i + 1;
 
             if (stageNumber <= maxStage)
             {
                 StageButtons[i].gameObject.SetActive(true);
-                Text buttonText = StageButtons[i].GetComponentInChildren<Text>();
-                TMP_Text tmpText = StageButtons[i].GetComponentInChildren<TMP_Text>(); // TMP_Text 확인
 
-                if (buttonText == null && tmpText == null)
-                {
-                    Debug.LogError($"StageButtons[{i}]에 Text 또는 TMP_Text 컴포넌트가 없습니다! 버튼 안에 UI Text 추가 필요.");
-                    continue;
-                }
+                bool isUnlocked = (stageNumber <= unlockedStage);
+                StageButtons[i].interactable = isUnlocked;
+                StagePlayImages[i].gameObject.SetActive(stageNumber == unlockedStage);
+
+                Debug.Log($"🟢 Stage {stageNumber}: isUnlocked = {isUnlocked}, PlayImage 활성화 여부 - {stageNumber == unlockedStage}");
+
+                Text buttonText = StageButtons[i].GetComponentInChildren<Text>();
+                TMP_Text tmpText = StageButtons[i].GetComponentInChildren<TMP_Text>();
 
                 if (buttonText != null)
                     buttonText.text = stageNumber.ToString();
                 else if (tmpText != null)
                     tmpText.text = stageNumber.ToString();
 
-                StageButtons[i].interactable = (stageNumber <= unlockedStage);
+                int capturedStageNumber = stageNumber;
+                StageButtons[i].onClick.RemoveAllListeners();
+                if (isUnlocked)
+                {
+                    StageButtons[i].onClick.AddListener(() => LoadStage(capturedStageNumber));
+                }
             }
             else
             {
                 StageButtons[i].gameObject.SetActive(false);
+                StagePlayImages[i].gameObject.SetActive(false);
             }
         }
     }
 
-    // 플레이어가 새로운 스테이지를 클리어하면 진행도 저장 (단, 최대 6까지만 해금 가능)
+    public void LoadStage(int stageNumber)
+    {
+        string sceneName = "Stage" + stageNumber;
+        Debug.Log($"🚀 스테이지 {sceneName} 이동 시도");
+        SceneManager.LoadScene(sceneName);
+    }
+
     public void UnlockNextStage(int stageNumber)
     {
-        if (stageNumber >= unlockedStage && stageNumber < maxUnlockedStage) // 6 이상은 해금 불가능
+        if (stageNumber >= unlockedStage && stageNumber < maxUnlockedStage)
         {
             unlockedStage = stageNumber + 1;
             PlayerPrefs.SetInt("UnlockedStage", unlockedStage);
-            PlayerPrefs.Save(); // 데이터 저장
+            PlayerPrefs.Save();
         }
     }
 }
