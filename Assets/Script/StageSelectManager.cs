@@ -21,6 +21,7 @@ public class StageSelectManager : MonoBehaviour
 
     void Start()
     {
+        
         LoadPlayerProgress(); // 저장된 플레이어 진행도 불러오기
         UpdateStageButtons();
         FowardArrow.onClick.AddListener(NextPage);
@@ -29,7 +30,7 @@ public class StageSelectManager : MonoBehaviour
 
     private void LoadPlayerProgress()
     {
-        unlockedStage = PlayerPrefs.GetInt("UnlockedStage", 1);
+        unlockedStage = PlayerPrefs.GetInt("UnlockedStage"); 
 
         Debug.Log($"🔍 현재 저장된 해금된 스테이지: {unlockedStage}");
 
@@ -69,6 +70,9 @@ public class StageSelectManager : MonoBehaviour
     public void UpdateStageButtons()
     {
         int buttonCount = Mathf.Min(StageButtons.Length, StagePlayImages.Length, stagesPerPage); // 배열 크기 초과 방지
+
+        // 🔥 추가한 디버그 로그
+        Debug.Log($"🔍 buttonCount : {StageButtons.Length} / {StagePlayImages.Length} / {stagesPerPage} / {buttonCount}");
 
         for (int i = 0; i < buttonCount; i++)
         {
@@ -122,8 +126,7 @@ public class StageSelectManager : MonoBehaviour
 
     public void LoadStage(int stageNumber)
     {
-        // 🔥 잘못된 스테이지 번호 예외처리 추가
-        if (stageNumber < 1)
+        if (stageNumber <= 0)
         {
             Debug.LogError($"❌ 잘못된 스테이지 번호: {stageNumber} - 1 이상이어야 합니다!");
             return;
