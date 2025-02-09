@@ -74,6 +74,13 @@ public class StageSelectManager : MonoBehaviour
         {
             int stageNumber = currentPage * stagesPerPage + i + 1;
 
+            // 🔥 스테이지 번호 예외처리 추가
+            if (stageNumber <= 0)
+            {
+                Debug.LogError($"❌ 잘못된 스테이지 번호 계산됨: {stageNumber}");
+                continue;
+            }
+
             if (StageButtons[i] == null || StagePlayImages[i] == null)
             {
                 Debug.LogError($"❌ StageButtons[{i}] 또는 StagePlayImages[{i}]이(가) null입니다! Inspector에서 연결 확인 필요.");
@@ -115,6 +122,13 @@ public class StageSelectManager : MonoBehaviour
 
     public void LoadStage(int stageNumber)
     {
+        // 🔥 잘못된 스테이지 번호 예외처리 추가
+        if (stageNumber < 1)
+        {
+            Debug.LogError($"❌ 잘못된 스테이지 번호: {stageNumber} - 1 이상이어야 합니다!");
+            return;
+        }
+
         string sceneName = "Stage" + stageNumber;
         Debug.Log($"🚀 스테이지 {sceneName} 이동 시도");
         SceneManager.LoadScene(sceneName);
