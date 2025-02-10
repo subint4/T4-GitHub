@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Data;
 using System.IO;
 using UnityEngine;
@@ -10,7 +10,7 @@ public static class ExcelLoader
     {
         if (!File.Exists(filePath))
         {
-            Debug.LogError($"Error: Excel ÆÄÀÏÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù: {filePath}");
+            Debug.LogError($"Error: Excel íŒŒì¼ì„ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤: {filePath}");
             return null;
         }
 
@@ -20,24 +20,24 @@ public static class ExcelLoader
         {
             using (var reader = ExcelReaderFactory.CreateReader(stream))
             {
-                // Ã¹ ¹øÂ° ÇàÀ» ÄÃ·³ ÀÌ¸§À¸·Î »ç¿ë
+                // ì²« ë²ˆì§¸ í–‰ì„ ì»¬ëŸ¼ ì´ë¦„ìœ¼ë¡œ ì‚¬ìš©
                 var config = new ExcelDataSetConfiguration
                 {
                     ConfigureDataTable = _ => new ExcelDataTableConfiguration
                     {
-                        UseHeaderRow = true  // Ã¹ ¹øÂ° ÇàÀ» "Çì´õ"·Î ÀÎ½ÄÇÏµµ·Ï ¼³Á¤
+                        UseHeaderRow = true  // ì²« ë²ˆì§¸ í–‰ì„ "í—¤ë”"ë¡œ ì¸ì‹í•˜ë„ë¡ ì„¤ì •
                     }
                 };
 
                 DataSet result = reader.AsDataSet(config);
                 if (result.Tables.Count == 0)
                 {
-                    Debug.LogError("Error: Excel ÆÄÀÏ¿¡ ½ÃÆ®°¡ ¾ø½À´Ï´Ù.");
+                    Debug.LogError("Error: Excel íŒŒì¼ì— ì‹œíŠ¸ê°€ ì—†ìŠµë‹ˆë‹¤.");
                     return null;
                 }
 
-                Debug.Log($"Excel ·Îµå ¿Ï·á! ÆÄÀÏ: {filePath}, ÃÑ {result.Tables[0].Rows.Count}°³ Çà");
-                return result.Tables[0]; // Ã¹ ¹øÂ° ½ÃÆ® ¹İÈ¯
+                Debug.Log($"Excel ë¡œë“œ ì™„ë£Œ! íŒŒì¼: {filePath}, ì´ {result.Tables[0].Rows.Count}ê°œ í–‰");
+                return result.Tables[0]; // ì²« ë²ˆì§¸ ì‹œíŠ¸ ë°˜í™˜
             }
         }
     }

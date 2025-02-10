@@ -4128,12 +4128,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90874ccd1b26e70459190727aba37bba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waves: []
-  enemyPrefabs:
-  - {fileID: 5853100367652610122, guid: 45348f200772f4241a0415c9146bd5c2, type: 3}
-  - {fileID: 5853100367652610122, guid: 2e806fd25fa816247a14d7c7992f152e, type: 3}
-  - {fileID: 5853100367652610122, guid: 9a909427b2e619145a82248052434600, type: 3}
-  - {fileID: 5853100367652610122, guid: eac95f30e48d2d3418221e544840a0ed, type: 3}
   spawnRows:
   - {fileID: 2080945646}
   - {fileID: 1401152980}

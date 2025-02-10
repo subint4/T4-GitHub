@@ -3,143 +3,296 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UnityEditor;
 
 public static class JsonToSO
 {
     public static void ConvertJsonToSO()
     {
-        string jsonFolder = "Assets/Resources/JsonData"; // JSON 파일 경로
+        string jsonFolder = "Assets/Resources/JsonData";
 
-        // 무조건 모든 데이터 변환 시도
-        if (!ConvertJsonToEnemySO(jsonFolder + "/Enemy.json"))
-            Debug.LogWarning("Enemy.json 변환 실패 또는 파일 없음.");
+        ConvertJsonToEnemySO(jsonFolder + "/Enemy.json");
+        ConvertJsonToTowerSO(jsonFolder + "/Tower.json");
+        ConvertJsonToWaveSO(jsonFolder + "/Wave.json");
 
-        if (!ConvertJsonToTowerSO(jsonFolder + "/Tower.json"))
-            Debug.LogWarning("Tower.json 변환 실패 또는 파일 없음.");
-
-        if (!ConvertJsonToProjectileSO(jsonFolder + "/ProjectileData.json"))
-            Debug.LogWarning("Projectile.json 변환 실패 또는 파일 없음.");
-   
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        Debug.Log("JSON 변환 완료! EnemySO, TowerSO, ProjectileSO,WaveSO 업데이트 완료.");
+        Debug.Log("JSON 변환 완료! EnemySO, TowerSO, WaveSO 업데이트 완료.");
     }
 
     // EnemySO 변환
-    private static bool ConvertJsonToEnemySO(string jsonFilePath)
+    public static void ConvertJsonToEnemySO(string jsonFilePath)
     {
-        if (!File.Exists(jsonFilePath)) return false;
+        if (!File.Exists(jsonFilePath))
+        {
+            Debug.LogError($"Enemy JSON 파일이 존재하지 않습니다: {jsonFilePath}");
+            return;
+        }
 
         string enemySOPath = "Assets/Resources/EnemySO";
         if (!Directory.Exists(enemySOPath)) Directory.CreateDirectory(enemySOPath);
 
         string jsonContent = File.ReadAllText(jsonFilePath);
-        List<Dictionary<string, object>> enemyDataList = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(jsonContent);
+        var jsonData = JObject.Parse(jsonContent);
+
+        if (!IsValidDataType(jsonData, "EnemyData")) return;
+
+        List<Dictionary<string, object>> enemyDataList = jsonData["Data"].ToObject<List<Dictionary<string, object>>>();
 
         foreach (var data in enemyDataList)
         {
-            string enemyName = data["UnitName"].ToString();
+            int enemyID = ConvertToInt(data["EnemyID"]);
+            if (enemyID == 0)
+            {
+                Debug.LogError($"enemyID 변환 오류: {data["EnemyID"]}");
+                continue;
+            }
+
+            string enemyName = data["EnemyName"].ToString();
             string assetPath = $"{enemySOPath}/{enemyName}.asset";
 
-            EnemySO enemySO = Resources.Load<EnemySO>($"EnemySO/{enemyName}") ?? ScriptableObject.CreateInstance<EnemySO>();
-
+            EnemySO enemySO = LoadOrCreateAsset<EnemySO>(assetPath);
+            enemySO.EnemyID = enemyID;
             enemySO.UnitName = enemyName;
-            enemySO.Health = Convert.ToInt32(data["Health"]);
-            enemySO.MovementSpeed = Convert.ToSingle(data["Speed"]);
-            enemySO.AttackPower = Convert.ToInt32(data["AttackDamage"]);
+            enemySO.Health = ConvertToInt(data["Health"]);
+            enemySO.MovementSpeed = ConvertToFloat(data["Speed"]);
+            enemySO.AttackPower = ConvertToInt(data["AttackPower"]);
 
-            AssetDatabase.CreateAsset(enemySO, assetPath);
+            Debug.Log($"EnemySO 생성됨: {enemyName} (ID: {enemyID})");
+
             EditorUtility.SetDirty(enemySO);
         }
-
-        return true;
     }
 
     // TowerSO 변환
-    private static bool ConvertJsonToTowerSO(string jsonFilePath)
+    public static void ConvertJsonToTowerSO(string jsonFilePath)
     {
-        if (!File.Exists(jsonFilePath)) return false;
+        if (!File.Exists(jsonFilePath)) return;
 
         string towerSOPath = "Assets/Resources/TowerSO";
         if (!Directory.Exists(towerSOPath)) Directory.CreateDirectory(towerSOPath);
 
         string jsonContent = File.ReadAllText(jsonFilePath);
-        List<Dictionary<string, object>> towerDataList = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(jsonContent);
+        var jsonData = JObject.Parse(jsonContent);
+
+        if (!IsValidDataType(jsonData, "TowerData")) return;
+
+        List<Dictionary<string, object>> towerDataList = jsonData["Data"].ToObject<List<Dictionary<string, object>>>();
 
         foreach (var data in towerDataList)
         {
             string towerName = data["UnitName"].ToString();
             string assetPath = $"{towerSOPath}/{towerName}.asset";
 
-            TowerSO towerSO = Resources.Load<TowerSO>($"TowerSO/{towerName}") ?? ScriptableObject.CreateInstance<TowerSO>();
-
+            TowerSO towerSO = LoadOrCreateAsset<TowerSO>(assetPath);
             towerSO.UnitName = towerName;
-            towerSO.AttackPower = Convert.ToInt32(data["AttackPower"]);
-            towerSO.AttackSpeed = Convert.ToSingle(data["AttackSpeed"]);
+            towerSO.AttackPower = ConvertToInt(data["AttackPower"]);
+            towerSO.AttackSpeed = ConvertToFloat(data["AttackSpeed"]);
 
-            AssetDatabase.CreateAsset(towerSO, assetPath);
             EditorUtility.SetDirty(towerSO);
+        }
+    }
+
+    // WaveSO 변환
+    public static bool ConvertJsonToWaveSO(string jsonFilePath)
+    {
+        if (!File.Exists(jsonFilePath))
+        {
+            Debug.LogError($"Wave JSON 파일이 존재하지 않습니다: {jsonFilePath}");
+            return false;
+        }
+
+        string waveSOPath = "Assets/Resources/WaveSO";
+        if (!Directory.Exists(waveSOPath)) Directory.CreateDirectory(waveSOPath);
+
+        string jsonContent = File.ReadAllText(jsonFilePath);
+        var jsonData = JObject.Parse(jsonContent);
+
+        if (!IsValidDataType(jsonData, "WaveData")) return false;
+
+        Debug.Log($"로드된 JSON 데이터: {jsonContent}");
+
+        JToken waveDataToken = jsonData["Data"];
+
+        if (waveDataToken is JArray)
+        {
+            Debug.LogError("JSON 데이터가 배열 형식입니다. 변환을 수행합니다.");
+            return ConvertJsonArrayToWaveSO(waveDataToken.ToObject<List<Dictionary<string, object>>>(), waveSOPath);
+        }
+        else if (waveDataToken is JObject)
+        {
+            // waveData를 Dictionary<int, Dictionary<int, int>>로 변환 후 전달
+            var rawWaveData = waveDataToken.ToObject<Dictionary<string, Dictionary<string, int>>>();
+            Dictionary<int, Dictionary<int, int>> convertedWaveData = ConvertWaveDataDictionary(rawWaveData);
+            return ConvertJsonDictionaryToWaveSO(convertedWaveData, waveSOPath);
+        }
+        else
+        {
+            Debug.LogError("JSON 데이터의 구조가 예상과 다릅니다.");
+            return false;
+        }
+    }
+
+
+
+
+
+    // 숫자 변환 함수
+    private static int ConvertToInt(object value)
+    {
+        if (value == null)
+        {
+            Debug.LogError("값이 null이므로 0 반환");
+            return 0;
+        }
+
+        try
+        {
+            return Convert.ToInt32(value);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"숫자로 변환 실패: {value} (오류: {ex.Message})");
+            return 0;
+        }
+    }
+    private static float ConvertToFloat(object value) => value == null ? 0f : Convert.ToSingle(value);
+
+    private static bool IsValidDataType(JObject jsonData, string expectedType)
+    {
+        return jsonData.ContainsKey("DataType") && jsonData["DataType"].ToString() == expectedType;
+    }
+
+    private static T LoadOrCreateAsset<T>(string assetPath) where T : ScriptableObject
+    {
+        T asset = AssetDatabase.LoadAssetAtPath<T>(assetPath);
+        if (asset == null)
+        {
+            asset = ScriptableObject.CreateInstance<T>();
+            AssetDatabase.CreateAsset(asset, assetPath);
+        }
+        return asset;
+    }
+    private static bool ConvertJsonArrayToWaveSO(List<Dictionary<string, object>> waveDataList, string waveSOPath)
+    {
+        // waveDataGrouped를 Dictionary<int, Dictionary<int, int>>로 선언
+        Dictionary<int, Dictionary<int, int>> waveDataGrouped = new Dictionary<int, Dictionary<int, int>>();
+
+        foreach (var waveEntry in waveDataList)
+        {
+            // waveEntry가 null인지 확인
+            if (waveEntry == null)
+            {
+                Debug.LogError("WaveData 항목이 null입니다.");
+                continue;
+            }
+
+            // JSON 키 변환 (waveCount → Wave, Count → EnemyCount)
+            if (waveEntry.ContainsKey("waveCount") && !waveEntry.ContainsKey("Wave"))
+            {
+                waveEntry["Wave"] = waveEntry["waveCount"];
+            }
+
+            if (waveEntry.ContainsKey("Count") && !waveEntry.ContainsKey("EnemyCount"))
+            {
+                waveEntry["EnemyCount"] = waveEntry["Count"];
+            }
+
+            // 키 존재 여부 확인
+            if (!waveEntry.ContainsKey("Wave") || !waveEntry.ContainsKey("EnemyID") || !waveEntry.ContainsKey("EnemyCount"))
+            {
+                Debug.LogError($"WaveData 항목이 잘못되었습니다: {JsonConvert.SerializeObject(waveEntry, Formatting.Indented)}");
+                continue;
+            }
+
+            // 데이터를 올바른 타입으로 변환
+            int waveCount = ConvertToInt(waveEntry["Wave"]);
+            int enemyID = ConvertToInt(waveEntry["EnemyID"]);
+            int enemyCount = ConvertToInt(waveEntry["EnemyCount"]);
+
+            // 변환 실패 여부 확인
+            if (waveCount == 0 || enemyID == 0 || enemyCount == 0)
+            {
+                Debug.LogError($"변환 실패: Wave={waveEntry["Wave"]}, EnemyID={waveEntry["EnemyID"]}, EnemyCount={waveEntry["EnemyCount"]}");
+                continue;
+            }
+
+            // waveDataGrouped에 waveCount가 존재하는지 확인 후 초기화
+            if (!waveDataGrouped.ContainsKey(waveCount))
+            {
+                waveDataGrouped[waveCount] = new Dictionary<int, int>();
+            }
+
+            // 적 데이터 추가 (중복된 EnemyID가 있으면 누적)
+            if (!waveDataGrouped[waveCount].ContainsKey(enemyID))
+            {
+                waveDataGrouped[waveCount][enemyID] = 0;
+            }
+
+            waveDataGrouped[waveCount][enemyID] += enemyCount; // 누적 합산
+
+            Debug.Log($"웨이브 {waveCount}: EnemyID {enemyID}, Count {enemyCount} 추가됨.");
+        }
+
+        // 변환된 Dictionary<int, Dictionary<int, int>>을 사용하여 SO 변환
+        return ConvertJsonDictionaryToWaveSO(waveDataGrouped, waveSOPath);
+    }
+
+    private static bool ConvertJsonDictionaryToWaveSO(Dictionary<int, Dictionary<int, int>> waveData, string waveSOPath)
+    {
+        foreach (var waveEntry in waveData)
+        {
+            int waveCount = waveEntry.Key;
+
+            string assetPath = $"{waveSOPath}/Wave_{waveCount}.asset";
+            WaveSO waveSO = LoadOrCreateAsset<WaveSO>(assetPath);
+            waveSO.waveCount = waveCount;
+            waveSO.enemyCounts = new SerializableDictionary<int, int>();
+
+            foreach (var kvp in waveEntry.Value)
+            {
+                waveSO.enemyCounts[kvp.Key] = kvp.Value;
+            }
+
+            Debug.Log($"WaveSO 생성됨: Wave {waveCount}");
+
+            EditorUtility.SetDirty(waveSO);
         }
 
         return true;
     }
 
-    // ProjectileSO 변환
-    private static bool ConvertJsonToProjectileSO(string jsonFilePath)
+
+    private static Dictionary<int, Dictionary<int, int>> ConvertWaveDataDictionary(Dictionary<string, Dictionary<string, int>> rawWaveData)
     {
-        if (!File.Exists(jsonFilePath))
+        Dictionary<int, Dictionary<int, int>> convertedWaveData = new Dictionary<int, Dictionary<int, int>>();
+
+        foreach (var waveEntry in rawWaveData)
         {
-            Debug.LogError($"Projectile JSON 파일이 존재하지 않습니다: {jsonFilePath}");
-            return false;
-        }
-
-        string projectileSOPath = "Assets/Resources/ProjectileSO";
-        if (!Directory.Exists(projectileSOPath))
-        {
-            Debug.Log($"ProjectileSO 폴더가 존재하지 않음. 폴더 생성 시도: {projectileSOPath}");
-            Directory.CreateDirectory(projectileSOPath);
-        }
-
-        Debug.Log($"폴더 확인 완료: {projectileSOPath}");
-
-        string jsonContent = File.ReadAllText(jsonFilePath);
-        List<Dictionary<string, object>> projectileDataList = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(jsonContent);
-
-        foreach (var data in projectileDataList)
-        {
-            string projectileName = data["ProjectileName"].ToString();
-            string assetPath = $"{projectileSOPath}/{projectileName}.asset";
-
-            Debug.Log($"Projectile 변환 시작: {projectileName}, 저장 경로: {assetPath}");
-
-            ProjectileSO projectileSO = Resources.Load<ProjectileSO>($"ProjectileSO/{projectileName}")
-                ?? ScriptableObject.CreateInstance<ProjectileSO>();
-
-            projectileSO.ProjectileName = projectileName;
-            projectileSO.Speed = Convert.ToSingle(data["Speed"]);
-            projectileSO.CanPierce = Convert.ToBoolean(data["CanPierce"]);
-            projectileSO.PierceCount = Convert.ToInt32(data["PierceCount"]);
-            projectileSO.CanSlow = Convert.ToBoolean(data["CanSlow"]);
-            projectileSO.SlowEffect = Convert.ToSingle(data["SlowEffect"]);
-            projectileSO.SlowDuration = Convert.ToSingle(data["SlowDuration"]);
-            projectileSO.CanStun = Convert.ToBoolean(data["CanStun"]);
-            projectileSO.StunDuration = Convert.ToSingle(data["StunDuration"]);
-
-            if (!File.Exists(assetPath))
+            if (!int.TryParse(waveEntry.Key, out int waveCount))
             {
-                Debug.Log($"새로운 ProjectileSO 생성: {assetPath}");
-                AssetDatabase.CreateAsset(projectileSO, assetPath);
-            }
-            else
-            {
-                Debug.Log($"기존 ProjectileSO 덮어쓰기: {assetPath}");
+                Debug.LogError($"웨이브 키 변환 실패: {waveEntry.Key}");
+                continue;
             }
 
-            EditorUtility.SetDirty(projectileSO);
+            Dictionary<int, int> enemyCounts = new Dictionary<int, int>();
+
+            foreach (var enemyEntry in waveEntry.Value)
+            {
+                if (!int.TryParse(enemyEntry.Key, out int enemyID))
+                {
+                    Debug.LogError($"EnemyID 변환 실패: {enemyEntry.Key}");
+                    continue;
+                }
+
+                enemyCounts[enemyID] = enemyEntry.Value;
+            }
+
+            convertedWaveData[waveCount] = enemyCounts;
         }
 
-        return true;
+        return convertedWaveData;
     }
 
 }

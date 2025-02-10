@@ -1,159 +1,105 @@
-using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
-using UnityEngine.UI;
 
-[System.Serializable]
-public class Wave_Data
-{
-    public int key;
-    public string EnemyType;
-    public int SpawnCount;
-    public float SpawnRate;
-    public string EnemyPrefab;
-}
-[System.Serializable]
-public class WaveConfig
-{
-    public List<Wave_Data> WaveStages;
-}
 public class WaveSpawner : MonoBehaviour
 {
-    [SerializeField]private List<Wave_Data> waves = new List<Wave_Data>();
-    [SerializeField]private GameObject[] enemyPrefabs;
-    [SerializeField] private Transform[] spawnRows;
-    //게이지 매니저
-    [SerializeField] private GaugeManager gaugeManager;
-
+    [SerializeField] private Transform[] spawnRows; // 적 스폰 위치 배열
+    private int currentWaveIndex = 1; // 현재 웨이브
     private bool isSpawning = false;
-    private int currentWaveIndex = 0;
-    //남은 적 목록
-    private List<GameObject> activeEnemies = new List<GameObject>();
-
-    private void Awake()
-    {
-        LoadWaveData();
-    }
+    private List<GameObject> activeEnemies = new List<GameObject>(); // 현재 살아 있는 적 목록
 
     private void Start()
     {
-        Debug.Log("Start() 실행됨!");
-
-        if (waves.Count == 0)
-        {
-            Debug.LogError("웨이브 데이터가 비어 있음! JSON 파일을 확인하세요.");
-        }
-
-        if (enemyPrefabs.Length == 0)
-        {
-            Debug.LogError("enemyPrefabs 배열이 비어 있음! Unity Inspector에서 프리팹 추가하세요.");
-        }
-        if (spawnRows.Length == 0)
-        {
-            Debug.LogError("spawnRows 배열이 비어 있음! Unity Inspector에서 스폰 위치 추가하세요.");
-        }
-
-        if (!isSpawning)StartCoroutine(SpawnWave());
+        StartCoroutine(SpawnWave());
     }
+
     private IEnumerator SpawnWave()
     {
-        if(isSpawning) yield break;
+        if (isSpawning) yield break;
         isSpawning = true;
-        Debug.Log("SpawnWave() 실행됨!");
 
-        Wave_Data wave = waves[currentWaveIndex];
-        //웨이브 시작시 게이지 초기화
-        gaugeManager.InitializeGauge(wave.SpawnCount);
-
-        for (int i = 0; i < wave.SpawnCount; i++)
+        // 웨이브 데이터 불러오기
+        WaveSO currentWave = DataManager.Instance.GetWaveData(currentWaveIndex);
+        if (currentWave == null)
         {
-            GameObject enemy = SpawnEnemy(wave);
-            if (enemy != null)
+            Debug.Log("모든 웨이브 완료! 게임 종료 또는 다음 스테이지 진행 가능.");
+            yield break;
+        }
+
+        // **디버깅 추가**
+        Debug.Log($"웨이브 {currentWave.waveCount} 시작! 적 수: {currentWave.GetTotalEnemies()}");
+
+        if (currentWave.enemyCounts.Count == 0)
+        {
+            Debug.LogError($"Wave {currentWave.waveCount}의 enemyCounts가 비어 있습니다.");
+        }
+
+        foreach (var enemyEntry in currentWave.enemyCounts)
+        {
+            Debug.Log($"적 ID: {enemyEntry.Key}, 스폰 개수: {enemyEntry.Value}");
+
+            int enemyID = enemyEntry.Key;
+            int spawnCount = enemyEntry.Value;
+
+            for (int i = 0; i < spawnCount; i++)
             {
-                //살아 있는 적 리스트에 추가
-                activeEnemies.Add(enemy);
+                GameObject enemy = SpawnEnemy(enemyID);
+                if (enemy != null)
+                {
+                    activeEnemies.Add(enemy);
+                }
+                yield return new WaitForSeconds(1.0f);
             }
-            yield return new WaitForSeconds(wave.SpawnRate); // 적 스폰 간격 유지
         }
-        Debug.Log($"웨이브 {currentWaveIndex + 1} 종료 대기...");
-        //모든 몬스터 죽을때 까지 대기
+
         yield return new WaitUntil(() => activeEnemies.Count == 0);
+        isSpawning = false;
 
-        Debug.Log("웨이브 종료!");
-        isSpawning = false; // 웨이브가 끝났으므로 다음 웨이브 실행 가능
-        currentWaveIndex++;
-
-        if (currentWaveIndex < waves.Count)
+        // 다음 웨이브가 존재하는 경우에만 진행
+        if (DataManager.Instance.GetWaveData(currentWaveIndex + 1) != null)
         {
-            StartCoroutine(SpawnWave()); // 다음 웨이브 실행
+            currentWaveIndex++;
+            StartCoroutine(SpawnWave());
         }
         else
         {
-            Debug.Log("모든 웨이브가 완료되었습니다!");
+            Debug.Log("마지막 웨이브 완료! 더 이상 웨이브 없음.");
         }
     }
-    private void LoadWaveData()
+
+
+
+
+
+    private GameObject SpawnEnemy(int enemyID)
     {
-        string filePath = Path.Combine(Application.dataPath, "wave_data.json");
-
-        if(!File.Exists(filePath))
+        if (spawnRows.Length == 0)
         {
-            Debug.LogError($"오류 : {filePath}파일을 찾을수 없습니다.");
-            return;
-        }
-        string jsonContent = File.ReadAllText(filePath);
-        WaveConfig config = JsonConvert.DeserializeObject<WaveConfig>(jsonContent);
-
-        if(config != null && config.WaveStages.Count > 0)
-        {
-            waves = config.WaveStages;
-            Debug.Log($"웨이브 데이터 {waves.Count}개 로드 완료!");
-
-        }
-        else
-        {
-            Debug.LogError("Json값의 웨이브데이터가 비어있습니다.");
-        }
-    }
-    private GameObject SpawnEnemy(Wave_Data wave)
-    {
-        if (enemyPrefabs.Length == 0 || spawnRows.Length == 0)
-        {
-            Debug.LogError("스폰할 적 프리팹 또는 위치가 없습니다.");
+            Debug.LogError("스폰 위치가 없습니다.");
             return null;
         }
+
         int randomIndex = Random.Range(0, spawnRows.Length);
         Transform spawnPoint = spawnRows[randomIndex];
 
-        Debug.Log($"스폰 위치 선택됨: {spawnPoint.position} (index: {randomIndex}");
+        Debug.Log($"적 스폰 시도: EnemyID {enemyID}");
 
-        GameObject enemyPrefab = GetEnemyPrefabByType(wave.EnemyPrefab);
-        if (enemyPrefab == null) return null;
-
-        GameObject enemy = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
-        enemy.GetComponent<Enemy>().OnEnemyDeath += UpdateEnemyCount;
-        return enemy;
-    }
-
-    private GameObject GetEnemyPrefabByType(string enemyPrefabName)
-    {
-        foreach(GameObject enemyPrefab in enemyPrefabs)
+        EnemySO enemyData = DataManager.Instance.GetEnemyData(enemyID);
+        if (enemyData == null)
         {
-            if(enemyPrefab.name == enemyPrefabName)
-            {
-                return enemyPrefab;
-            }
+            Debug.LogError($"EnemyID {enemyID} 데이터를 찾을 수 없습니다. DataManager를 확인하세요.");
+            return null;
         }
-        Debug.LogError($"적 프리팹을 찾을 수 없습니다: {enemyPrefabName}");
 
-        return null;
+        GameObject enemyPrefab = DataManager.Instance.GetEnemyPrefab(enemyData.UnitName);
+        if (enemyPrefab == null)
+        {
+            Debug.LogError($"EnemyID {enemyID}에 대한 프리팹이 존재하지 않습니다.");
+            return null;
+        }
+
+        return Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
     }
-    
-    private void UpdateEnemyCount(GameObject enemy)
-    {
-        activeEnemies.Remove(enemy);
-        gaugeManager.UpdateGage();
-    }
+
 }

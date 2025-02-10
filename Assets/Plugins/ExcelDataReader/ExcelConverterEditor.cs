@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class ExcelConverterEditor : EditorWindow
 {
-    public enum DataType { EnemyData,TowerData, WaveData, ProjectileData } // 하나의 공통 열거형 사용
+    public enum DataType { EnemyData, TowerData, WaveData, ProjectileData }
 
     private DataType selectedDataType;
     private string jsonFilePath = "";
@@ -33,10 +33,14 @@ public class ExcelConverterEditor : EditorWindow
             excelFilePath = EditorUtility.OpenFilePanel("Select Excel File", "", "xlsx");
             if (!string.IsNullOrEmpty(excelFilePath))
             {
-                string outputJsonPath = ExcelToJson.ConvertExcelToJson(excelFilePath, selectedDataType);
-                if (!string.IsNullOrEmpty(outputJsonPath))
+                string outputJsonPath = Path.Combine("Assets/Resources/JsonData", $"{selectedDataType}.json");
+
+                ExcelToJson.ConvertExcelToJson(excelFilePath, selectedDataType);
+
+                if (File.Exists(outputJsonPath))
                 {
                     Debug.Log($"Excel 변환 완료: {outputJsonPath}");
+                    AssetDatabase.Refresh();
                 }
                 else
                 {
@@ -55,18 +59,33 @@ public class ExcelConverterEditor : EditorWindow
         // JSON 파일 선택 버튼
         if (GUILayout.Button("JSON 파일 선택 및 SO 변환"))
         {
-            jsonFilePath = EditorUtility.OpenFilePanel("Select JSON File", "", "json");
+            jsonFilePath = EditorUtility.OpenFilePanel("Select JSON File", "Assets/Resources/JsonData", "json");
             if (!string.IsNullOrEmpty(jsonFilePath))
             {
-                if (selectedDataType == DataType.WaveData)
+                switch (selectedDataType)
                 {
-                    Debug.Log($"선택한 WaveData JSON 파일 경로: {jsonFilePath}");
-                    Debug.Log($"WaveData JSON 내용:\n{File.ReadAllText(jsonFilePath)}");
+                    case DataType.EnemyData:
+                        JsonToSO.ConvertJsonToEnemySO(jsonFilePath);
+                        Debug.Log($"EnemyData JSON 변환 완료: {jsonFilePath}");
+                        break;
+
+                    case DataType.TowerData:
+                        JsonToSO.ConvertJsonToTowerSO(jsonFilePath);
+                        Debug.Log($"TowerData JSON 변환 완료: {jsonFilePath}");
+                        break;
+
+                    case DataType.WaveData:
+                        JsonToSO.ConvertJsonToWaveSO(jsonFilePath);
+                        Debug.Log($"WaveData JSON 변환 완료: {jsonFilePath}");
+                        break;
+
+                    default:
+                        Debug.LogError("지원되지 않는 데이터 유형입니다.");
+                        break;
                 }
-                else
-                {
-                    JsonToSO.ConvertJsonToSO();
-                }
+
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
             }
             else
             {
