@@ -1,9 +1,9 @@
-ï»¿using System;
+using ExcelDataReader;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
+using System;
 using UnityEngine;
-using Newtonsoft.Json;
-using ExcelDataReader;
 
 public static class ExcelToJson
 {
@@ -11,11 +11,10 @@ public static class ExcelToJson
     {
         if (!File.Exists(excelFilePath))
         {
-            Debug.LogError($"Excel íŒŒì¼ì´ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤: {excelFilePath}");
+            Debug.LogError($"Excel ÆÄÀÏÀÌ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù: {excelFilePath}");
             return null;
         }
-
-        Debug.Log($"Excel íŒŒì¼ ë¡œë“œ ì‹œë„: {excelFilePath}");
+        Debug.Log($"Excel ÆÄÀÏ ·Îµå ½Ãµµ: {excelFilePath}");
 
         string outputFolder = "Assets/Resources/JsonData";
         if (!Directory.Exists(outputFolder))
@@ -23,66 +22,52 @@ public static class ExcelToJson
             Directory.CreateDirectory(outputFolder);
         }
 
-        string outputJsonPath = Path.Combine(outputFolder, $"{dataType}.json");
+        string outputJsonPath = null;
 
         try
         {
+            Debug.Log($"Excel ÆÄÀÏ ºĞ¼® Áß: {excelFilePath}");
+
             using (var stream = File.Open(excelFilePath, FileMode.Open, FileAccess.Read))
             {
                 using (var reader = ExcelReaderFactory.CreateReader(stream))
                 {
                     var result = reader.AsDataSet();
-                    Debug.Log($"ì—‘ì…€ íŒŒì¼ ë¡œë“œ ì™„ë£Œ, ì´ ì‹œíŠ¸ ê°œìˆ˜: {result.Tables.Count}");
+                    Debug.Log($"¾×¼¿ ÆÄÀÏ ·Îµå ¿Ï·á, ÃÑ ½ÃÆ® °³¼ö: {result.Tables.Count}");
+
 
                     foreach (System.Data.DataTable table in result.Tables)
                     {
                         string sheetName = table.TableName.Trim();
-                        Debug.Log($"í™•ì¸ ì¤‘ì¸ ì‹œíŠ¸: '{sheetName}', ì„ íƒëœ ë°ì´í„° íƒ€ì…: {dataType}");
+                        Debug.Log($"È®ÀÎ ÁßÀÎ ½ÃÆ®: '{sheetName}', ¼±ÅÃµÈ µ¥ÀÌÅÍ Å¸ÀÔ: {dataType}");
 
-                        if (table.Rows.Count < 3)
+                        if (!IsMatchingSheet(sheetName, dataType))
                         {
-                            Debug.LogError($"{sheetName} ì‹œíŠ¸ì— ë°ì´í„°ê°€ ë¶€ì¡±í•©ë‹ˆë‹¤. ìµœì†Œ 3í–‰(í—¤ë” + ë°ì´í„° í˜•ì‹ + ê°’)ì´ í•„ìš”í•©ë‹ˆë‹¤.");
+                            Debug.LogWarning($"{sheetName} ½ÃÆ®´Â {dataType}°ú ÀÏÄ¡ÇÏÁö ¾Ê¾Æ °Ç³Ê¶Ü.");
                             continue;
                         }
 
                         List<Dictionary<string, object>> dataList = new List<Dictionary<string, object>>();
 
-                        // ì²« ë²ˆì§¸ í–‰ â†’ ì»¬ëŸ¼ëª… ì €ì¥
-                        List<string> columnNames = new List<string>();
-                        for (int j = 0; j < table.Columns.Count; j++)
-                        {
-                            string columnName = table.Rows[0][j]?.ToString()?.Trim();
-                            if (string.IsNullOrEmpty(columnName))
-                            {
-                                Debug.LogError($"ì»¬ëŸ¼ëª…ì´ ë¹„ì–´ ìˆìŠµë‹ˆë‹¤! {j}ë²ˆì§¸ ì—´ì„ ê±´ë„ˆëœë‹ˆë‹¤.");
-                                continue;
-                            }
-                            columnNames.Add(columnName);
-                        }
-
-                        // ë‘ ë²ˆì§¸ í–‰ â†’ ë°ì´í„° íƒ€ì… ë³€í™˜
-                        Dictionary<string, string> metadata = new Dictionary<string, string>();
-                        for (int j = 0; j < table.Columns.Count; j++)
-                        {
-                            object typeSample = table.Rows[2][j]; // ì²« ë²ˆì§¸ ì‹¤ì œ ë°ì´í„° í–‰ ê¸°ì¤€ìœ¼ë¡œ íƒ€ì… ê²°ì •
-                            string typeString = DetectDataType(typeSample);
-                            metadata[columnNames[j]] = typeString;
-                        }
-
-                        // ì„¸ ë²ˆì§¸ í–‰ë¶€í„° ë°ì´í„° ì €ì¥
-                        for (int i = 2; i < table.Rows.Count; i++)
+                        for (int i = 1; i < table.Rows.Count; i++) // Ã¹ ¹øÂ° Çà(Çì´õ) Á¦¿Ü
                         {
                             Dictionary<string, object> rowDict = new Dictionary<string, object>();
 
-                            for (int j = 0; j < columnNames.Count; j++)
+                            for (int j = 0; j < table.Columns.Count; j++)
                             {
+                                string columnName = table.Rows[0][j]?.ToString();
                                 object cellValue = table.Rows[i][j];
 
-                                if (cellValue == null)
+                                if (columnName == null)
+                                {
+                                    Debug.LogError($"ÄÃ·³¸íÀÌ nullÀÔ´Ï´Ù! {i}¹øÂ° Çà, {j}¹øÂ° ¿­");
+                                    continue;
+                                }
+
+                                if (cellValue == null || string.IsNullOrEmpty(cellValue.ToString()))
                                     continue;
 
-                                // ì •ìˆ˜ì™€ ì‹¤ìˆ˜ë¥¼ êµ¬ë³„í•˜ì—¬ ì €ì¥
-                                rowDict[columnNames[j]] = ConvertToCorrectType(cellValue, metadata[columnNames[j]]);
+                                rowDict[columnName] = cellValue;
                             }
 
                             if (rowDict.Count > 0)
@@ -91,60 +76,39 @@ public static class ExcelToJson
                             }
                         }
 
-                        // ì˜¬ë°”ë¥¸ JSON êµ¬ì¡°ë¡œ ì €ì¥ (DataTypeì„ ë§¨ ìœ„ë¡œ ë°°ì¹˜)
-                        var jsonOutput = new
-                        {
-                            DataType = dataType.ToString(),
-                            Metadata = metadata,
-                            Data = dataList
-                        };
+                        string jsonOutput = JsonConvert.SerializeObject(dataList, Formatting.Indented);
+                        outputJsonPath = Path.Combine(outputFolder, $"{sheetName}.json");
+                        File.WriteAllText(outputJsonPath, jsonOutput);
 
-                        string jsonString = JsonConvert.SerializeObject(jsonOutput, Formatting.Indented);
-                        File.WriteAllText(outputJsonPath, jsonString);
-
-                        Debug.Log($"{sheetName} ë³€í™˜ ì™„ë£Œ! JSON ì €ì¥ ìœ„ì¹˜: {outputJsonPath}");
+                        Debug.Log($"{sheetName} ½ÃÆ® º¯È¯ ¿Ï·á! JSON ÀúÀå À§Ä¡: {outputJsonPath}");
                     }
                 }
             }
         }
         catch (Exception ex)
         {
-            Debug.LogError($"Excel ë³€í™˜ ì¤‘ ì˜¤ë¥˜ ë°œìƒ: {ex.Message}");
+            Debug.LogError($"Excel º¯È¯ Áß ¿À·ù ¹ß»ı: {ex.Message}");
             return null;
         }
 
         return outputJsonPath;
     }
 
-    // ë°ì´í„° íƒ€ì…ì„ ìë™ ê°ì§€í•˜ëŠ” í•¨ìˆ˜
-    private static string DetectDataType(object value)
+    private static bool IsMatchingSheet(string sheetName, ExcelConverterEditor.DataType dataType)
     {
-        if (value == null) return "string";
-
-        if (double.TryParse(value.ToString(), out double num))
+        switch (dataType)
         {
-            if (num == Math.Floor(num)) // ì†Œìˆ˜ì ì´ ì—†ìœ¼ë©´ ì •ìˆ˜
-                return "int";
-            return "float";
-        }
-        if (bool.TryParse(value.ToString(), out _)) return "bool";
+            case ExcelConverterEditor.DataType.EnemyData:
+                return sheetName.Equals("EnemyData", StringComparison.OrdinalIgnoreCase);
+            case ExcelConverterEditor.DataType.TowerData:
+                return sheetName.Equals("TowerData", StringComparison.OrdinalIgnoreCase);
+            case ExcelConverterEditor.DataType.WaveData:
+                return sheetName.Equals("WaveData", StringComparison.OrdinalIgnoreCase);
+            case ExcelConverterEditor.DataType.ProjectileData: // ProjectileData Ã³¸® Ãß°¡
+                return sheetName.Equals("ProjectileData", StringComparison.OrdinalIgnoreCase);
 
-        return "string"; // ê¸°ë³¸ê°’
-    }
-
-    // ì •ìˆ˜ì™€ ì‹¤ìˆ˜ë¥¼ ì •í™•í•˜ê²Œ ë³€í™˜í•˜ëŠ” í•¨ìˆ˜
-    private static object ConvertToCorrectType(object value, string expectedType)
-    {
-        if (value == null) return null;
-
-        if (expectedType == "int" && double.TryParse(value.ToString(), out double num))
-        {
-            return Convert.ToInt32(num); // ê°•ì œ `int` ë³€í™˜
+            default:
+                return false;
         }
-        else if (expectedType == "float" && double.TryParse(value.ToString(), out double floatNum))
-        {
-            return floatNum; // ì‹¤ìˆ˜ ë³€í™˜ ìœ ì§€
-        }
-        return value;
     }
 }

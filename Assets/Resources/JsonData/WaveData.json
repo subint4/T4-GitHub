@@ -1,40 +1,23 @@
-{
-  "DataType": "WaveData",
-  "Metadata": {
-    "waveCount": "int",
-    "EnemyID": "int",
-    "Count": "int"
+[
+  {
+    "key": 1.0,
+    "EnemyType": "Zombie",
+    "SpawnCount": 5.0,
+    "SpawnRate": 2.0,
+    "EnemyPrefab": "ZombiePrefab"
   },
-  "Data": [
-    {
-      "waveCount": 1,
-      "EnemyID": 1,
-      "Count": 5
-    },
-    {
-      "waveCount": 1,
-      "EnemyID": 2,
-      "Count": 3
-    },
-    {
-      "waveCount": 2,
-      "EnemyID": 1,
-      "Count": 6
-    },
-    {
-      "waveCount": 2,
-      "EnemyID": 3,
-      "Count": 4
-    },
-    {
-      "waveCount": 3,
-      "EnemyID": 2,
-      "Count": 5
-    },
-    {
-      "waveCount": 3,
-      "EnemyID": 4,
-      "Count": 2
-    }
-  ]
-}
+  {
+    "key": 2.0,
+    "EnemyType": "Zombie",
+    "SpawnCount": 10.0,
+    "SpawnRate": 2.0,
+    "EnemyPrefab": "ZombiePrefab"
+  },
+  {
+    "key": 3.0,
+    "EnemyType": "Boss_zombie",
+    "SpawnCount": 1.0,
+    "SpawnRate": 5.0,
+    "EnemyPrefab": "BossPrefab"
+  }
+]

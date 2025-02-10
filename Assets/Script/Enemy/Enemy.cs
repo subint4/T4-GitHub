@@ -5,7 +5,6 @@ using System;
 
 public class Enemy : MonoBehaviour
 {
-    public int EnemyID;
     public EnemySO enemyStats;
     public Rigidbody2D enemyRigidbody;
     private bool isDead = false;
@@ -36,8 +35,6 @@ public class Enemy : MonoBehaviour
 
         if (enemyStats != null)
         {
-            EnemyID = enemyStats.EnemyID;
-
             health = enemyStats.Health;
             rewardMoney = enemyStats.RewardMoney;
             attackPower = enemyStats.AttackPower;

@@ -4,6 +4,7 @@ using UnityEngine;
 public class EnemySO : ScriptableObject
 {
     // UnitData 속성
+    public int key;                  // 고유 키 값
     public string UnitName;          // 적 이름
     public int Health;               // 체력
     public int AttackPower;          // 공격력
@@ -12,7 +13,6 @@ public class EnemySO : ScriptableObject
     public int DeployCost;           // 배치 비용
 
     // EnemyData 전용 속성
-    public int EnemyID;
     public int RewardMoney;          // 적 처치 시 보상 금액
     public string EnemyType;         // 적 유형 (예: "Zombie", "Skeleton")
     public int SpawnCount;           // 스폰 수
@@ -23,7 +23,7 @@ public class EnemySO : ScriptableObject
     public void LoadFromEnemyData(EnemyData enemyData)
     {
         // UnitData 속성 로드
-        EnemyID = enemyData.EnemyID;
+        key = enemyData.key;
         UnitName = enemyData.UnitName;
         Health = enemyData.Health;
         AttackPower = enemyData.AttackPower;
