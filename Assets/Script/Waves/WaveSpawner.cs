@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class WaveSpawner : MonoBehaviour
 {
-    [SerializeField] private Transform[] spawnRows; // 적 스폰 위치 배열
-    private int currentWaveIndex = 1; // 현재 웨이브
+    [SerializeField] private Transform[] spawnRows;
+    private int currentWaveIndex = 1;
     private bool isSpawning = false;
-    private List<GameObject> activeEnemies = new List<GameObject>(); // 현재 살아 있는 적 목록
+    private List<GameObject> activeEnemies = new List<GameObject>();
 
     private void Start()
     {
@@ -19,15 +19,13 @@ public class WaveSpawner : MonoBehaviour
         if (isSpawning) yield break;
         isSpawning = true;
 
-        // 웨이브 데이터 불러오기
         WaveSO currentWave = DataManager.Instance.GetWaveData(currentWaveIndex);
         if (currentWave == null)
         {
-            Debug.Log("모든 웨이브 완료! 게임 종료 또는 다음 스테이지 진행 가능.");
+            Debug.Log("모든 웨이브 완료!");
             yield break;
         }
 
-        // **디버깅 추가**
         Debug.Log($"웨이브 {currentWave.waveCount} 시작! 적 수: {currentWave.GetTotalEnemies()}");
 
         if (currentWave.enemyCounts.Count == 0)
@@ -56,7 +54,12 @@ public class WaveSpawner : MonoBehaviour
         yield return new WaitUntil(() => activeEnemies.Count == 0);
         isSpawning = false;
 
-        // 다음 웨이브가 존재하는 경우에만 진행
+        // **웨이브 간격 반영**
+        float waveInterval = DataManager.Instance.GetWaveInterval(currentWaveIndex);
+        Debug.Log($"웨이브 {currentWaveIndex} 완료! 다음 웨이브까지 {waveInterval}초 대기...");
+        yield return new WaitForSeconds(waveInterval);
+
+        // 다음 웨이브 시작
         if (DataManager.Instance.GetWaveData(currentWaveIndex + 1) != null)
         {
             currentWaveIndex++;
@@ -67,10 +70,6 @@ public class WaveSpawner : MonoBehaviour
             Debug.Log("마지막 웨이브 완료! 더 이상 웨이브 없음.");
         }
     }
-
-
-
-
 
     private GameObject SpawnEnemy(int enemyID)
     {
@@ -101,5 +100,4 @@ public class WaveSpawner : MonoBehaviour
 
         return Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
     }
-
 }
