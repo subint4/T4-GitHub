@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameSpeedController : MonoBehaviour
 {
@@ -10,8 +11,8 @@ public class GameSpeedController : MonoBehaviour
     //UI 버튼
     public Button speedButton;
     //버튼 텍스트
-    public Text speedButtonText;
-        
+    public TextMeshProUGUI speedButtonText;
+
     void Start()
     {
         //UI 버튼이 널이 아니거나 버튼 텍스트가 널이 아니면 발생
@@ -30,12 +31,10 @@ public class GameSpeedController : MonoBehaviour
         //현재 속도
         if (nowSpeed)
         {
-            //기본 속도
             Time.timeScale = 2.0f;
         }
         else
         {
-            //2배속
             Time.timeScale = 1.0f;
         }
 
