@@ -21,7 +21,7 @@ public class DataManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
 
-            // Resources Æú´õ¿¡¼­ ÀÚµ¿À¸·Î µ¥ÀÌÅÍ ·Îµå
+            // Resources ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½
             enemyDataList = new List<EnemySO>(Resources.LoadAll<EnemySO>("EnemySO"));
             towerDataList = new List<TowerSO>(Resources.LoadAll<TowerSO>("TowerSO"));
             waveDataList = new List<WaveSO>(Resources.LoadAll<WaveSO>("WaveSO"));
@@ -36,119 +36,119 @@ public class DataManager : MonoBehaviour
 
     private void InitializeData()
     {
-        Debug.Log("µ¥ÀÌÅÍ ¸Å´ÏÀú ÃÊ±âÈ­ ½ÃÀÛ...");
+        Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Å´ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½ï¿½ï¿½ï¿½...");
 
-        // Àû µ¥ÀÌÅÍ ·Îµå
+        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½
         enemyDataDictionary.Clear();
         foreach (var enemy in enemyDataList)
         {
             if (enemy == null)
             {
-                Debug.LogError("EnemySO ¸ñ·Ï¿¡ null °ªÀÌ ÀÖ½À´Ï´Ù.");
+                Debug.LogError("EnemySO ï¿½ï¿½Ï¿ï¿½ null ï¿½ï¿½ï¿½ï¿½ ï¿½Ö½ï¿½ï¿½Ï´ï¿½.");
                 continue;
             }
 
             if (!enemyDataDictionary.ContainsKey(enemy.EnemyID))
             {
                 enemyDataDictionary.Add(enemy.EnemyID, enemy);
-                Debug.Log($"EnemySO ·Îµå: {enemy.UnitName} (ID: {enemy.EnemyID})");
+                Debug.Log($"EnemySO ï¿½Îµï¿½: {enemy.UnitName} (ID: {enemy.EnemyID})");
             }
         }
 
-        // Å¸¿ö µ¥ÀÌÅÍ ·Îµå
+        // Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½
         towerDataDictionary.Clear();
         foreach (var tower in towerDataList)
         {
             if (tower == null)
             {
-                Debug.LogError("TowerSO ¸ñ·Ï¿¡ null °ªÀÌ ÀÖ½À´Ï´Ù.");
+                Debug.LogError("TowerSO ï¿½ï¿½Ï¿ï¿½ null ï¿½ï¿½ï¿½ï¿½ ï¿½Ö½ï¿½ï¿½Ï´ï¿½.");
                 continue;
             }
 
             if (!towerDataDictionary.ContainsKey(tower.UnitName))
             {
                 towerDataDictionary.Add(tower.UnitName, tower);
-                Debug.Log($"TowerSO ·Îµå: {tower.UnitName}");
+                Debug.Log($"TowerSO ï¿½Îµï¿½: {tower.UnitName}");
             }
         }
 
-        // ¿þÀÌºê µ¥ÀÌÅÍ ·Îµå
+        // ï¿½ï¿½ï¿½Ìºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½
         waveDataDictionary.Clear();
         foreach (var wave in waveDataList)
         {
             if (wave == null)
             {
-                Debug.LogError("WaveSO ¸ñ·Ï¿¡ null °ªÀÌ ÀÖ½À´Ï´Ù.");
+                Debug.LogError("WaveSO ï¿½ï¿½Ï¿ï¿½ null ï¿½ï¿½ï¿½ï¿½ ï¿½Ö½ï¿½ï¿½Ï´ï¿½.");
                 continue;
             }
 
             if (!waveDataDictionary.ContainsKey(wave.waveCount))
             {
                 waveDataDictionary.Add(wave.waveCount, wave);
-                Debug.Log($"¿þÀÌºê ·Îµå ¿Ï·á: Wave {wave.waveCount} (Àû ¼ö: {wave.enemyCounts.Count})");
+                Debug.Log($"ï¿½ï¿½ï¿½Ìºï¿½ ï¿½Îµï¿½ ï¿½Ï·ï¿½: Wave {wave.waveCount} (ï¿½ï¿½ ï¿½ï¿½: {wave.enemyCounts.Count})");
             }
         }
 
-        // Àû ÇÁ¸®ÆÕ ÀÚµ¿ ·Îµå
+        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½ ï¿½Îµï¿½
         enemyPrefabDictionary.Clear();
         GameObject[] loadedPrefabs = Resources.LoadAll<GameObject>("Prefabs/Enemy");
 
         if (loadedPrefabs.Length == 0)
         {
-            Debug.LogError("EnemyPrefabs°¡ ·ÎµåµÇÁö ¾Ê¾Ò½À´Ï´Ù. Resources/Prefabs/Enemy Æú´õ¸¦ È®ÀÎÇÏ¼¼¿ä.");
+            Debug.LogError("EnemyPrefabsï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò½ï¿½ï¿½Ï´ï¿½. Resources/Prefabs/Enemy ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½.");
         }
 
         foreach (var prefab in loadedPrefabs)
         {
             if (prefab == null)
             {
-                Debug.LogError("EnemyPrefab ¸ñ·Ï¿¡ null °ªÀÌ ÀÖ½À´Ï´Ù.");
+                Debug.LogError("EnemyPrefab ï¿½ï¿½Ï¿ï¿½ null ï¿½ï¿½ï¿½ï¿½ ï¿½Ö½ï¿½ï¿½Ï´ï¿½.");
                 continue;
             }
 
             if (!enemyPrefabDictionary.ContainsKey(prefab.name))
             {
                 enemyPrefabDictionary.Add(prefab.name, prefab);
-                Debug.Log($"EnemyPrefab ÀÚµ¿ ·Îµå: {prefab.name}");
+                Debug.Log($"EnemyPrefab ï¿½Úµï¿½ ï¿½Îµï¿½: {prefab.name}");
             }
         }
 
-        Debug.Log($"ÃÖÁ¾ µî·ÏµÈ EnemyPrefab °³¼ö: {enemyPrefabDictionary.Count}");
+        Debug.Log($"ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ïµï¿½ EnemyPrefab ï¿½ï¿½ï¿½ï¿½: {enemyPrefabDictionary.Count}");
     }
 
-    // Àû µ¥ÀÌÅÍ¸¦ EnemyID ±âÁØÀ¸·Î °¡Á®¿À±â
+    // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ EnemyID ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public EnemySO GetEnemyData(int enemyID)
     {
         if (!enemyDataDictionary.ContainsKey(enemyID))
         {
-            Debug.LogError($"EnemyID {enemyID} µ¥ÀÌÅÍ¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+            Debug.LogError($"EnemyID {enemyID} ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
             return null;
         }
 
         return enemyDataDictionary[enemyID];
     }
 
-    // Å¸¿ö µ¥ÀÌÅÍ¸¦ UnitName ±âÁØÀ¸·Î °¡Á®¿À±â
+    // Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ UnitName ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public TowerSO GetTowerData(string unitName)
     {
         if (!towerDataDictionary.ContainsKey(unitName))
         {
-            Debug.LogError($"Å¸¿ö {unitName} µ¥ÀÌÅÍ¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+            Debug.LogError($"Å¸ï¿½ï¿½ {unitName} ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
             return null;
         }
 
         return towerDataDictionary[unitName];
     }
 
-    // ¿þÀÌºê µ¥ÀÌÅÍ¸¦ waveCount ±âÁØÀ¸·Î °¡Á®¿À±â
+    // ï¿½ï¿½ï¿½Ìºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ waveCount ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public WaveSO GetWaveData(int waveCount)
     {
         if (!waveDataDictionary.ContainsKey(waveCount))
         {
-            Debug.LogError($"¿þÀÌºê {waveCount} µ¥ÀÌÅÍ¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù. µî·ÏµÈ ¿þÀÌºê °³¼ö: {waveDataDictionary.Count}");
+            Debug.LogError($"ï¿½ï¿½ï¿½Ìºï¿½ {waveCount} ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½. ï¿½ï¿½Ïµï¿½ ï¿½ï¿½ï¿½Ìºï¿½ ï¿½ï¿½ï¿½ï¿½: {waveDataDictionary.Count}");
             foreach (var key in waveDataDictionary.Keys)
             {
-                Debug.Log($"µî·ÏµÈ ¿þÀÌºê: {key}");
+                Debug.Log($"ï¿½ï¿½Ïµï¿½ ï¿½ï¿½ï¿½Ìºï¿½: {key}");
             }
             return null;
         }
@@ -158,19 +158,19 @@ public class DataManager : MonoBehaviour
     public float GetWaveInterval(int waveIndex)
     {
         WaveSO wave = GetWaveData(waveIndex);
-        return wave != null ? wave.timeBetweenWaves : 5f; // ±âº»°ª 5ÃÊ
+        return wave != null ? wave.timeBetweenWaves : 5f; // ï¿½âº»ï¿½ï¿½ 5ï¿½ï¿½
     }
 
 
-    // Àû ÇÁ¸®ÆÕÀ» UnitName ±âÁØÀ¸·Î °¡Á®¿À±â
+    // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ UnitName ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public GameObject GetEnemyPrefab(string unitName)
     {
         if (!enemyPrefabDictionary.ContainsKey(unitName))
         {
-            Debug.LogError($"EnemyPrefab {unitName} µ¥ÀÌÅÍ¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù. µî·ÏµÈ ÇÁ¸®ÆÕ °³¼ö: {enemyPrefabDictionary.Count}");
+            Debug.LogError($"EnemyPrefab {unitName} ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½. ï¿½ï¿½Ïµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: {enemyPrefabDictionary.Count}");
             foreach (var key in enemyPrefabDictionary.Keys)
             {
-                Debug.Log($"µî·ÏµÈ ÇÁ¸®ÆÕ: {key}");
+                Debug.Log($"ï¿½ï¿½Ïµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: {key}");
             }
             return null;
         }
