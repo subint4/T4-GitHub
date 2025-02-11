@@ -60,24 +60,25 @@ public static class JsonToSO
     // EnemySO 변환
     public static void ConvertJsonToEnemySO(string jsonFilePath)
     {
-        Debug.Log($"Enemy JSON 변환 시작: {jsonFilePath}");
-
         if (!File.Exists(jsonFilePath))
         {
-            Debug.LogError($"JSON 파일 없음: {jsonFilePath}");
+            Debug.LogError($"Enemy JSON 파일이 존재하지 않습니다: {jsonFilePath}");
             return;
+        }
+
+        string enemySOPath = "Assets/Resources/EnemySO";
+
+        // **폴더가 없으면 생성**
+        if (!Directory.Exists(enemySOPath))
+        {
+            Directory.CreateDirectory(enemySOPath);
+            AssetDatabase.Refresh();
         }
 
         string jsonContent = File.ReadAllText(jsonFilePath);
-        Debug.Log($"JSON 데이터 로드됨: {jsonFilePath}\n{jsonContent}");
-
         var jsonData = JObject.Parse(jsonContent);
 
-        if (!IsValidDataType(jsonData, "EnemyData"))
-        {
-            Debug.LogError($"JSON 형식 오류: {jsonFilePath}");
-            return;
-        }
+        if (!IsValidDataType(jsonData, "EnemyData")) return;
 
         List<Dictionary<string, object>> enemyDataList = jsonData["Data"].ToObject<List<Dictionary<string, object>>>();
 
@@ -91,23 +92,30 @@ public static class JsonToSO
             }
 
             string enemyName = data["EnemyName"].ToString();
-            string assetPath = $"Assets/Resources/EnemySO/{enemyName}.asset";
+            string assetPath = $"{enemySOPath}/{enemyName}.asset";
 
+            // **SO 불러오기 또는 생성**
             EnemySO enemySO = LoadOrCreateAsset<EnemySO>(assetPath);
+
+            // **기존 데이터 덮어쓰기**
             enemySO.EnemyID = enemyID;
             enemySO.UnitName = enemyName;
             enemySO.Health = ConvertToInt(data["Health"]);
             enemySO.MovementSpeed = ConvertToFloat(data["Speed"]);
             enemySO.AttackPower = ConvertToInt(data["AttackPower"]);
 
-            Debug.Log($"EnemySO 생성/업데이트 완료: {enemyName}");
+            Debug.Log($"EnemySO 업데이트됨: {enemyName} (ID: {enemySO.EnemyID})");
 
+            // **강제 변경 감지**
             EditorUtility.SetDirty(enemySO);
         }
 
+        // **강제 저장 및 리프레시**
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
     }
+
+
 
     // TowerSO 변환
     public static void ConvertJsonToTowerSO(string jsonFilePath)
@@ -282,6 +290,15 @@ public static class JsonToSO
 
     private static T LoadOrCreateAsset<T>(string assetPath) where T : ScriptableObject
     {
+        string directoryPath = Path.GetDirectoryName(assetPath);
+
+        // **폴더가 없으면 생성**
+        if (!Directory.Exists(directoryPath))
+        {
+            Directory.CreateDirectory(directoryPath);
+            AssetDatabase.Refresh(); // Unity 프로젝트에 반영
+        }
+
         T asset = AssetDatabase.LoadAssetAtPath<T>(assetPath);
         if (asset == null)
         {
@@ -293,6 +310,13 @@ public static class JsonToSO
         {
             Debug.Log($"기존 SO 불러옴: {assetPath}");
         }
+
+        // 강제 변경 감지 및 저장
+        EditorUtility.SetDirty(asset);
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        AssetDatabase.ForceReserializeAssets(new[] { assetPath });
+
         return asset;
     }
 

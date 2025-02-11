@@ -24,7 +24,7 @@ public class Enemy : MonoBehaviour
     public EnemyAnimatorController controller;
 
     public event Action<GameObject> OnEnemyDeath;
-
+    private float attackCooldown = 0f;
     private void Start()
     {
         if (controller == null)
@@ -59,6 +59,17 @@ public class Enemy : MonoBehaviour
         {
             transform.Translate(Vector3.left * movementSpeed * Time.deltaTime);
         }
+
+        if (attackCooldown > 0)
+        {
+            attackCooldown -= Time.deltaTime;
+        }
+
+        if (currentTarget != null && currentTarget.IsDestroyed())
+        {
+            Debug.Log($"[Enemy] {gameObject.name}: 타겟이 파괴됨 -> 이동 시작");
+            StopAttack();
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -84,90 +95,94 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator AttackTower()
     {
+        if (isAttacking) yield break; // 중복 실행 방지
+
         isAttacking = true;
         movementSpeed = 0f;
         enemyRigidbody.isKinematic = true;
 
         if (controller != null)
         {
-            controller.SetAttackState(true); // 랜덤 공격 애니메이션 실행
+            controller.SetAttackState(true);
             Debug.Log($"[Enemy] {gameObject.name}: 공격 애니메이션 실행!");
         }
 
-        yield return new WaitForSeconds(attackSpeed); // 공격 간격 유지
-        if (currentTarget == null || currentTarget.IsDestroyed())
+        while (currentTarget != null && !currentTarget.IsDestroyed() && !isDead)
         {
-            Debug.Log($"[Enemy] {gameObject.name}: 타겟이 삭제되어 공격 중지!");
-            StopAttack();
-            yield break;
-        }
-        Collider2D[] targets = Physics2D.OverlapBoxAll(transform.position, new Vector2(1f, 1f), 0f);
-        foreach (var target in targets)
-        {
-            Tower targetTower = target.GetComponent<Tower>();
-            if (targetTower != null&&!targetTower.IsDestroyed())
+            if (attackCooldown <= 0)
             {
-                targetTower.TakeDamage(attackPower);
+                attackCooldown = attackSpeed;
+                currentTarget.TakeDamage(attackPower);
+                Debug.Log($"[Enemy] {gameObject.name}: {currentTarget.name}에게 {attackPower} 피해를 입힘");
             }
+            yield return null;
         }
 
-        StartCoroutine(ResetAttack()); // 다음 공격 실행 준비
+        Debug.Log($"[Enemy] {gameObject.name}: 타겟이 파괴됨 -> 이동 시작");
+        StopAttack();
     }
+
+
+
+
+
 
     public IEnumerator ResetAttack()
     {
         Debug.Log($"[Enemy] {gameObject.name}: 공격 대기 중...");
 
-        yield return new WaitForSeconds(0.1f); // 애니메이션 트랜지션을 고려한 짧은 대기 시간
+        yield return new WaitForSeconds(0.1f); // 애니메이션 트랜지션 고려
 
         isAttacking = false;
 
         if (controller != null)
         {
-            controller.SetAttackState(false); // 공격 종료 애니메이션
+            controller.SetAttackState(false);
         }
 
-        yield return new WaitForSeconds(attackSpeed); // 공격 속도 반영하여 대기
+        yield return new WaitForSeconds(attackSpeed); // 일정한 공격 딜레이 유지
 
-        if (currentTarget == null || currentTarget.IsDestroyed())
+        if (!isDead && currentTarget != null && !currentTarget.IsDestroyed())
         {
-            Debug.Log($"[Enemy] {gameObject.name}: 타겟이 파괴됨 -> 이동 시작");
-            StopAttack();
-            yield break;
+            Debug.Log($"[Enemy] {gameObject.name}: 다음 공격 시작!");
+            StartCoroutine(AttackTower());
         }
         else
         {
-            StartCoroutine(AttackTower());
+            StopAttack();
         }
     }
 
+
     private void StopAttack()
     {
-        isAttacking = false;
-        movementSpeed = originalSpeed;
-        enemyRigidbody.isKinematic = false;
-
-        if (controller != null)
+        if (!isDead)
         {
-            controller.SetAttackState(false); // 공격 상태 종료
-        }
+            isAttacking = false;
+            movementSpeed = Mathf.Max(originalSpeed, 0.1f); // 멈추지 않도록 최소 이동 속도 설정
+            enemyRigidbody.isKinematic = false;
 
-        Debug.Log("공격 종료, 이동 상태 복구");
+            if (controller != null)
+            {
+                controller.SetAttackState(false);
+            }
 
-        if(currentTarget !=null&& currentTarget.IsDestroyed())
-        {
-            currentTarget = null;
+            Debug.Log($"[Enemy] {gameObject.name}: 공격 종료, 이동 시작");
         }
-        if(isSlowed && movementSpeed <0.1f)
-        {
-            movementSpeed = 0.1f;
-        }
+    }
 
-        if(!isDead)
+
+
+    // 이동 재개를 위한 코루틴 추가
+    private IEnumerator ResumeMovementAfterDelay()
+    {
+        yield return new WaitForSeconds(0.2f);
+        if (!isDead)
         {
             transform.Translate(Vector3.left * movementSpeed * Time.deltaTime);
         }
     }
+
 
     public void TakeDamage(int damage)
     {

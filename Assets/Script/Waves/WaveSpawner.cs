@@ -98,6 +98,21 @@ public class WaveSpawner : MonoBehaviour
             return null;
         }
 
-        return Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
+        GameObject enemyInstance = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
+
+        // **enemyStats를 올바르게 설정**
+        Enemy enemyScript = enemyInstance.GetComponent<Enemy>();
+        if (enemyScript != null)
+        {
+            enemyScript.enemyStats = enemyData;
+            Debug.Log($"Enemy {enemyData.UnitName}가 {spawnPoint.position}에 스폰됨! EnemyID: {enemyData.EnemyID}");
+        }
+        else
+        {
+            Debug.LogError($"Enemy 프리팹에 Enemy 스크립트가 없습니다! {enemyPrefab.name}");
+        }
+
+        return enemyInstance;
     }
+
 }
