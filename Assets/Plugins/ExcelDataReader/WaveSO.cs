@@ -5,6 +5,7 @@ public class WaveSO : ScriptableObject
 {
     public int waveCount;
     public float spawnRate;
+    public float timeBetweenWaves = 5f;
 
     // 이제 Unity에서 직렬화 가능
     public SerializableDictionary<int, int> enemyCounts = new SerializableDictionary<int, int>();
