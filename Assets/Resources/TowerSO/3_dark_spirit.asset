@@ -14,10 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: 0
   UnitName: 3_dark_spirit
-  Health: 0
+  Health: 250
   AttackPower: 60
   AttackSpeed: 1
   DeployCost: 0
-  UpgradeCost: 0
-  Range: 0
+  UpgradeCost: 140
   TowerType: 0

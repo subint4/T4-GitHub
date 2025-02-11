@@ -24,7 +24,7 @@ public static class JsonToSO
         Debug.Log("JSON 변환 완료! EnemySO, TowerSO, WaveSO 업데이트 완료.");
     }
 
-
+    // ConvertToInt, ConvertToFloat 유틸 함수
     private static int ConvertToInt(object value)
     {
         if (value == null)
@@ -33,13 +33,13 @@ public static class JsonToSO
             return 0;
         }
 
-        try
+        if (int.TryParse(value.ToString(), out int result))
         {
-            return Convert.ToInt32(value);
+            return result;
         }
-        catch (Exception ex)
+        else
         {
-            Debug.LogError($"숫자로 변환 실패: {value} (오류: {ex.Message})");
+            Debug.LogError($"[ConvertToInt] 변환 실패: {value}");
             return 0;
         }
     }
@@ -47,33 +47,26 @@ public static class JsonToSO
     private static float ConvertToFloat(object value)
     {
         if (value == null) return 0f;
-        try
+
+        if (float.TryParse(value.ToString(), out float result))
         {
-            return Convert.ToSingle(value);
+            return result;
         }
-        catch
+        else
         {
+            Debug.LogError($"[ConvertToFloat] 변환 실패: {value}");
             return 0f;
         }
     }
 
+
     // EnemySO 변환
     public static void ConvertJsonToEnemySO(string jsonFilePath)
     {
-        if (!File.Exists(jsonFilePath))
-        {
-            Debug.LogError($"Enemy JSON 파일이 존재하지 않습니다: {jsonFilePath}");
-            return;
-        }
+        if (!File.Exists(jsonFilePath)) return;
 
         string enemySOPath = "Assets/Resources/EnemySO";
-
-        // **폴더가 없으면 생성**
-        if (!Directory.Exists(enemySOPath))
-        {
-            Directory.CreateDirectory(enemySOPath);
-            AssetDatabase.Refresh();
-        }
+        EnsureDirectoryExists(enemySOPath);
 
         string jsonContent = File.ReadAllText(jsonFilePath);
         var jsonData = JObject.Parse(jsonContent);
@@ -84,38 +77,23 @@ public static class JsonToSO
 
         foreach (var data in enemyDataList)
         {
-            int enemyID = ConvertToInt(data["EnemyID"]);
-            if (enemyID == 0)
-            {
-                Debug.LogError($"enemyID 변환 오류: {data["EnemyID"]}");
-                continue;
-            }
-
             string enemyName = data["EnemyName"].ToString();
             string assetPath = $"{enemySOPath}/{enemyName}.asset";
 
-            // **SO 불러오기 또는 생성**
             EnemySO enemySO = LoadOrCreateAsset<EnemySO>(assetPath);
 
-            // **기존 데이터 덮어쓰기**
-            enemySO.EnemyID = enemyID;
+            // 기존 데이터 업데이트
+            enemySO.EnemyID = ConvertToInt(data["EnemyID"]);
             enemySO.UnitName = enemyName;
             enemySO.Health = ConvertToInt(data["Health"]);
             enemySO.MovementSpeed = ConvertToFloat(data["Speed"]);
             enemySO.AttackPower = ConvertToInt(data["AttackPower"]);
 
-            Debug.Log($"EnemySO 업데이트됨: {enemyName} (ID: {enemySO.EnemyID})");
+            Debug.Log($"[EnemySO] {enemyName} 업데이트됨 (ID: {enemySO.EnemyID})");
 
-            // **강제 변경 감지**
             EditorUtility.SetDirty(enemySO);
         }
-
-        // **강제 저장 및 리프레시**
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
     }
-
-
 
     // TowerSO 변환
     public static void ConvertJsonToTowerSO(string jsonFilePath)
@@ -127,7 +105,7 @@ public static class JsonToSO
         }
 
         string towerSOPath = "Assets/Resources/TowerSO";
-        if (!Directory.Exists(towerSOPath)) Directory.CreateDirectory(towerSOPath);
+        EnsureDirectoryExists(towerSOPath);
 
         string jsonContent = File.ReadAllText(jsonFilePath);
         var jsonData = JObject.Parse(jsonContent);
@@ -145,33 +123,33 @@ public static class JsonToSO
             string towerName = data["UnitName"].ToString();
             string assetPath = $"{towerSOPath}/{towerName}.asset";
 
-            TowerSO towerSO = AssetDatabase.LoadAssetAtPath<TowerSO>(assetPath);
+            TowerSO towerSO = LoadOrCreateAsset<TowerSO>(assetPath);
 
-            if (towerSO == null)
-            {
-                towerSO = ScriptableObject.CreateInstance<TowerSO>();
-                AssetDatabase.CreateAsset(towerSO, assetPath);
-                Debug.Log($"새로운 TowerSO 생성: {towerName}");  // **생성이 실행되는지 확인**
-            }
-            else
-            {
-                Debug.Log($"기존 TowerSO 로드: {towerName}");  // **기존 SO가 로드되는지 확인**
-            }
+            // **디버깅용 로그 추가**
+            Debug.Log($"[TowerSO] {towerName} 생성/업데이트 진행 중...");
 
+            // **데이터 가져오기**
             towerSO.UnitName = towerName;
             towerSO.AttackPower = ConvertToInt(data["AttackPower"]);
             towerSO.AttackSpeed = ConvertToFloat(data["AttackSpeed"]);
+            towerSO.Health = ConvertToInt(data["Health"]);
+            towerSO.DeployCost = ConvertToInt(data["DeployCost"]);
+            towerSO.UpgradeCost = ConvertToInt(data["UpgradeCost"]);
 
+            // **TowerType 설정**
             if (data.ContainsKey("TowerType") && Enum.TryParse(data["TowerType"].ToString().Trim(), true, out TowerType parsedType))
             {
                 towerSO.TowerType = parsedType;
-                Debug.Log($"{towerName}의 TowerType 설정됨: {parsedType}");  // **타워 타입이 올바르게 설정되는지 확인**
             }
             else
             {
                 towerSO.TowerType = TowerType.Default;
-                Debug.LogError($"{towerName}: TowerType 변환 실패! 기본값(Default)으로 설정됨.");
             }
+
+            // **디버깅용 로그 추가 (확인용)**
+            Debug.Log($"[TowerSO] {towerName} 업데이트 완료: " +
+                      $"공격력={towerSO.AttackPower}, 속도={towerSO.AttackSpeed}, 체력={towerSO.Health}, " +
+                      $"배치 비용={towerSO.DeployCost}, 업그레이드 비용={towerSO.UpgradeCost}, 타입={towerSO.TowerType}");
 
             EditorUtility.SetDirty(towerSO);
         }
@@ -181,42 +159,29 @@ public static class JsonToSO
     }
 
 
-
-
-
-    // WaveSO 변환 추가
+    // WaveSO 변환
     public static void ConvertJsonToWaveSO(string jsonFilePath)
     {
-        Debug.Log($"Wave JSON 변환 시작: {jsonFilePath}");
+        if (!File.Exists(jsonFilePath)) return;
 
-        if (!File.Exists(jsonFilePath))
-        {
-            Debug.LogError($"JSON 파일 없음: {jsonFilePath}");
-            return;
-        }
+        string waveSOPath = "Assets/Resources/WaveSO";
+        EnsureDirectoryExists(waveSOPath);
 
         string jsonContent = File.ReadAllText(jsonFilePath);
-        Debug.Log($"JSON 데이터 로드됨: {jsonFilePath}\n{jsonContent}");
-
         var jsonData = JObject.Parse(jsonContent);
 
-        if (!IsValidDataType(jsonData, "WaveData"))
-        {
-            Debug.LogError($"JSON 형식 오류: {jsonFilePath}");
-            return;
-        }
+        if (!IsValidDataType(jsonData, "WaveData")) return;
 
         JToken waveDataToken = jsonData["Data"];
 
         if (waveDataToken is JArray waveArray)
         {
-            ConvertJsonArrayToWaveSO(waveArray.ToObject<List<Dictionary<string, object>>>(), "Assets/Resources/WaveSO");
+            ConvertJsonArrayToWaveSO(waveArray.ToObject<List<Dictionary<string, object>>>(), waveSOPath);
         }
         else if (waveDataToken is JObject waveObject)
         {
             var rawWaveData = waveObject.ToObject<Dictionary<string, Dictionary<string, int>>>();
-            Dictionary<int, Dictionary<int, int>> convertedWaveData = ConvertWaveDataDictionary(rawWaveData);
-            ConvertJsonDictionaryToWaveSO(convertedWaveData, "Assets/Resources/WaveSO");
+            ConvertJsonDictionaryToWaveSO(ConvertWaveDataDictionary(rawWaveData), waveSOPath);
         }
     }
 
@@ -249,13 +214,14 @@ public static class JsonToSO
             string assetPath = $"{waveSOPath}/Wave_{waveCount}.asset";
             WaveSO waveSO = LoadOrCreateAsset<WaveSO>(assetPath);
             waveSO.waveCount = waveCount;
-
             waveSO.enemyCounts = new SerializableDictionary<int, int>();
+
             foreach (var kvp in waveEntry.Value)
             {
-                waveSO.enemyCounts.Add(kvp.Key, kvp.Value);
+                waveSO.enemyCounts[kvp.Key] = kvp.Value;
             }
 
+            Debug.Log($"[WaveSO] Wave {waveCount} 업데이트됨");
             EditorUtility.SetDirty(waveSO);
         }
     }
@@ -287,37 +253,32 @@ public static class JsonToSO
         return jsonData.ContainsKey("DataType") && jsonData["DataType"].ToString() == expectedType;
     }
 
-
     private static T LoadOrCreateAsset<T>(string assetPath) where T : ScriptableObject
     {
-        string directoryPath = Path.GetDirectoryName(assetPath);
-
-        // **폴더가 없으면 생성**
-        if (!Directory.Exists(directoryPath))
-        {
-            Directory.CreateDirectory(directoryPath);
-            AssetDatabase.Refresh(); // Unity 프로젝트에 반영
-        }
+        EnsureDirectoryExists(Path.GetDirectoryName(assetPath));
 
         T asset = AssetDatabase.LoadAssetAtPath<T>(assetPath);
         if (asset == null)
         {
             asset = ScriptableObject.CreateInstance<T>();
             AssetDatabase.CreateAsset(asset, assetPath);
-            Debug.Log($"SO 생성됨: {assetPath}");
+            Debug.Log($"[SO 생성] {assetPath}");
         }
         else
         {
-            Debug.Log($"기존 SO 불러옴: {assetPath}");
+            Debug.Log($"[SO 로드] {assetPath}");
         }
-
-        // 강제 변경 감지 및 저장
-        EditorUtility.SetDirty(asset);
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
-        AssetDatabase.ForceReserializeAssets(new[] { assetPath });
 
         return asset;
     }
 
+
+    private static void EnsureDirectoryExists(string path)
+    {
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+            AssetDatabase.Refresh();
+        }
+    }
 }

@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyAnimatorController : MonoBehaviour
@@ -54,12 +55,29 @@ public class EnemyAnimatorController : MonoBehaviour
 
     public void OnAttackAnimationEnd()
     {
-        if (!isDead && enemy != null)
+        if (!enemy.isDead && enemy.currentTarget != null)
         {
-            Debug.Log($"[EnemyAnimator] {gameObject.name}: 공격 애니메이션 종료 감지됨!");
-            enemy.StartCoroutine(enemy.ResetAttack()); // 공격 반복 실행
+            // 타겟이 살아있는지 다시 확인
+            if (enemy.currentTarget.IsDestroyed())
+            {
+                Debug.Log($"[EnemyAnimator] {gameObject.name}: 타겟이 이미 파괴됨 -> 공격 취소");
+                enemy.StopAttack();  // 공격 중지
+                return;
+            }
+
+            Debug.Log($"[EnemyAnimator] {gameObject.name}: 공격 애니메이션 종료 감지됨! {enemy.currentTarget.name}에게 {enemy.attackPower} 피해!");
+
+            // 현재 타겟에게 피해를 줌 (여기서 null 체크 추가)
+            enemy.currentTarget.TakeDamage(enemy.attackPower);
+
+            // 공격 딜레이 후 다시 공격
+            enemy.Invoke("RestartAttack", enemy.attackSpeed);
         }
     }
+
+
+
+
 
     public void OnDeathAnimationEnd()
     {

@@ -8,23 +8,22 @@ public class Enemy : MonoBehaviour
     public int EnemyID;
     public EnemySO enemyStats;
     public Rigidbody2D enemyRigidbody;
-    private bool isDead = false;
+    public bool isDead = false;
     private Collider2D enemyCollider;
     private int health;
     private int rewardMoney;
-    private int attackPower;
+    public int attackPower;
     public float attackSpeed;
     public float movementSpeed;
     public float originalSpeed;
     public bool isAttacking = false;
     public bool isSlowed = false;
 
-    private Tower currentTarget;
+    public Tower currentTarget;
     private ProjectileSO projectileStats;
     public EnemyAnimatorController controller;
 
     public event Action<GameObject> OnEnemyDeath;
-    private float attackCooldown = 0f; // 공격 쿨다운 추가
 
     private void Start()
     {
@@ -60,11 +59,6 @@ public class Enemy : MonoBehaviour
             transform.Translate(Vector3.left * movementSpeed * Time.deltaTime);
         }
 
-        if (attackCooldown > 0)
-        {
-            attackCooldown -= Time.deltaTime;
-        }
-
         if (currentTarget != null && currentTarget.IsDestroyed())
         {
             Debug.Log($"[Enemy] {gameObject.name}: 타겟이 파괴됨 -> 이동 시작");
@@ -88,74 +82,54 @@ public class Enemy : MonoBehaviour
             currentTarget = tower;
             if (!isAttacking)
             {
-                StartCoroutine(AttackTower());
+                StartCoroutine(AttackLoop());
             }
         }
     }
 
-    private IEnumerator AttackTower()
+    /// <summary>
+    /// 공격 루프를 실행하여 `attackSpeed` 간격으로 반복
+    /// </summary>
+    private IEnumerator AttackLoop()
     {
-        if (isAttacking) yield break; // 중복 실행 방지
-
         isAttacking = true;
-        movementSpeed = 0f;
-        enemyRigidbody.isKinematic = true;
 
-        if (controller != null)
+        while (!isDead && currentTarget != null)
         {
-            controller.SetAttackState(true);
-            Debug.Log($"[Enemy] {gameObject.name}: 공격 애니메이션 실행!");
-        }
-
-        while (currentTarget != null && !currentTarget.IsDestroyed() && !isDead)
-        {
-            if (attackCooldown <= 0)
+            // 타겟이 파괴되지 않았는지 다시 확인
+            if (currentTarget.IsDestroyed())
             {
-                attackCooldown = attackSpeed;
-                currentTarget.TakeDamage(attackPower);
-                Debug.Log($"[Enemy] {gameObject.name}: {currentTarget.name}에게 {attackPower} 피해를 입힘");
-
-                yield return new WaitForSeconds(attackSpeed);
+                Debug.Log($"[Enemy] {gameObject.name}: 타겟이 이미 파괴됨 -> 공격 종료");
+                StopAttack();
+                yield break;
             }
-            else
+
+            Debug.Log($"[Enemy] {gameObject.name}: 공격 시작!");
+
+
+            if (controller != null)
             {
-                yield return null;
+                controller.SetAttackState(true);  // 공격 애니메이션 실행
             }
+
+            yield return new WaitForSeconds(attackSpeed); // 공격 딜레이
+
+            if (controller != null)
+            {
+                controller.SetAttackState(false);  // 애니메이션 종료
+            }
+
+            yield return new WaitForSeconds(0.1f); // 짧은 대기 후 반복
         }
-
-        Debug.Log($"[Enemy] {gameObject.name}: 타겟이 파괴됨 -> 이동 시작");
-        StopAttack();
-    }
-
-    public IEnumerator ResetAttack()
-    {
-        Debug.Log($"[Enemy] {gameObject.name}: 공격 대기 중...");
-
-        yield return new WaitForSeconds(0.1f);
 
         isAttacking = false;
-
-        if (controller != null)
-        {
-            controller.SetAttackState(false);
-        }
-
-        attackCooldown = 0; // 공격 쿨다운 초기화
-
-        yield return new WaitForSeconds(attackSpeed);
-
-        if (!isDead && currentTarget != null && !currentTarget.IsDestroyed())
-        {
-            Debug.Log($"[Enemy] {gameObject.name}: 다음 공격 시작!");
-            StartCoroutine(AttackTower());
-        }
-        else
-        {
-            StopAttack();
-        }
     }
 
-    private void StopAttack()
+
+
+
+
+    public void StopAttack()
     {
         if (!isDead)
         {
@@ -169,6 +143,40 @@ public class Enemy : MonoBehaviour
             }
 
             Debug.Log($"[Enemy] {gameObject.name}: 공격 종료, 이동 시작");
+        }
+    }
+    private void RestartAttack()
+    {
+        if (!isDead && currentTarget != null)
+        {
+            // 타겟이 파괴되지 않았는지 다시 확인
+            if (currentTarget.IsDestroyed())
+            {
+                Debug.Log($"[Enemy] {gameObject.name}: 타겟이 이미 파괴됨 -> 이동 시작");
+                StopAttack();
+                return;
+            }
+
+            Debug.Log($"[Enemy] {gameObject.name}: 공격 재개!");
+
+            if (controller != null)
+            {
+                controller.SetAttackState(true);  // 공격 애니메이션 다시 실행
+            }
+
+            StartCoroutine(AttackLoop());
+        }
+    }
+
+
+
+
+    // `AttackLoop` 실행을 위한 중간 메서드
+    private void StartAttackLoop()
+    {
+        if (!isDead && currentTarget != null && !currentTarget.IsDestroyed())
+        {
+            StartCoroutine("AttackLoop");
         }
     }
 
@@ -218,6 +226,9 @@ public class Enemy : MonoBehaviour
         Destroy(gameObject);
     }
 
+    /// <summary>
+    /// 슬로우 효과 적용 (이동 속도 및 공격 속도 조정)
+    /// </summary>
     public void ApplySlow(ProjectileSO projectileStats)
     {
         if (!isSlowed)
@@ -225,7 +236,7 @@ public class Enemy : MonoBehaviour
             originalSpeed = movementSpeed;
             float slowFactor = Mathf.Clamp(1f - projectileStats.SlowEffect, 0.1f, 1f);
             movementSpeed = Mathf.Max(movementSpeed * slowFactor, 0.1f);
-            attackCooldown *= slowFactor; // 공격 속도에 슬로우 효과 적용
+            attackSpeed /= slowFactor; // 공격 속도 조정
             isSlowed = true;
         }
         Invoke("EndSlow", projectileStats.SlowDuration);
@@ -234,17 +245,20 @@ public class Enemy : MonoBehaviour
     public void EndSlow()
     {
         movementSpeed = originalSpeed;
-        attackCooldown = attackSpeed;
+        attackSpeed = enemyStats.AttackSpeed; // 원래 공격 속도로 복구
         isSlowed = false;
     }
 
+    /// <summary>
+    /// 스턴 효과 적용 (공격 중단 및 이동 불가)
+    /// </summary>
     public void ApplyStun(ProjectileSO projectileStats)
     {
         originalSpeed = movementSpeed;
         movementSpeed = 0f;
         enemyRigidbody.isKinematic = false;
         isAttacking = false;
-        attackCooldown += projectileStats.StunDuration; // 스턴 동안 공격 쿨다운 증가
+        StopCoroutine(AttackLoop()); // 공격 중단
         Invoke("EndStun", projectileStats.StunDuration);
     }
 
@@ -252,5 +266,9 @@ public class Enemy : MonoBehaviour
     {
         movementSpeed = originalSpeed;
         enemyRigidbody.isKinematic = true;
+        if (currentTarget != null && !currentTarget.IsDestroyed() && !isDead)
+        {
+            StartCoroutine(AttackLoop()); // 스턴 후 다시 공격 시작
+        }
     }
 }

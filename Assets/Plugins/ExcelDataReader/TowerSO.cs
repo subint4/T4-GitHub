@@ -20,7 +20,6 @@ public class TowerSO : ScriptableObject
     public float AttackSpeed;
     public int DeployCost;
     public int UpgradeCost;
-    public float Range;
     public TowerType TowerType;
 
     // JSON 데이터를 불러와 `TowerSO`를 생성하는 메서드

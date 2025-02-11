@@ -25,6 +25,8 @@ public class Tower : MonoBehaviour
 
     public void Update()
     {
+        if (isDead) return; // 사망한 경우 공격 및 감지 중단
+
         attackCooldown -= Time.deltaTime;
 
         if (currentTarget == null || !currentTarget.activeInHierarchy)
@@ -32,7 +34,7 @@ public class Tower : MonoBehaviour
             currentTarget = null;
             animatorController.SetAttackState(false);
         }
-        // 적 탐지
+
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.right, detectionRange, enemyLayer);
         if (hit.collider != null && hit.collider.CompareTag("Enemy"))
         {
@@ -41,7 +43,6 @@ public class Tower : MonoBehaviour
                 currentTarget = hit.collider.gameObject;
             }
 
-            // **애니메이션이 실행 중이 아닐 때만 새로운 공격 시작**
             if (!animatorController.IsPlayingAttackAnimation() && attackCooldown <= 0f)
             {
                 attackCooldown = towerStats.AttackSpeed;
@@ -56,6 +57,7 @@ public class Tower : MonoBehaviour
             }
         }
     }
+
 
     public void Attack()
     {

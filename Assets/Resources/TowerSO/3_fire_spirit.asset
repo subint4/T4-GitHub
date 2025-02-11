@@ -14,10 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: 0
   UnitName: 3_fire_spirit
-  Health: 0
+  Health: 150
   AttackPower: 20
   AttackSpeed: 1
   DeployCost: 0
-  UpgradeCost: 0
-  Range: 0
+  UpgradeCost: 40
   TowerType: 0

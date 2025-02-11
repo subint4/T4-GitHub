@@ -41,7 +41,7 @@ public static class SODataTable
         TowerSO[] allTowers = Resources.LoadAll<TowerSO>(path);
         foreach (TowerSO tower in allTowers)
         {
-            Debug.Log($"{tower.UnitName} | HP: {tower.Health} | ATK: {tower.AttackPower} | Range: {tower.Range}");
+            Debug.Log($"{tower.UnitName} | HP: {tower.Health} | ATK: {tower.AttackPower} ");
         }
     }
 

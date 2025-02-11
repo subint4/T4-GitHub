@@ -14,10 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: 0
   UnitName: 3_light_spirit
-  Health: 0
+  Health: 200
   AttackPower: 40
   AttackSpeed: 1
   DeployCost: 0
-  UpgradeCost: 0
-  Range: 0
+  UpgradeCost: 120
   TowerType: 3

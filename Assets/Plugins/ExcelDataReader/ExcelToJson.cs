@@ -47,7 +47,7 @@ public static class ExcelToJson
 
                         List<Dictionary<string, object>> dataList = new List<Dictionary<string, object>>();
 
-                        // 첫 번째 행 → 컬럼명 저장
+                        // 1. 첫 번째 행 → 컬럼명 저장
                         List<string> columnNames = new List<string>();
                         for (int j = 0; j < table.Columns.Count; j++)
                         {
@@ -60,16 +60,23 @@ public static class ExcelToJson
                             columnNames.Add(columnName);
                         }
 
-                        // 두 번째 행 → 데이터 타입 변환
+                        // 2. 두 번째 행 → 데이터 타입 변환 (2행을 기준으로 설정)
                         Dictionary<string, string> metadata = new Dictionary<string, string>();
                         for (int j = 0; j < table.Columns.Count; j++)
                         {
-                            object typeSample = table.Rows[2][j]; // 첫 번째 실제 데이터 행 기준으로 타입 결정
-                            string typeString = DetectDataType(typeSample);
+                            string typeString = table.Rows[1][j]?.ToString()?.Trim().ToLower();
+
+                            // 지정된 타입이 없거나 잘못된 경우 기본값은 "string"
+                            if (string.IsNullOrEmpty(typeString) || !IsValidType(typeString))
+                            {
+                                Debug.LogWarning($"[{columnNames[j]}] 잘못된 데이터 타입({typeString}) → 기본값 'string' 적용");
+                                typeString = "string";
+                            }
+
                             metadata[columnNames[j]] = typeString;
                         }
 
-                        // 세 번째 행부터 데이터 저장
+                        // 3. 세 번째 행부터 데이터 저장
                         for (int i = 2; i < table.Rows.Count; i++)
                         {
                             Dictionary<string, object> rowDict = new Dictionary<string, object>();
@@ -81,7 +88,7 @@ public static class ExcelToJson
                                 if (cellValue == null)
                                     continue;
 
-                                // 정수와 실수를 구별하여 저장
+                                // **2행에서 정의한 데이터 타입을 기반으로 변환**
                                 rowDict[columnNames[j]] = ConvertToCorrectType(cellValue, metadata[columnNames[j]]);
                             }
 
@@ -91,7 +98,7 @@ public static class ExcelToJson
                             }
                         }
 
-                        // 올바른 JSON 구조로 저장 (DataType을 맨 위로 배치)
+                        // 4. JSON 파일 저장
                         var jsonOutput = new
                         {
                             DataType = dataType.ToString(),
@@ -116,35 +123,30 @@ public static class ExcelToJson
         return outputJsonPath;
     }
 
-    // 데이터 타입을 자동 감지하는 함수
-    private static string DetectDataType(object value)
+    // 지원하는 데이터 타입인지 확인
+    private static bool IsValidType(string type)
     {
-        if (value == null) return "string";
-
-        if (double.TryParse(value.ToString(), out double num))
-        {
-            if (num == Math.Floor(num)) // 소수점이 없으면 정수
-                return "int";
-            return "float";
-        }
-        if (bool.TryParse(value.ToString(), out _)) return "bool";
-
-        return "string"; // 기본값
+        return type == "int" || type == "float" || type == "string" || type == "bool";
     }
 
-    // 정수와 실수를 정확하게 변환하는 함수
+    // **2행(메타데이터)에서 받은 타입을 기준으로 변환**
     private static object ConvertToCorrectType(object value, string expectedType)
     {
         if (value == null) return null;
 
         if (expectedType == "int" && double.TryParse(value.ToString(), out double num))
         {
-            return Convert.ToInt32(num); // 강제 `int` 변환
+            return Convert.ToInt32(num); // **정수 변환**
         }
         else if (expectedType == "float" && double.TryParse(value.ToString(), out double floatNum))
         {
-            return floatNum; // 실수 변환 유지
+            return floatNum; // **소수 유지**
         }
-        return value;
+        else if (expectedType == "bool" && bool.TryParse(value.ToString(), out bool boolValue))
+        {
+            return boolValue; // **참/거짓 변환**
+        }
+
+        return value.ToString(); // 기본적으로 문자열로 저장
     }
 }
