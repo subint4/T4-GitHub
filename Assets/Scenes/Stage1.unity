@@ -4793,6 +4793,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1157314036}
   - component: {fileID: 1157314034}
+  - component: {fileID: 1157314037}
   m_Layer: 0
   m_Name: Wave
   m_TagString: Untagged
@@ -4833,6 +4834,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1157314037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1157314033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 685faa7d2c9a92b498f273e4814bad40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyDataList: []
+  towerDataList: []
+  waveDataList: []
 --- !u!1 &1171014182
 GameObject:
   m_ObjectHideFlags: 0

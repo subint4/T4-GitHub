@@ -1,7 +1,7 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using System;
+using Unity.VisualScripting;
 
 public class Enemy : MonoBehaviour
 {
@@ -13,9 +13,9 @@ public class Enemy : MonoBehaviour
     private int health;
     private int rewardMoney;
     private int attackPower;
-    [HideInInspector]public float attackSpeed;
-    [HideInInspector]public float movementSpeed;
-    [HideInInspector]public float originalSpeed;
+    public float attackSpeed;
+    public float movementSpeed;
+    public float originalSpeed;
     public bool isAttacking = false;
     public bool isSlowed = false;
 
@@ -24,7 +24,8 @@ public class Enemy : MonoBehaviour
     public EnemyAnimatorController controller;
 
     public event Action<GameObject> OnEnemyDeath;
-    private float attackCooldown = 0f;
+    private float attackCooldown = 0f; // 공격 쿨다운 추가
+
     private void Start()
     {
         if (controller == null)
@@ -37,7 +38,6 @@ public class Enemy : MonoBehaviour
         if (enemyStats != null)
         {
             EnemyID = enemyStats.EnemyID;
-
             health = enemyStats.Health;
             rewardMoney = enemyStats.RewardMoney;
             attackPower = enemyStats.AttackPower;
@@ -114,24 +114,24 @@ public class Enemy : MonoBehaviour
                 attackCooldown = attackSpeed;
                 currentTarget.TakeDamage(attackPower);
                 Debug.Log($"[Enemy] {gameObject.name}: {currentTarget.name}에게 {attackPower} 피해를 입힘");
+
+                yield return new WaitForSeconds(attackSpeed);
             }
-            yield return null;
+            else
+            {
+                yield return null;
+            }
         }
 
         Debug.Log($"[Enemy] {gameObject.name}: 타겟이 파괴됨 -> 이동 시작");
         StopAttack();
     }
 
-
-
-
-
-
     public IEnumerator ResetAttack()
     {
         Debug.Log($"[Enemy] {gameObject.name}: 공격 대기 중...");
 
-        yield return new WaitForSeconds(0.1f); // 애니메이션 트랜지션 고려
+        yield return new WaitForSeconds(0.1f);
 
         isAttacking = false;
 
@@ -140,7 +140,9 @@ public class Enemy : MonoBehaviour
             controller.SetAttackState(false);
         }
 
-        yield return new WaitForSeconds(attackSpeed); // 일정한 공격 딜레이 유지
+        attackCooldown = 0; // 공격 쿨다운 초기화
+
+        yield return new WaitForSeconds(attackSpeed);
 
         if (!isDead && currentTarget != null && !currentTarget.IsDestroyed())
         {
@@ -153,13 +155,12 @@ public class Enemy : MonoBehaviour
         }
     }
 
-
     private void StopAttack()
     {
         if (!isDead)
         {
             isAttacking = false;
-            movementSpeed = Mathf.Max(originalSpeed, 0.1f); // 멈추지 않도록 최소 이동 속도 설정
+            movementSpeed = Mathf.Max(originalSpeed, 0.1f);
             enemyRigidbody.isKinematic = false;
 
             if (controller != null)
@@ -171,19 +172,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-
-
-    // 이동 재개를 위한 코루틴 추가
-    private IEnumerator ResumeMovementAfterDelay()
-    {
-        yield return new WaitForSeconds(0.2f);
-        if (!isDead)
-        {
-            transform.Translate(Vector3.left * movementSpeed * Time.deltaTime);
-        }
-    }
-
-
     public void TakeDamage(int damage)
     {
         if (isDead) return;
@@ -193,8 +181,6 @@ public class Enemy : MonoBehaviour
         {
             Die();
         }
-
-
     }
 
     private void Die()
@@ -206,12 +192,11 @@ public class Enemy : MonoBehaviour
         enemyRigidbody.velocity = Vector2.zero;
         enemyRigidbody.isKinematic = true;
 
-
-        if(enemyCollider != null)
+        if (enemyCollider != null)
         {
             enemyCollider.enabled = false;
         }
-        if(enemyRigidbody != null)
+        if (enemyRigidbody != null)
         {
             enemyRigidbody.simulated = false;
         }
@@ -232,34 +217,40 @@ public class Enemy : MonoBehaviour
         Debug.Log($"[Enemy] {gameObject.name}: 사망 애니메이션 종료 후 제거됨.");
         Destroy(gameObject);
     }
+
     public void ApplySlow(ProjectileSO projectileStats)
     {
-        if(!isSlowed)
+        if (!isSlowed)
         {
-        originalSpeed = movementSpeed;
-        float slowFactor = Mathf.Clamp(1f - projectileStats.SlowEffect, 0.1f, 1f);
-        movementSpeed = Mathf.Max(movementSpeed * slowFactor,0.1f);
-        isSlowed = true;
+            originalSpeed = movementSpeed;
+            float slowFactor = Mathf.Clamp(1f - projectileStats.SlowEffect, 0.1f, 1f);
+            movementSpeed = Mathf.Max(movementSpeed * slowFactor, 0.1f);
+            attackCooldown *= slowFactor; // 공격 속도에 슬로우 효과 적용
+            isSlowed = true;
         }
         Invoke("EndSlow", projectileStats.SlowDuration);
     }
+
     public void EndSlow()
     {
         movementSpeed = originalSpeed;
+        attackCooldown = attackSpeed;
         isSlowed = false;
     }
+
     public void ApplyStun(ProjectileSO projectileStats)
     {
         originalSpeed = movementSpeed;
         movementSpeed = 0f;
         enemyRigidbody.isKinematic = false;
         isAttacking = false;
+        attackCooldown += projectileStats.StunDuration; // 스턴 동안 공격 쿨다운 증가
         Invoke("EndStun", projectileStats.StunDuration);
     }
+
     public void EndStun()
     {
         movementSpeed = originalSpeed;
         enemyRigidbody.isKinematic = true;
-        
     }
 }
