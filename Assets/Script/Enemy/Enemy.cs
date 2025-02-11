@@ -95,7 +95,12 @@ public class Enemy : MonoBehaviour
         }
 
         yield return new WaitForSeconds(attackSpeed); // 공격 간격 유지
-
+        if (currentTarget == null || currentTarget.IsDestroyed())
+        {
+            Debug.Log($"[Enemy] {gameObject.name}: 타겟이 삭제되어 공격 중지!");
+            StopAttack();
+            yield break;
+        }
         Collider2D[] targets = Physics2D.OverlapBoxAll(transform.position, new Vector2(1f, 1f), 0f);
         foreach (var target in targets)
         {
@@ -124,14 +129,15 @@ public class Enemy : MonoBehaviour
 
         yield return new WaitForSeconds(attackSpeed); // 공격 속도 반영하여 대기
 
-        if (!isDead && currentTarget != null && !currentTarget.IsDestroyed())
+        if (currentTarget == null || currentTarget.IsDestroyed())
         {
-            Debug.Log($"[Enemy] {gameObject.name}: 다음 공격 시작!");
-            StartCoroutine(AttackTower()); // 다음 공격 실행
+            Debug.Log($"[Enemy] {gameObject.name}: 타겟이 파괴됨 -> 이동 시작");
+            StopAttack();
+            yield break;
         }
         else
         {
-            StopAttack();
+            StartCoroutine(AttackTower());
         }
     }
 
@@ -147,6 +153,20 @@ public class Enemy : MonoBehaviour
         }
 
         Debug.Log("공격 종료, 이동 상태 복구");
+
+        if(currentTarget !=null&& currentTarget.IsDestroyed())
+        {
+            currentTarget = null;
+        }
+        if(isSlowed && movementSpeed <0.1f)
+        {
+            movementSpeed = 0.1f;
+        }
+
+        if(!isDead)
+        {
+            transform.Translate(Vector3.left * movementSpeed * Time.deltaTime);
+        }
     }
 
     public void TakeDamage(int damage)
@@ -202,7 +222,8 @@ public class Enemy : MonoBehaviour
         if(!isSlowed)
         {
         originalSpeed = movementSpeed;
-        movementSpeed *= (1f - projectileStats.SlowEffect);
+        float slowFactor = Mathf.Clamp(1f - projectileStats.SlowEffect, 0.1f, 1f);
+        movementSpeed = Mathf.Max(movementSpeed * slowFactor,0.1f);
         isSlowed = true;
         }
         Invoke("EndSlow", projectileStats.SlowDuration);

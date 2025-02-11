@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 [System.Serializable]
@@ -11,6 +12,7 @@ public class UnitData
     public float AttackSpeed;
     public int DeployCost;
     public int UpgradeCost;
+    public string TowerType;
 }
 
 [System.Serializable]

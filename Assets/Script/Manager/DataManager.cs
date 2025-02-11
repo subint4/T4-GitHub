@@ -155,6 +155,12 @@ public class DataManager : MonoBehaviour
 
         return waveDataDictionary[waveCount];
     }
+    public float GetWaveInterval(int waveIndex)
+    {
+        WaveSO wave = GetWaveData(waveIndex);
+        return wave != null ? wave.timeBetweenWaves : 5f; // 기본값 5초
+    }
+
 
     // 적 프리팹을 UnitName 기준으로 가져오기
     public GameObject GetEnemyPrefab(string unitName)

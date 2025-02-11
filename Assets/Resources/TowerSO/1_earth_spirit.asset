@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8c34944e472fb6428d21b895e550bde, type: 3}
   m_Name: 1_earth_spirit
   m_EditorClassIdentifier: 
-  key: 1010
+  key: 0
   UnitName: 1_earth_spirit
-  Health: 400
+  Health: 0
   AttackPower: 0
   AttackSpeed: 0
-  DeployCost: 75
+  DeployCost: 0
   UpgradeCost: 0
   Range: 0
   TowerType: 0

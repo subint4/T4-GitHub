@@ -80,6 +80,7 @@ public class Tower : MonoBehaviour
 
 public void TakeDamage(int damage)
     {
+        if (isDead) return;
         Health -= damage;
         Debug.Log($"타워가 {damage}를 받았습니다. 현재 체력 : {Health}");
 
@@ -95,8 +96,8 @@ public void TakeDamage(int damage)
         Debug.Log("타워가 파괴되었습니다.");
         if (currentTiles != null)
         {
-            currentTiles.isOccupied = false; // 타워가 파괴되면 타일의 점유 상태 해제
-            currentTiles.currentTower = null;
+            currentTiles.isOccupied = false;    // 타워가 파괴되면 타일의 점유 상태 해제
+            currentTiles.currentTower = null;   // 현재 타워 데이터 파괴
         }
 
         Destroy(gameObject);
@@ -114,4 +115,4 @@ public void TakeDamage(int damage)
             return false;
         }
     }
-    }
+}

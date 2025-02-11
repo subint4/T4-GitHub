@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8c34944e472fb6428d21b895e550bde, type: 3}
   m_Name: 3_fire_spirit
   m_EditorClassIdentifier: 
-  key: 1003
+  key: 0
   UnitName: 3_fire_spirit
-  Health: 150
+  Health: 0
   AttackPower: 20
   AttackSpeed: 1
   DeployCost: 0
-  UpgradeCost: 40
+  UpgradeCost: 0
   Range: 0
   TowerType: 0
