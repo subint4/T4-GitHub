@@ -1,0 +1,50 @@
+{
+  "DataType": "EnemyData",
+  "Metadata": {
+    "ID": "int",
+    "Name": "string",
+    "Health": "float",
+    "Speed": "float",
+    "AttackPower": "float",
+    "SpawnCount": "int",
+    "RewardMoney": "int"
+  },
+  "Data": [
+    {
+      "ID": 1,
+      "Name": "Zombie1",
+      "Health": 10.0,
+      "Speed": 1.0,
+      "AttackPower": 10.0,
+      "SpawnCount": 5,
+      "RewardMoney": 20
+    },
+    {
+      "ID": 2,
+      "Name": "Zombie2",
+      "Health": 20.0,
+      "Speed": 0.8,
+      "AttackPower": 20.0,
+      "SpawnCount": 3,
+      "RewardMoney": 25
+    },
+    {
+      "ID": 3,
+      "Name": "Zombie3",
+      "Health": 30.0,
+      "Speed": 0.5,
+      "AttackPower": 15.0,
+      "SpawnCount": 1,
+      "RewardMoney": 30
+    },
+    {
+      "ID": 4,
+      "Name": "Boss_Zombie",
+      "Health": 40.0,
+      "Speed": 1.2,
+      "AttackPower": 50.0,
+      "SpawnCount": 4,
+      "RewardMoney": 50
+    }
+  ]
+}

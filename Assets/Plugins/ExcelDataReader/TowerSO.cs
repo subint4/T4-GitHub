@@ -1,54 +1,73 @@
-using System;
-using System.Collections.Generic;
+using OfficeOpenXml.FormulaParsing.LexicalAnalysis;
 using UnityEngine;
-
 public enum TowerType
 {
-    Default,
-    Slow,
-    Pierce,
-    Stun
+    Default,  // 기본형
+    Slow,     // 슬로우 효과
+    Pierce,   // 관통 공격
+    Stun      // 기절 효과
 }
-
-[CreateAssetMenu(fileName = "NewTowerData", menuName = "New Tower/Tower")]
+[CreateAssetMenu(fileName = "NewTowerData", menuName = "Game Data/Tower")]
 public class TowerSO : ScriptableObject
 {
-    public int key;
-    public string UnitName;
+    public int ID;
+    public string Name;
+    public int NextLevelID;
     public int Health;
+    public int Level;
     public int AttackPower;
     public float AttackSpeed;
     public int DeployCost;
     public int UpgradeCost;
     public TowerType TowerType;
+    public float SlowEffect;
+    public float SlowDuration;
+    public int PierceCount;
+    public float StunDuration;
 
-    // JSON 데이터를 불러와 `TowerSO`를 생성하는 메서드
-    public void LoadFromUnitData(UnitData unitData)
+    public void LoadFromJson(TowerData data)
     {
-        key = unitData.key;
-        UnitName = unitData.UnitName;
-        Health = unitData.Health;
-        AttackPower = unitData.AttackPower;
-        AttackSpeed = unitData.AttackSpeed;
-        DeployCost = unitData.DeployCost;
-        UpgradeCost = unitData.UpgradeCost;
+        ID = data.ID;
+        Name = data.Name;
+        NextLevelID = data.NextLevelID;
+        Health = (int)data.Health;
+        Level = data.Level;
+        AttackPower = (int)data.AttackPower;
+        AttackSpeed = data.AttackSpeed;
+        DeployCost = data.DeployCost;
+        UpgradeCost = data.UpgradeCost;
+        SlowEffect = data.SlowEffect;
+        SlowDuration = data.SlowDuration;
+        PierceCount = data.PierceCount;
+        StunDuration = data.StunDuration;
 
-        if (unitData.TowerType != null)
+        if (System.Enum.TryParse(data.Type.Trim(), true, out TowerType parsedType))
         {
-            string towerTypeString = unitData.TowerType.Trim();
-            if (Enum.TryParse(towerTypeString, true, out TowerType parsedType))
-            {
-                TowerType = parsedType;
-            }
-            else
-            {
-                Debug.LogError($"{UnitName}: TowerType 변환 실패! 기본값(Default) 적용.");
-                TowerType = TowerType.Default;
-            }
+            TowerType = parsedType;
         }
         else
         {
+            Debug.LogError($"{Name}: TowerType 변환 실패! 기본값(Default) 적용.");
             TowerType = TowerType.Default;
         }
     }
+
+[System.Serializable]
+public class TowerData
+{
+    public int ID;
+    public string Name;
+    public int NextLevelID;
+    public float Health;
+    public int Level;
+    public float AttackPower;
+    public float AttackSpeed;
+    public int DeployCost;
+    public int UpgradeCost;
+    public string Type;
+    public float SlowEffect;
+    public float SlowDuration;
+    public int PierceCount;
+    public float StunDuration;
+}
 }

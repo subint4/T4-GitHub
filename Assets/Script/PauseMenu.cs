@@ -19,7 +19,7 @@ public class PauseMenu : MonoBehaviour
     // 효과음 토글 텍스트
     public Text ImpactToggleText;
 
-    private bool isPaused = false;
+    private bool isPaused = false;  
     // 현재 효과음 상태
     private bool isSFXOn = true;
 

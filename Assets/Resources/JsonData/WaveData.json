@@ -1,40 +1,82 @@
 {
   "DataType": "WaveData",
   "Metadata": {
-    "waveCount": "float",
-    "EnemyID": "float",
-    "Count": "float"
+    "ID": "int",
+    "stagenum": "int",
+    "wave": "int",
+    "enemyID": "int",
+    "count": "int",
+    "SpawnGroup": "int",
+    "SpawnDelay": "float",
+    "interval": "float",
+    "SpawnLaneID": "int"
   },
   "Data": [
     {
-      "waveCount": 1.0,
-      "EnemyID": 1.0,
-      "Count": 5.0
+      "ID": 1,
+      "stagenum": 1,
+      "wave": 1,
+      "enemyID": 1,
+      "count": 5,
+      "SpawnGroup": 4,
+      "SpawnDelay": 0.0,
+      "interval": 2.0,
+      "SpawnLaneID": 2
     },
     {
-      "waveCount": 1.0,
-      "EnemyID": 2.0,
-      "Count": 3.0
+      "ID": 2,
+      "stagenum": 1,
+      "wave": 1,
+      "enemyID": 1,
+      "count": 3,
+      "SpawnGroup": 2,
+      "SpawnDelay": 10.0,
+      "interval": 2.0,
+      "SpawnLaneID": 22
     },
     {
-      "waveCount": 2.0,
-      "EnemyID": 1.0,
-      "Count": 6.0
+      "ID": 3,
+      "stagenum": 1,
+      "wave": 1,
+      "enemyID": 2,
+      "count": 3,
+      "SpawnGroup": 3,
+      "SpawnDelay": 15.0,
+      "interval": 3.0,
+      "SpawnLaneID": 19
     },
     {
-      "waveCount": 2.0,
-      "EnemyID": 3.0,
-      "Count": 4.0
+      "ID": 4,
+      "stagenum": 1,
+      "wave": 2,
+      "enemyID": 3,
+      "count": 6,
+      "SpawnGroup": 2,
+      "SpawnDelay": 25.0,
+      "interval": 2.0,
+      "SpawnLaneID": 8
     },
     {
-      "waveCount": 3.0,
-      "EnemyID": 2.0,
-      "Count": 5.0
+      "ID": 5,
+      "stagenum": 1,
+      "wave": 2,
+      "enemyID": 3,
+      "count": 6,
+      "SpawnGroup": 2,
+      "SpawnDelay": 35.0,
+      "interval": 2.0,
+      "SpawnLaneID": 16
     },
     {
-      "waveCount": 3.0,
-      "EnemyID": 4.0,
-      "Count": 1.0
+      "ID": 6,
+      "stagenum": 1,
+      "wave": 2,
+      "enemyID": 4,
+      "count": 1,
+      "SpawnGroup": 1,
+      "SpawnDelay": 40.0,
+      "interval": 0.0,
+      "SpawnLaneID": 31
     }
   ]
 }

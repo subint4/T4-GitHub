@@ -1,120 +1,153 @@
+using System.Collections;
 using UnityEngine;
 
 public class Tower : MonoBehaviour
 {
+    public int TowerID;  // **SO와 연결될 ID (프리팹에 직접 설정 가능)**
+    private int currentLevel;
+
     public TowerSO towerStats;
-    public Transform firePoint;
-    public GameObject projectilePrefab;
-    public TowerAnimatorController animatorController;
-    public Tiles currentTiles;
+    public Tiles currentTile;
+    public TowerAnimatorController towerAnimatorController;
     public bool isDead = false;
+    private float health;
+    private GameObject currentTarget; // 현재 공격 대상 저장
 
-    private int Health;
-    private float attackCooldown = 0f;
-    private GameObject currentTarget;
-    private float detectionRange = 1000f;
-    [SerializeField] private LayerMask enemyLayer;
+    private void Awake()
+    {
+        AssignTowerSO(); // 자동 SO 연결
+        if (towerStats == null)
+        {
+            Debug.LogError($"TowerStats가 {gameObject.name}에서 할당되지 않았습니다! 프리팹을 확인하세요.");
+        }
+        else
+        {
+            Debug.Log($"{gameObject.name}의 TowerStats가 올바르게 설정됨. Tower ID: {towerStats.ID}");
+        }
+    }
 
+    private void AssignTowerSO()
+    {
+        if (TowerID <= 0)
+        {
+            Debug.LogError($"{gameObject.name}의 TowerID가 올바르지 않습니다! (현재 ID: {TowerID})");
+            return;
+        }
+
+        towerStats = DataManager.GetTowerData(TowerID);
+
+        if (towerStats == null)
+        {
+            Debug.LogError($"{gameObject.name}에서 TowerID {TowerID}에 해당하는 SO를 찾을 수 없습니다!");
+        }
+        else
+        {
+            Debug.Log($"{gameObject.name}에 TowerSO({towerStats.Name})가 정상 할당됨 (ID: {TowerID})");
+        }
+    }
     private void Start()
     {
         if (towerStats != null)
         {
-            Health = towerStats.Health;
+            health = towerStats.Health;
         }
     }
 
-    public void Update()
+    private void Update()
     {
-        if (isDead) return; // 사망한 경우 공격 및 감지 중단
-
-        attackCooldown -= Time.deltaTime;
-
-        if (currentTarget == null || !currentTarget.activeInHierarchy)
+        if (!isDead)
         {
-            currentTarget = null;
-            animatorController.SetAttackState(false);
+            FindTarget();
+        }
+    }
+
+    private void FindTarget()
+    {
+        float detectionRange = 1000f; // 탐지 거리
+        Collider2D[] enemies = Physics2D.OverlapCircleAll(transform.position, detectionRange);
+
+        foreach (var enemy in enemies)
+        {
+            if (enemy.CompareTag("Enemy"))
+            {
+                currentTarget = enemy.gameObject;
+                if (towerAnimatorController != null)
+                {
+                    towerAnimatorController.SetAttackState(true);
+                }
+                return;
+            }
         }
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.right, detectionRange, enemyLayer);
-        if (hit.collider != null && hit.collider.CompareTag("Enemy"))
+        currentTarget = null;
+        if (towerAnimatorController != null)
         {
-            if (currentTarget != hit.collider.gameObject)
-            {
-                currentTarget = hit.collider.gameObject;
-            }
-
-            if (!animatorController.IsPlayingAttackAnimation() && attackCooldown <= 0f)
-            {
-                attackCooldown = towerStats.AttackSpeed;
-                animatorController.SetAttackState(true);
-            }
+            towerAnimatorController.SetAttackState(false);
+        }
+    }
+    // 타워 클릭 시 업그레이드 UI 활성화
+    private void OnMouseDown()
+    {
+        if (UpgradeUI.Instance != null)
+        {
+            UpgradeUI.Instance.OpenUpgradeUI(this);
         }
         else
         {
-            if (!animatorController.IsPlayingAttackAnimation())
-            {
-                currentTarget = null;
-            }
+            Debug.LogError("UpgradeUI 인스턴스를 찾을 수 없습니다!");
         }
     }
 
+    // 업그레이드 실행
+    public void UpgradeTower(TowerSO newStats)
+    {
+        if (newStats == null)
+        {
+            Debug.LogError("새로운 타워 데이터가 없습니다!");
+            return;
+        }
+
+        towerStats = newStats;
+        transform.localScale *= 1.3f; // 30% 크기 증가
+        Debug.Log($"{towerStats.Name} 업그레이드 완료! 새로운 공격력: {towerStats.AttackPower}");
+    }
+    public void TakeDamage(float damage)
+    {
+        if (isDead) return;
+
+        health -= damage;
+        if (health <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        if (isDead) return;
+        isDead = true;
+
+        if (towerAnimatorController != null)
+        {
+            towerAnimatorController.PlayDeathAnimation();
+        }
+    }
 
     public void Attack()
     {
-        if (projectilePrefab == null)
+        if (currentTarget != null)
         {
-            Debug.LogError("투사체 프리팹이 연결되지 않았습니다!");
-            return;
-        }
-
-        if (currentTarget == null)
-        {
-            return;
-        }
-
-        GameObject projectile = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
-        Projectile projectileScript = projectile.GetComponent<Projectile>();
-
-        ProjectileDataLoader.ProjectileData projectileData = ProjectileDataLoader.GetProjectileData(towerStats.TowerType);
-        projectileScript.SetDamage(towerStats.AttackPower);
-    }
-
-
-public void TakeDamage(int damage)
-    {
-        if (isDead) return;
-        Health -= damage;
-        Debug.Log($"타워가 {damage}를 받았습니다. 현재 체력 : {Health}");
-
-        if (Health <= 0)
-        {
-            isDead = true;
-            animatorController.PlayDeathAnimation();
+            Enemy enemy = currentTarget.GetComponent<Enemy>();
+            if (enemy != null)
+            {
+                enemy.TakeDamage(towerStats.AttackPower);
+            }
         }
     }
-    public void DestroyTower()
+
+    public void OnDeathAnimationEnd()
     {
-
-        Debug.Log("타워가 파괴되었습니다.");
-        if (currentTiles != null)
-        {
-            currentTiles.isOccupied = false;    // 타워가 파괴되면 타일의 점유 상태 해제
-            currentTiles.currentTower = null;   // 현재 타워 데이터 파괴
-        }
-
         Destroy(gameObject);
     }
-    public bool UpgradeTower()
-    {
-        if (ResourceManager.Instance.SpendGoldForTower(towerStats, true)) // 업그레이드 비용 차감
-        {
-            Debug.Log($"타워 업그레이드 완료! 업그레이드 비용: {towerStats.UpgradeCost}");
-            return true;
-        }
-        else
-        {
-            Debug.Log("골드 부족으로 타워 업그레이드 불가!");
-            return false;
-        }
-    }
+
 }

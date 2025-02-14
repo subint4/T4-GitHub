@@ -10,14 +10,15 @@ public class Enemy : MonoBehaviour
     public Rigidbody2D enemyRigidbody;
     public bool isDead = false;
     private Collider2D enemyCollider;
-    private int health;
+    private float health;
     private int rewardMoney;
-    public int attackPower;
+    public float attackPower;
     public float attackSpeed;
     public float movementSpeed;
     public float originalSpeed;
     public bool isAttacking = false;
     public bool isSlowed = false;
+    public float currentSpeed;
 
     public Tower currentTarget;
     private ProjectileSO projectileStats;
@@ -25,33 +26,42 @@ public class Enemy : MonoBehaviour
 
     public event Action<GameObject> OnEnemyDeath;
 
-    private void Start()
+    public void Initialize(EnemySO stats)
     {
-        if (controller == null)
-        {
-            controller = GetComponent<EnemyAnimatorController>();
-        }
-
-        enemyRigidbody = GetComponent<Rigidbody2D>();
-
+        enemyStats = stats;
         if (enemyStats != null)
         {
-            EnemyID = enemyStats.EnemyID;
-            health = enemyStats.Health;
-            rewardMoney = enemyStats.RewardMoney;
-            attackPower = enemyStats.AttackPower;
-            attackSpeed = enemyStats.AttackSpeed;
-            movementSpeed = enemyStats.MovementSpeed;
-            originalSpeed = movementSpeed;
+            currentSpeed = enemyStats.MovementSpeed;
+        }
+    transform.localScale = new Vector3(-1, 1, 1); // 왼쪽으로 이동
+    }
+
+        private void Awake()
+    {
+        if (enemyStats == null)
+        {
+            enemyStats = DataManager.GetEnemyData(EnemyID);
+            if (enemyStats != null)
+            {
+                Debug.Log($"Enemy '{gameObject.name}'에 EnemySO '{enemyStats.ID}' 자동 할당 완료!");
+            }
+            else
+            {
+                Debug.LogError($"Enemy '{gameObject.name}'에 EnemySO 할당 실패! EnemyID: {EnemyID}");
+            }
+        }
+    }
+    void Start()
+    {
+        if (enemyStats == null)
+        {
+            Debug.LogError($"Enemy ({gameObject.name}): EnemySO가 할당되지 않았습니다!");
         }
         else
         {
-            Debug.LogError("적 스탯이 연결되지 않았습니다!");
+            Debug.Log($"Enemy ({gameObject.name}) - ID: {enemyStats.ID}");
         }
-
-        transform.localScale = new Vector3(-1, 1, 1); // 왼쪽으로 이동
     }
-
     private void Update()
     {
         if (!isAttacking && !isDead)
@@ -70,7 +80,7 @@ public class Enemy : MonoBehaviour
     {
         if (collision.CompareTag("EndLine"))
         {
-            GameManager.instance?.GameOver();
+            GameManager.Instance?.GameOver();
             Debug.Log("적이 EndLine에 도달하여 게임 종료!");
             Destroy(gameObject);
             return;
@@ -229,17 +239,17 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// 슬로우 효과 적용 (이동 속도 및 공격 속도 조정)
     /// </summary>
-    public void ApplySlow(ProjectileSO projectileStats)
+    public void ApplySlow(float slowFactor, float duration)
     {
         if (!isSlowed)
         {
             originalSpeed = movementSpeed;
-            float slowFactor = Mathf.Clamp(1f - projectileStats.SlowEffect, 0.1f, 1f);
-            movementSpeed = Mathf.Max(movementSpeed * slowFactor, 0.1f);
-            attackSpeed /= slowFactor; // 공격 속도 조정
+            float adjustedSlowFactor = Mathf.Clamp(1f - slowFactor, 0.1f, 1f);
+            movementSpeed = Mathf.Max(movementSpeed * adjustedSlowFactor, 0.1f);
+            attackSpeed /= adjustedSlowFactor; // 공격 속도 조정
             isSlowed = true;
         }
-        Invoke("EndSlow", projectileStats.SlowDuration);
+        Invoke("EndSlow", duration);
     }
 
     public void EndSlow()
@@ -252,14 +262,16 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// 스턴 효과 적용 (공격 중단 및 이동 불가)
     /// </summary>
-    public void ApplyStun(ProjectileSO projectileStats)
+    public void ApplyStun(float duration)
     {
+        if (isDead) return;
+
         originalSpeed = movementSpeed;
         movementSpeed = 0f;
         enemyRigidbody.isKinematic = false;
         isAttacking = false;
         StopCoroutine(AttackLoop()); // 공격 중단
-        Invoke("EndStun", projectileStats.StunDuration);
+        Invoke("EndStun", duration);
     }
 
     public void EndStun()

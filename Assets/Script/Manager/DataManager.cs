@@ -1,180 +1,168 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class DataManager : MonoBehaviour
+public static class DataManager
 {
-    public static DataManager Instance { get; private set; }
+    private static Dictionary<int, EnemySO> enemyDataDictionary = new Dictionary<int, EnemySO>();
+    private static Dictionary<int, TowerSO> towerDataDictionary = new Dictionary<int, TowerSO>();
+    private static Dictionary<int, WaveSO> waveDataDictionary = new Dictionary<int, WaveSO>();
+    private static Dictionary<int, GameObject> towerPrefabDictionary = new Dictionary<int, GameObject>();
+    private static Dictionary<int, GameObject> enemyPrefabDictionary = new Dictionary<int, GameObject>();
 
-    [SerializeField] private List<EnemySO> enemyDataList = new List<EnemySO>();
-    [SerializeField] private List<TowerSO> towerDataList = new List<TowerSO>();
-    [SerializeField] private List<WaveSO> waveDataList = new List<WaveSO>();
-
-    private Dictionary<int, EnemySO> enemyDataDictionary = new Dictionary<int, EnemySO>();
-    private Dictionary<int, WaveSO> waveDataDictionary = new Dictionary<int, WaveSO>();
-    private Dictionary<string, TowerSO> towerDataDictionary = new Dictionary<string, TowerSO>();
-    private Dictionary<string, GameObject> enemyPrefabDictionary = new Dictionary<string, GameObject>();
-
-    private void Awake()
+    static DataManager()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
+        InitializeData();
+    }
 
-            // Resources �������� �ڵ����� ������ �ε�
-            enemyDataList = new List<EnemySO>(Resources.LoadAll<EnemySO>("EnemySO"));
-            towerDataList = new List<TowerSO>(Resources.LoadAll<TowerSO>("TowerSO"));
-            waveDataList = new List<WaveSO>(Resources.LoadAll<WaveSO>("WaveSO"));
+    private static void InitializeData()
+    {
+        Debug.Log("DataManager: 데이터 초기화 시작...");
 
-            InitializeData();
-        }
-        else
+        LoadEnemyData();
+        LoadTowerData();
+        LoadWaveData();
+        LoadTowerPrefabs();
+        LoadEnemyPrefabs();
+    }
+
+    // **적 데이터 로드**
+    private static void LoadEnemyData()
+    {
+        EnemySO[] enemyDataList = Resources.LoadAll<EnemySO>("EnemySO");
+
+        foreach (var enemy in enemyDataList)
         {
-            Destroy(gameObject);
+            if (enemy != null)
+            {
+                enemyDataDictionary[enemy.ID] = enemy;
+            }
         }
     }
 
-    private void InitializeData()
+    //  타워 데이터 로드
+    private static void LoadTowerData()
     {
-        Debug.Log("������ �Ŵ��� �ʱ�ȭ ����...");
-
-        // �� ������ �ε�
-        enemyDataDictionary.Clear();
-        foreach (var enemy in enemyDataList)
-        {
-            if (enemy == null)
-            {
-                Debug.LogError("EnemySO ��Ͽ� null ���� �ֽ��ϴ�.");
-                continue;
-            }
-
-            if (!enemyDataDictionary.ContainsKey(enemy.EnemyID))
-            {
-                enemyDataDictionary.Add(enemy.EnemyID, enemy);
-                Debug.Log($"EnemySO �ε�: {enemy.UnitName} (ID: {enemy.EnemyID})");
-            }
-        }
-
-        // Ÿ�� ������ �ε�
-        towerDataDictionary.Clear();
+        TowerSO[] towerDataList = Resources.LoadAll<TowerSO>("TowerSO");
         foreach (var tower in towerDataList)
         {
-            if (tower == null)
-            {
-                Debug.LogError("TowerSO ��Ͽ� null ���� �ֽ��ϴ�.");
-                continue;
-            }
-
-            if (!towerDataDictionary.ContainsKey(tower.UnitName))
-            {
-                towerDataDictionary.Add(tower.UnitName, tower);
-                Debug.Log($"TowerSO �ε�: {tower.UnitName}");
-            }
+            if (tower != null)
+                towerDataDictionary[tower.ID] = tower;
         }
+    }
 
-        // ���̺� ������ �ε�
-        waveDataDictionary.Clear();
+    //  웨이브 데이터 로드
+    private static void LoadWaveData()
+    {
+        WaveSO[] waveDataList = Resources.LoadAll<WaveSO>("WaveSO");
         foreach (var wave in waveDataList)
         {
-            if (wave == null)
-            {
-                Debug.LogError("WaveSO ��Ͽ� null ���� �ֽ��ϴ�.");
-                continue;
-            }
-
-            if (!waveDataDictionary.ContainsKey(wave.waveCount))
-            {
-                waveDataDictionary.Add(wave.waveCount, wave);
-                Debug.Log($"���̺� �ε� �Ϸ�: Wave {wave.waveCount} (�� ��: {wave.enemyCounts.Count})");
-            }
+            if (wave != null)
+                waveDataDictionary[wave.ID] = wave;
         }
+    }
 
-        // �� ������ �ڵ� �ε�
-        enemyPrefabDictionary.Clear();
-        GameObject[] loadedPrefabs = Resources.LoadAll<GameObject>("Prefabs/Enemy");
-
-        if (loadedPrefabs.Length == 0)
-        {
-            Debug.LogError("EnemyPrefabs�� �ε���� �ʾҽ��ϴ�. Resources/Prefabs/Enemy ������ Ȯ���ϼ���.");
-        }
+    //  타워 프리팹 로드
+    private static void LoadTowerPrefabs()
+    {
+        GameObject[] loadedPrefabs = Resources.LoadAll<GameObject>("Prefabs/Tower");
 
         foreach (var prefab in loadedPrefabs)
         {
-            if (prefab == null)
+            Tower towerComponent = prefab.GetComponent<Tower>();
+            if (towerComponent != null && towerComponent.towerStats != null)
             {
-                Debug.LogError("EnemyPrefab ��Ͽ� null ���� �ֽ��ϴ�.");
-                continue;
+                int towerID = towerComponent.towerStats.ID;
+                towerPrefabDictionary[towerID] = prefab;
+                Debug.Log($"타워 프리팹 로드됨: {prefab.name} (ID: {towerID})");
             }
-
-            if (!enemyPrefabDictionary.ContainsKey(prefab.name))
+            else
             {
-                enemyPrefabDictionary.Add(prefab.name, prefab);
-                Debug.Log($"EnemyPrefab �ڵ� �ε�: {prefab.name}");
+                Debug.LogError($"타워 프리팹 '{prefab.name}'에서 Tower 또는 towerStats를 찾을 수 없음!");
             }
         }
-
-        Debug.Log($"���� ��ϵ� EnemyPrefab ����: {enemyPrefabDictionary.Count}");
     }
 
-    // �� �����͸� EnemyID �������� ��������
-    public EnemySO GetEnemyData(int enemyID)
+    //  적 프리팹 로드
+    private static void LoadEnemyPrefabs()
     {
-        if (!enemyDataDictionary.ContainsKey(enemyID))
+        GameObject[] loadedPrefabs = Resources.LoadAll<GameObject>("Prefabs/Enemy");
+
+        foreach (var prefab in loadedPrefabs)
         {
-            Debug.LogError($"EnemyID {enemyID} �����͸� ã�� �� �����ϴ�.");
-            return null;
-        }
-
-        return enemyDataDictionary[enemyID];
-    }
-
-    // Ÿ�� �����͸� UnitName �������� ��������
-    public TowerSO GetTowerData(string unitName)
-    {
-        if (!towerDataDictionary.ContainsKey(unitName))
-        {
-            Debug.LogError($"Ÿ�� {unitName} �����͸� ã�� �� �����ϴ�.");
-            return null;
-        }
-
-        return towerDataDictionary[unitName];
-    }
-
-    // ���̺� �����͸� waveCount �������� ��������
-    public WaveSO GetWaveData(int waveCount)
-    {
-        if (!waveDataDictionary.ContainsKey(waveCount))
-        {
-            Debug.LogError($"���̺� {waveCount} �����͸� ã�� �� �����ϴ�. ��ϵ� ���̺� ����: {waveDataDictionary.Count}");
-            foreach (var key in waveDataDictionary.Keys)
+            Enemy enemyComponent = prefab.GetComponent<Enemy>();
+            if (enemyComponent != null)
             {
-                Debug.Log($"��ϵ� ���̺�: {key}");
+                if (enemyComponent.enemyStats == null) // EnemySO가 없는 경우 자동 할당
+                {
+                    if (enemyDataDictionary.TryGetValue(enemyComponent.EnemyID, out EnemySO enemySO))
+                    {
+                        enemyComponent.enemyStats = enemySO;
+                        Debug.Log($"프리팹 '{prefab.name}'에 EnemySO '{enemySO.ID}' 자동 할당 완료!");
+                    }
+                    else
+                    {
+                        Debug.LogError($"프리팹 '{prefab.name}'에서 EnemySO ID '{enemyComponent.EnemyID}'를 찾을 수 없습니다!");
+                    }
+                }
+
+                enemyPrefabDictionary[enemyComponent.EnemyID] = prefab;
             }
-            return null;
-        }
-
-        return waveDataDictionary[waveCount];
-    }
-    public float GetWaveInterval(int waveIndex)
-    {
-        WaveSO wave = GetWaveData(waveIndex);
-        return wave != null ? wave.timeBetweenWaves : 5f; // �⺻�� 5��
-    }
-
-
-    // �� �������� UnitName �������� ��������
-    public GameObject GetEnemyPrefab(string unitName)
-    {
-        if (!enemyPrefabDictionary.ContainsKey(unitName))
-        {
-            Debug.LogError($"EnemyPrefab {unitName} �����͸� ã�� �� �����ϴ�. ��ϵ� ������ ����: {enemyPrefabDictionary.Count}");
-            foreach (var key in enemyPrefabDictionary.Keys)
+            else
             {
-                Debug.Log($"��ϵ� ������: {key}");
+                Debug.LogError($"적 프리팹 '{prefab.name}'에서 Enemy 컴포넌트를 찾을 수 없습니다!");
             }
-            return null;
         }
+    }
 
-        return enemyPrefabDictionary[unitName];
+
+    // **적 프리팹 가져오기**
+    public static GameObject GetEnemyPrefab(int enemyID)
+    {
+        if (enemyPrefabDictionary.TryGetValue(enemyID, out GameObject prefab))
+        {
+            return prefab;
+        }
+        Debug.LogError($"Enemy ID '{enemyID}'에 해당하는 프리팹을 찾을 수 없습니다!");
+        return null;
+    }
+
+    //  특정 ID의 타워 프리팹 반환
+    public static GameObject GetTowerPrefab(int towerID)
+    {
+        if (towerPrefabDictionary.TryGetValue(towerID, out GameObject prefab))
+        {
+            return prefab;
+        }
+        Debug.LogError($"Tower ID '{towerID}'에 해당하는 프리팹을 찾을 수 없습니다!");
+        return null;
+    }
+
+    //  특정 ID의 적 데이터 반환
+    public static EnemySO GetEnemyData(int enemyID)
+    {
+        return enemyDataDictionary.TryGetValue(enemyID, out var enemy) ? enemy : null;
+    }
+
+    //  특정 ID의 타워 데이터 반환
+    public static TowerSO GetTowerData(int towerID)
+    {
+        return towerDataDictionary.TryGetValue(towerID, out var tower) ? tower : null;
+    }
+
+    //  특정 ID의 웨이브 데이터 반환
+    public static WaveSO GetWaveData(int waveID)
+    {
+        return waveDataDictionary.TryGetValue(waveID, out var wave) ? wave : null;
+    }
+
+    //  1레벨 타워 ID 목록 반환
+    public static List<int> GetAllLevel1TowerIDs()
+    {
+        return towerDataDictionary.Values
+            .Where(tower => tower.Level == 1)
+            .OrderBy(tower => tower.ID)
+            .Select(tower => tower.ID)
+            .ToList();
     }
 }

@@ -43,10 +43,10 @@ public class Projectile : MonoBehaviour
                     hitEnemies.Add(enemy);
 
                     if (projectileStats.CanSlow)
-                        enemy.ApplySlow(projectileStats);
+                        enemy.ApplySlow(projectileStats.SlowEffect,projectileStats.SlowDuration);
                         
                     else if (projectileStats.CanStun)
-                        enemy.ApplyStun(projectileStats);
+                        enemy.ApplyStun(projectileStats.StunDuration);
                     if (!projectileStats.CanPierce)
                         Destroy(gameObject);
                    

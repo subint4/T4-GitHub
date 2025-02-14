@@ -1,96 +1,121 @@
 using UnityEditor;
 using UnityEngine;
 using System.IO;
-using System.Collections.Generic;
 
 public class ExcelConverterEditor : EditorWindow
 {
-    public enum DataType { EnemyData, TowerData, WaveData, ProjectileData }
-
-    private DataType selectedDataType;
-    private string jsonFilePath = "";
     private string excelFilePath = "";
+    private string jsonOutputPath = "Assets/Resources/JsonData";
 
-    [MenuItem("Tools/Data Converter")]
+    [MenuItem("Tools/Excel To JSON Converter")]
     public static void ShowWindow()
     {
-        GetWindow<ExcelConverterEditor>("Data Converter");
+        GetWindow<ExcelConverterEditor>("Excel To JSON Converter");
     }
 
     private void OnGUI()
     {
-        GUILayout.Label("Excel ↔ JSON ↔ ScriptableObject 변환기", EditorStyles.boldLabel);
+        GUILayout.Label("Excel → JSON 변환기", EditorStyles.boldLabel);
 
-        // 데이터 유형 선택 드롭다운 메뉴
-        selectedDataType = (DataType)EditorGUILayout.EnumPopup("데이터 타입 선택", selectedDataType);
-
-        GUILayout.Space(10);
-        GUILayout.Label("Excel → JSON 변환", EditorStyles.boldLabel);
-
-        // Excel 파일 선택 버튼
-        if (GUILayout.Button("Excel 파일 선택 및 JSON 변환"))
+        if (GUILayout.Button("Excel 파일 선택"))
         {
-            excelFilePath = EditorUtility.OpenFilePanel("Select Excel File", "", "xlsx");
-            if (!string.IsNullOrEmpty(excelFilePath))
-            {
-                string outputJsonPath = Path.Combine("Assets/Resources/JsonData", $"{selectedDataType}.json");
+            excelFilePath = EditorUtility.OpenFilePanel("Excel 파일 선택", "", "xlsx");
+        }
 
-                ExcelToJson.ConvertExcelToJson(excelFilePath, selectedDataType);
+        EditorGUILayout.TextField("Excel 파일 경로", excelFilePath);
 
-                if (File.Exists(outputJsonPath))
-                {
-                    Debug.Log($"Excel 변환 완료: {outputJsonPath}");
-                    AssetDatabase.Refresh();
-                }
-                else
-                {
-                    Debug.LogError("Excel 변환 실패");
-                }
-            }
-            else
+        if (GUILayout.Button("Excel → JSON 변환"))
+        {
+            if (ValidateExcelPath())
             {
-                Debug.LogWarning("Excel 파일이 선택되지 않았습니다.");
+                string jsonPath = ExcelToJson.ConvertExcelToJson(excelFilePath, jsonOutputPath);
+                if (!string.IsNullOrEmpty(jsonPath))
+                {
+                    Debug.Log($"Excel 변환 완료! JSON 저장 경로: {jsonPath}");
+                }
             }
         }
 
         GUILayout.Space(10);
-        GUILayout.Label("JSON → ScriptableObject 변환", EditorStyles.boldLabel);
+        GUILayout.Label("JSON → SO 변환기", EditorStyles.boldLabel);
 
-        // JSON 파일 선택 버튼
-        if (GUILayout.Button("JSON 파일 선택 및 SO 변환"))
+        if (GUILayout.Button("JSON 파일 선택"))
         {
-            jsonFilePath = EditorUtility.OpenFilePanel("Select JSON File", "Assets/Resources/JsonData", "json");
-            if (!string.IsNullOrEmpty(jsonFilePath))
+            jsonOutputPath = EditorUtility.OpenFilePanel("JSON 파일 선택", "", "json");
+        }
+
+        EditorGUILayout.TextField("JSON 파일 경로", jsonOutputPath);
+
+        if (GUILayout.Button("적 데이터 변환"))
+        {
+            if (ValidateJsonPath())
             {
-                switch (selectedDataType)
-                {
-                    case DataType.EnemyData:
-                        JsonToSO.ConvertJsonToEnemySO(jsonFilePath);
-                        Debug.Log($"EnemyData JSON 변환 완료: {jsonFilePath}");
-                        break;
-
-                    case DataType.TowerData:
-                        JsonToSO.ConvertJsonToTowerSO(jsonFilePath);
-                        Debug.Log($"TowerData JSON 변환 완료: {jsonFilePath}");
-                        break;
-
-                    case DataType.WaveData:
-                        JsonToSO.ConvertJsonToWaveSO(jsonFilePath);
-                        Debug.Log($"WaveData JSON 변환 완료: {jsonFilePath}");
-                        break;
-
-                    default:
-                        Debug.LogError("지원되지 않는 데이터 유형입니다.");
-                        break;
-                }
-
-                AssetDatabase.SaveAssets();
-                AssetDatabase.Refresh();
-            }
-            else
-            {
-                Debug.LogWarning("JSON 파일이 선택되지 않았습니다.");
+                JsonToSO.ConvertJsonToEnemySO(jsonOutputPath);
+                Debug.Log("적 데이터 변환 완료!");
             }
         }
+
+        if (GUILayout.Button("타워 데이터 변환"))
+        {
+            if (ValidateJsonPath())
+            {
+                JsonToSO.ConvertJsonToTowerSO(jsonOutputPath);
+                Debug.Log("타워 데이터 변환 완료!");
+            }
+        }
+
+        if (GUILayout.Button("웨이브 데이터 변환"))
+        {
+            if (ValidateJsonPath())
+            {
+                JsonToSO.ConvertJsonToWaveSO(jsonOutputPath);
+                Debug.Log("웨이브 데이터 변환 완료!");
+            }
+        }
+
+        if (GUILayout.Button("모든 데이터 변환"))
+        {
+            if (ValidateJsonPath())
+            {
+                JsonToSO.ConvertJsonToEnemySO(jsonOutputPath);
+                JsonToSO.ConvertJsonToTowerSO(jsonOutputPath);
+                JsonToSO.ConvertJsonToWaveSO(jsonOutputPath);
+                Debug.Log("모든 데이터 변환 완료!");
+            }
+        }
+    }
+
+    private bool ValidateExcelPath()
+    {
+        if (string.IsNullOrEmpty(excelFilePath))
+        {
+            Debug.LogError("Excel 파일 경로가 비어 있습니다.");
+            return false;
+        }
+
+        if (!File.Exists(excelFilePath))
+        {
+            Debug.LogError($"Excel 파일을 찾을 수 없습니다: {excelFilePath}");
+            return false;
+        }
+
+        return true;
+    }
+
+    private bool ValidateJsonPath()
+    {
+        if (string.IsNullOrEmpty(jsonOutputPath))
+        {
+            Debug.LogError("JSON 파일 경로가 비어 있습니다.");
+            return false;
+        }
+
+        if (!File.Exists(jsonOutputPath))
+        {
+            Debug.LogError($"JSON 파일을 찾을 수 없습니다: {jsonOutputPath}");
+            return false;
+        }
+
+        return true;
     }
 }

@@ -21,14 +21,14 @@ public class TowerDataLoader : MonoBehaviour
 
         try
         {
-            UnitConfig unitConfig = JsonConvert.DeserializeObject<UnitConfig>(unitDataJson.text);
-            if (unitConfig == null || unitConfig.Units == null)
+            TowerSO.TowerData[] unitConfig = JsonConvert.DeserializeObject<TowerSO.TowerData[]>(unitDataJson.text);
+            if (unitConfig == null || unitConfig.Length == 0)
             {
                 Debug.LogError("JSON 데이터가 올바르지 않습니다.");
                 return;
             }
 
-            foreach (UnitData unit in unitConfig.Units)
+            foreach (TowerSO.TowerData unit in unitConfig)
             {
                 if (unit == null)
                 {
@@ -36,7 +36,7 @@ public class TowerDataLoader : MonoBehaviour
                     continue;
                 }
 
-                string assetPath = $"Assets/TowerData/Tower_{unit.UnitName}.asset";
+                string assetPath = $"Assets/TowerData/Tower_{unit.Name}.asset";
                 TowerSO tower = AssetDatabase.LoadAssetAtPath<TowerSO>(assetPath);
 
                 if (tower == null)
@@ -48,7 +48,7 @@ public class TowerDataLoader : MonoBehaviour
 
                 if (tower != null)
                 {
-                    tower.LoadFromUnitData(unit);
+                    tower.LoadFromJson(unit);  // LoadFromJsonData 호출
                     EditorUtility.SetDirty(tower);
                 }
                 else

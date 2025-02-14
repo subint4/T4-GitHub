@@ -29,7 +29,7 @@ public class EnemyDataLoader : MonoBehaviour
             foreach (EnemyData enemy in enemyConfig.Enemies)
             {
                 // 기존 EnemySO 파일 찾기 (이름 기반)
-                string assetPath = $"Assets/EnemyData/Enemy_{enemy.UnitName}.asset";
+                string assetPath = $"Assets/EnemyData/Enemy_{enemy.ID}.asset";
                 EnemySO enemySO = AssetDatabase.LoadAssetAtPath<EnemySO>(assetPath);
 
                 if (enemySO == null)
@@ -40,7 +40,7 @@ public class EnemyDataLoader : MonoBehaviour
                 }
 
                 // JSON 데이터를 기존 EnemySO에 적용
-                enemySO.LoadFromEnemyData(enemy);
+                enemySO.LoadFromJson(enemy);
 
                 // 변경 사항 저장
                 EditorUtility.SetDirty(enemySO);

@@ -7,7 +7,9 @@ using ExcelDataReader;
 
 public static class ExcelToJson
 {
-    public static string ConvertExcelToJson(string excelFilePath, ExcelConverterEditor.DataType dataType)
+    private static readonly string OutputFolder = "Assets/Resources/JsonData"; // 고정된 JSON 저장 경로
+
+    public static string ConvertExcelToJson(string excelFilePath, string outputFolder = "Assets/Resources/JsonData")
     {
         if (!File.Exists(excelFilePath))
         {
@@ -17,13 +19,13 @@ public static class ExcelToJson
 
         Debug.Log($"Excel 파일 로드 시도: {excelFilePath}");
 
-        string outputFolder = "Assets/Resources/JsonData";
-        if (!Directory.Exists(outputFolder))
+        //  폴더가 존재하지 않을 때만 생성
+        if (!Directory.Exists(OutputFolder))
         {
-            Directory.CreateDirectory(outputFolder);
+            Directory.CreateDirectory(OutputFolder);
         }
 
-        string outputJsonPath = Path.Combine(outputFolder, $"{dataType}.json");
+        string jsonFilePath = Path.Combine(OutputFolder, Path.GetFileNameWithoutExtension(excelFilePath) + ".json");
 
         try
         {
@@ -37,7 +39,7 @@ public static class ExcelToJson
                     foreach (System.Data.DataTable table in result.Tables)
                     {
                         string sheetName = table.TableName.Trim();
-                        Debug.Log($"확인 중인 시트: '{sheetName}', 선택된 데이터 타입: {dataType}");
+                        Debug.Log($"확인 중인 시트: '{sheetName}'");
 
                         if (table.Rows.Count < 3)
                         {
@@ -65,14 +67,11 @@ public static class ExcelToJson
                         for (int j = 0; j < table.Columns.Count; j++)
                         {
                             string typeString = table.Rows[1][j]?.ToString()?.Trim().ToLower();
-
-                            // 지정된 타입이 없거나 잘못된 경우 기본값은 "string"
                             if (string.IsNullOrEmpty(typeString) || !IsValidType(typeString))
                             {
                                 Debug.LogWarning($"[{columnNames[j]}] 잘못된 데이터 타입({typeString}) → 기본값 'string' 적용");
                                 typeString = "string";
                             }
-
                             metadata[columnNames[j]] = typeString;
                         }
 
@@ -88,7 +87,6 @@ public static class ExcelToJson
                                 if (cellValue == null)
                                     continue;
 
-                                // **2행에서 정의한 데이터 타입을 기반으로 변환**
                                 rowDict[columnNames[j]] = ConvertToCorrectType(cellValue, metadata[columnNames[j]]);
                             }
 
@@ -98,18 +96,18 @@ public static class ExcelToJson
                             }
                         }
 
-                        // 4. JSON 파일 저장
-                        var jsonOutput = new
+                        //  JsonToSO에서 사용할 형식으로 JSON 변환
+                        var jsonOutput = new JsonWrapper
                         {
-                            DataType = dataType.ToString(),
+                            DataType = sheetName,
                             Metadata = metadata,
                             Data = dataList
                         };
 
                         string jsonString = JsonConvert.SerializeObject(jsonOutput, Formatting.Indented);
-                        File.WriteAllText(outputJsonPath, jsonString);
+                        File.WriteAllText(jsonFilePath, jsonString);
 
-                        Debug.Log($"{sheetName} 변환 완료! JSON 저장 위치: {outputJsonPath}");
+                        Debug.Log($"{sheetName} 변환 완료! JSON 저장 위치: {jsonFilePath}");
                     }
                 }
             }
@@ -120,33 +118,40 @@ public static class ExcelToJson
             return null;
         }
 
-        return outputJsonPath;
+        return jsonFilePath;
     }
 
-    // 지원하는 데이터 타입인지 확인
     private static bool IsValidType(string type)
     {
         return type == "int" || type == "float" || type == "string" || type == "bool";
     }
 
-    // **2행(메타데이터)에서 받은 타입을 기준으로 변환**
     private static object ConvertToCorrectType(object value, string expectedType)
     {
         if (value == null) return null;
 
         if (expectedType == "int" && double.TryParse(value.ToString(), out double num))
         {
-            return Convert.ToInt32(num); // **정수 변환**
+            return Convert.ToInt32(num);
         }
         else if (expectedType == "float" && double.TryParse(value.ToString(), out double floatNum))
         {
-            return floatNum; // **소수 유지**
+            return floatNum;
         }
         else if (expectedType == "bool" && bool.TryParse(value.ToString(), out bool boolValue))
         {
-            return boolValue; // **참/거짓 변환**
+            return boolValue;
         }
 
-        return value.ToString(); // 기본적으로 문자열로 저장
+        return value.ToString();
     }
+}
+
+//  JsonToSO에서 사용하는 형식과 맞추기 위해 래퍼 클래스 추가
+[Serializable]
+public class JsonWrapper
+{
+    public string DataType;
+    public Dictionary<string, string> Metadata;
+    public List<Dictionary<string, object>> Data;
 }

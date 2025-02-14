@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8c34944e472fb6428d21b895e550bde, type: 3}
+  m_Name: Tower_3
+  m_EditorClassIdentifier: 
+  ID: 3
+  Name: 3_fire_spirit
+  NextLevelID: 0
+  Health: 150
+  Level: 3
+  AttackPower: 20
+  AttackSpeed: 1
+  DeployCost: 0
+  UpgradeCost: 40
+  TowerType: 0
+  SlowEffect: 0
+  SlowDuration: 0
+  PierceCount: 1
+  StunDuration: 0

@@ -12,8 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 078fc7eee979b8c41a9f103040b3448a, type: 3}
   m_Name: Wave_1
   m_EditorClassIdentifier: 
-  waveCount: 1
-  spawnRate: 0
-  enemyCounts:
-    keys: 0100000002000000
-    values: 0500000003000000
+  ID: 1
+  stagenum: 1
+  wave: 1
+  interval: 2
+  spawnDataList:
+  - ID: 1
+    stagenum: 1
+    wave: 1
+    enemyID: 1
+    count: 5
+    SpawnGroup: 4
+    SpawnDelay: 0
+    interval: 2
+    SpawnLaneID: 2

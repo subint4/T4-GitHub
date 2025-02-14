@@ -61,13 +61,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c90e63840947131459fd3fa8b81f71b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyStats: {fileID: 11400000, guid: 203402c607c881f40809cdbf16dfcd2e, type: 2}
+  EnemyID: 4
+  enemyStats: {fileID: 0}
   enemyRigidbody: {fileID: 3538306792262835736}
+  isDead: 0
+  attackPower: 0
   attackSpeed: 0
   movementSpeed: 0
   originalSpeed: 0
   isAttacking: 0
   isSlowed: 0
+  currentSpeed: 0
+  currentTarget: {fileID: 0}
   controller: {fileID: 1958865530240314543}
 --- !u!50 &3538306792262835736
 Rigidbody2D:
