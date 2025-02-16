@@ -5,19 +5,35 @@ using UnityEngine.SceneManagement;
 using TMPro;
 using System.IO;
 using ExcelDataReader;
+using DG.Tweening;
 
 public class GoldManager : MonoBehaviour
 {
     public static GoldManager Instance { get; private set; }
 
-    [SerializeField] private TMP_Text goldText;  // 골드 UI
+    // 골드 UI
+    [SerializeField] private TMP_Text goldText;
+    // 추가되는 골드UI
+    [SerializeField] private TMP_Text secondaryGoldText;
+    // 골드 획득시 사운드
+    [SerializeField] private AudioSource goldSound;
+    [SerializeField] private AudioClip goldSoundClip;
+
+
     private Dictionary<int, (int startGold, int gainGold, int sec)> goldData = new Dictionary<int, (int, int, int)>();
+    // 몬스터별 보상
+    private Dictionary<string, int> monsterRewards = new Dictionary<string, int>();
 
     private int currentGold;
     private int currentStage;
     private float elapsedTime = 0f;
     private string excelFilePath;
     private string csvFilePath;
+
+    // 원래 위치 저장
+    private Vector3 goldTextOriginalPos;
+    // 새로운 골드 텍스트 위치
+    private Vector3 secondaryTextOriginalPos;
 
     private void Awake()
     {
@@ -40,7 +56,33 @@ public class GoldManager : MonoBehaviour
                 Debug.LogError("GoldText UI를 찾을 수 없습니다!");
             }
         }
-    }
+        if (secondaryGoldText == null)
+        {
+            secondaryGoldText = GameObject.Find("SecondaryGoldText")?.GetComponent<TMP_Text>();
+            if (secondaryGoldText == null)
+            {
+                Debug.LogError("SecondaryGoldText UI를 찾을 수 없습니다!");
+            }
+        }
+        if (goldSound == null)
+        {
+            goldSound = gameObject.AddComponent<AudioSource>();
+        }
+
+        if (goldSoundClip == null)
+        {
+            goldSoundClip = Resources.Load<AudioClip>("Sounds/goldSound"); // 리소스에서 사운드 로드
+        }
+
+        goldSound.clip = goldSoundClip;
+        goldSound.playOnAwake = false;
+
+        // 원래 위치 저장
+        goldTextOriginalPos = goldText.transform.position;
+        secondaryTextOriginalPos = goldTextOriginalPos + new Vector3(0, -0.3f, 0);
+        secondaryGoldText.transform.position = secondaryTextOriginalPos;
+    
+}
 
     private void Start()
     {
@@ -199,6 +241,8 @@ public class GoldManager : MonoBehaviour
     {
         currentGold += amount;
         UpdateGoldUI();
+        AnimateGoldGain(amount);
+        PlayGoldSound();
     }
 
     /// <summary>
@@ -248,5 +292,34 @@ public class GoldManager : MonoBehaviour
 
         currentStage = stageNum;
         InitializeGold();
+    }
+    private void PlayGoldSound()
+    {
+        if (goldSound != null && goldSound.clip != null)
+        {
+            goldSound.Play();
+        }
+    }
+    private void AnimateGoldGain(int amount)
+    {
+        // 추가 골드 텍스트 복제
+        TMP_Text newGoldText = Instantiate(secondaryGoldText, secondaryGoldText.transform.parent);
+        newGoldText.text = $"+{amount}";
+        newGoldText.color = Color.yellow;
+        newGoldText.gameObject.SetActive(true);
+
+        // 초기 위치 설정 (기존 골드 텍스트 바로 아래)
+        newGoldText.transform.position = secondaryTextOriginalPos;
+
+        // 애니메이션 적용
+        Sequence seq = DOTween.Sequence();
+            // 0.5초 동안 살짝 아래 이동
+        seq.Append(newGoldText.transform.DOMoveY(secondaryTextOriginalPos.y - 0.2f, 0.5f).SetEase(Ease.OutQuad))
+           // 1.5초 유지
+           .AppendInterval(1.5f)
+           // 0.5초 동안 페이드아웃
+           .Append(newGoldText.DOFade(0, 0.5f))
+           // 애니메이션 종료 후 삭제
+           .OnComplete(() => Destroy(newGoldText.gameObject));
     }
 }
