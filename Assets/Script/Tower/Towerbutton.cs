@@ -14,10 +14,16 @@ public class TowerButton : MonoBehaviour, IPointerClickHandler
     // Hierarchy 순서대로 Tower ID 할당
     private void AssignTowerIDByHierarchy()
     {
-        List<int> sortedTowerIDs = DataManager.GetAllLevel1TowerIDs(); // 1레벨 타워 ID 정렬
+        if (TowerManager.Instance == null)
+        {
+            Debug.LogError("TowerManager가 존재하지 않습니다!");
+            return;
+        }
+
+        List<int> sortedTowerIDs = TowerManager.Instance.GetAllLevel1TowerIDs(); // TowerManager에서 ID 가져오기
         int index = transform.GetSiblingIndex(); // **Hierarchy에서 버튼의 순서 가져오기**
 
-        if (index < sortedTowerIDs.Count)
+        if (index >= 0 && index < sortedTowerIDs.Count)
         {
             towerID = sortedTowerIDs[index]; // **버튼 순서대로 ID 매칭**
             Debug.Log($"버튼 {gameObject.name}에 Tower ID {towerID} 할당 (Index: {index})");
@@ -31,15 +37,13 @@ public class TowerButton : MonoBehaviour, IPointerClickHandler
     // 버튼 클릭 시 실행
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (TowerManager.Instance != null)
+        if (TowerManager.Instance == null)
         {
-            TowerManager.Instance.SelectTower(towerID);
-            Debug.Log($"버튼 클릭됨: 타워 ID {towerID} 선택됨");
+            Debug.LogError("TowerManager가 존재하지 않습니다!");
+            return;
         }
-        else
-        {
-            Debug.LogError("TowerManager가 존재하지 않음!");
-        }
-    }
 
+        TowerManager.Instance.SelectTower(towerID);
+        Debug.Log($"버튼 클릭됨: 타워 ID {towerID} 선택됨");
+    }
 }

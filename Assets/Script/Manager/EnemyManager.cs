@@ -4,14 +4,17 @@ using System.Collections.Generic;
 public class EnemyManager : MonoBehaviour
 {
     public static EnemyManager Instance { get; private set; }
-
+    private Dictionary<int, GameObject> enemyPrefabDictionary = new Dictionary<int, GameObject>();
+    private Dictionary<int, EnemySO> enemyDataDictionary = new Dictionary<int, EnemySO>();
     private List<Enemy> activeEnemies = new List<Enemy>();
+    public Transform[] spawnPoints;
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
+            InitializeEnemies();
         }
         else
         {
@@ -19,32 +22,64 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 적을 스폰하는 함수
-    /// </summary>
-    public GameObject SpawnEnemy(int enemyID, Transform spawnPoint)
+    private void InitializeEnemies()
     {
-        EnemySO enemyData = DataManager.GetEnemyData(enemyID);
-        if (enemyData == null)
+        Debug.Log("EnemyManager: 모든 적 프리팹과 SO 데이터를 불러옵니다.");
+
+        EnemySO[] enemyDataList = Resources.LoadAll<EnemySO>("EnemySO");
+        foreach (var enemyData in enemyDataList)
         {
-            Debug.LogError($"EnemyManager: EnemySO({enemyID})를 찾을 수 없습니다!");
+            enemyDataDictionary[enemyData.ID] = enemyData;
+        }
+
+        GameObject[] enemyPrefabs = Resources.LoadAll<GameObject>("Prefabs/Enemy");
+        foreach (var prefab in enemyPrefabs)
+        {
+            Enemy enemyComponent = prefab.GetComponent<Enemy>();
+            if (enemyComponent == null)
+            {
+                Debug.LogError($"{prefab.name} 프리팹에서 Enemy 컴포넌트를 찾을 수 없습니다!");
+                continue;
+            }
+
+            if (!enemyDataDictionary.TryGetValue(enemyComponent.EnemyID, out EnemySO enemySO))
+            {
+                Debug.LogError($"{prefab.name} 프리팹에 해당하는 EnemySO (ID: {enemyComponent.EnemyID})를 찾을 수 없습니다!");
+                continue;
+            }
+
+            enemyComponent.enemyStats = enemySO;
+            enemyPrefabDictionary[enemyComponent.EnemyID] = prefab;
+            Debug.Log($"Enemy ID {enemyComponent.EnemyID} - {prefab.name} 프리팹과 자동 연결됨.");
+        }
+    }
+
+    public GameObject SpawnEnemy(int enemyID)
+    {
+        if (!enemyDataDictionary.ContainsKey(enemyID) || !enemyPrefabDictionary.ContainsKey(enemyID))
+        {
+            Debug.LogError($"EnemyManager: Enemy ID {enemyID}에 대한 데이터 또는 프리팹을 찾을 수 없습니다!");
             return null;
         }
 
-        GameObject enemyPrefab = DataManager.GetEnemyPrefab(enemyID);
-        if (enemyPrefab == null)
+        if (spawnPoints == null || spawnPoints.Length == 0)
         {
-            Debug.LogError($"EnemyManager: EnemyID {enemyID}에 대한 프리팹을 찾을 수 없습니다!");
+            Debug.LogError("EnemyManager: 스폰 위치가 설정되지 않았습니다!");
             return null;
         }
 
-        GameObject newEnemyObj = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
+        Transform selectedSpawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+        GameObject enemyPrefab = enemyPrefabDictionary[enemyID];
+        EnemySO enemyData = enemyDataDictionary[enemyID];
+
+        GameObject newEnemyObj = Instantiate(enemyPrefab, selectedSpawnPoint.position, Quaternion.identity);
         Enemy newEnemy = newEnemyObj.GetComponent<Enemy>();
 
         if (newEnemy != null)
         {
-            newEnemy.Initialize(enemyData);  // 적 데이터 전달
-            return newEnemyObj;  // GameObject 반환하도록 수정
+            newEnemy.Initialize(enemyData);  // 반드시 호출하여 movementSpeed 및 localScale 설정
+            activeEnemies.Add(newEnemy);
+            return newEnemyObj;
         }
         else
         {
@@ -53,9 +88,6 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 적이 죽었을 때 리스트에서 제거
-    /// </summary>
     public void RemoveEnemy(Enemy enemy)
     {
         if (activeEnemies.Contains(enemy))

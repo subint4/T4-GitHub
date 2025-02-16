@@ -32,46 +32,32 @@ public class Enemy : MonoBehaviour
         if (enemyStats != null)
         {
             currentSpeed = enemyStats.MovementSpeed;
+            movementSpeed = enemyStats.MovementSpeed;
+            health = enemyStats.Health;
+            rewardMoney = enemyStats.RewardMoney;
         }
-    transform.localScale = new Vector3(-1, 1, 1); // 왼쪽으로 이동
+        transform.localScale = new Vector3(-1, 1, 1); // 왼쪽으로 이동
     }
 
-        private void Awake()
-    {
-        if (enemyStats == null)
-        {
-            enemyStats = DataManager.GetEnemyData(EnemyID);
-            if (enemyStats != null)
-            {
-                Debug.Log($"Enemy '{gameObject.name}'에 EnemySO '{enemyStats.ID}' 자동 할당 완료!");
-            }
-            else
-            {
-                Debug.LogError($"Enemy '{gameObject.name}'에 EnemySO 할당 실패! EnemyID: {EnemyID}");
-            }
-        }
-    }
-    void Start()
+    private void Start()
     {
         if (enemyStats == null)
         {
             Debug.LogError($"Enemy ({gameObject.name}): EnemySO가 할당되지 않았습니다!");
         }
-        else
-        {
-            Debug.Log($"Enemy ({gameObject.name}) - ID: {enemyStats.ID}");
-        }
     }
+
     private void Update()
     {
         if (!isAttacking && !isDead)
         {
-            transform.Translate(Vector3.left * movementSpeed * Time.deltaTime);
+
+            float moveSpeed = Mathf.Abs(movementSpeed);  // 항상 양수 값 보장
+            transform.Translate(Vector3.left * moveSpeed * Time.deltaTime);
         }
 
         if (currentTarget != null && currentTarget.IsDestroyed())
         {
-            Debug.Log($"[Enemy] {gameObject.name}: 타겟이 파괴됨 -> 이동 시작");
             StopAttack();
         }
     }
@@ -81,7 +67,6 @@ public class Enemy : MonoBehaviour
         if (collision.CompareTag("EndLine"))
         {
             GameManager.Instance?.GameOver();
-            Debug.Log("적이 EndLine에 도달하여 게임 종료!");
             Destroy(gameObject);
             return;
         }
@@ -97,47 +82,35 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 공격 루프를 실행하여 `attackSpeed` 간격으로 반복
-    /// </summary>
     private IEnumerator AttackLoop()
     {
         isAttacking = true;
 
         while (!isDead && currentTarget != null)
         {
-            // 타겟이 파괴되지 않았는지 다시 확인
             if (currentTarget.IsDestroyed())
             {
-                Debug.Log($"[Enemy] {gameObject.name}: 타겟이 이미 파괴됨 -> 공격 종료");
                 StopAttack();
                 yield break;
             }
 
-            Debug.Log($"[Enemy] {gameObject.name}: 공격 시작!");
+            if (controller != null)
+            {
+                controller.SetAttackState(true);
+            }
 
+            yield return new WaitForSeconds(attackSpeed);
 
             if (controller != null)
             {
-                controller.SetAttackState(true);  // 공격 애니메이션 실행
+                controller.SetAttackState(false);
             }
 
-            yield return new WaitForSeconds(attackSpeed); // 공격 딜레이
-
-            if (controller != null)
-            {
-                controller.SetAttackState(false);  // 애니메이션 종료
-            }
-
-            yield return new WaitForSeconds(0.1f); // 짧은 대기 후 반복
+            yield return new WaitForSeconds(0.1f);
         }
 
         isAttacking = false;
     }
-
-
-
-
 
     public void StopAttack()
     {
@@ -146,47 +119,10 @@ public class Enemy : MonoBehaviour
             isAttacking = false;
             movementSpeed = Mathf.Max(originalSpeed, 0.1f);
             enemyRigidbody.isKinematic = false;
-
             if (controller != null)
             {
                 controller.SetAttackState(false);
             }
-
-            Debug.Log($"[Enemy] {gameObject.name}: 공격 종료, 이동 시작");
-        }
-    }
-    private void RestartAttack()
-    {
-        if (!isDead && currentTarget != null)
-        {
-            // 타겟이 파괴되지 않았는지 다시 확인
-            if (currentTarget.IsDestroyed())
-            {
-                Debug.Log($"[Enemy] {gameObject.name}: 타겟이 이미 파괴됨 -> 이동 시작");
-                StopAttack();
-                return;
-            }
-
-            Debug.Log($"[Enemy] {gameObject.name}: 공격 재개!");
-
-            if (controller != null)
-            {
-                controller.SetAttackState(true);  // 공격 애니메이션 다시 실행
-            }
-
-            StartCoroutine(AttackLoop());
-        }
-    }
-
-
-
-
-    // `AttackLoop` 실행을 위한 중간 메서드
-    private void StartAttackLoop()
-    {
-        if (!isDead && currentTarget != null && !currentTarget.IsDestroyed())
-        {
-            StartCoroutine("AttackLoop");
         }
     }
 
@@ -224,21 +160,10 @@ public class Enemy : MonoBehaviour
         }
 
         ResourceManager.Instance?.AddGold(rewardMoney);
-        Debug.Log($"[Enemy] {gameObject.name}: 사망 애니메이션 실행!");
-
         OnEnemyDeath?.Invoke(gameObject);
         Destroy(gameObject);
     }
 
-    public void DestroyEnemy()
-    {
-        Debug.Log($"[Enemy] {gameObject.name}: 사망 애니메이션 종료 후 제거됨.");
-        Destroy(gameObject);
-    }
-
-    /// <summary>
-    /// 슬로우 효과 적용 (이동 속도 및 공격 속도 조정)
-    /// </summary>
     public void ApplySlow(float slowFactor, float duration)
     {
         if (!isSlowed)
@@ -246,7 +171,7 @@ public class Enemy : MonoBehaviour
             originalSpeed = movementSpeed;
             float adjustedSlowFactor = Mathf.Clamp(1f - slowFactor, 0.1f, 1f);
             movementSpeed = Mathf.Max(movementSpeed * adjustedSlowFactor, 0.1f);
-            attackSpeed /= adjustedSlowFactor; // 공격 속도 조정
+            attackSpeed /= adjustedSlowFactor;
             isSlowed = true;
         }
         Invoke("EndSlow", duration);
@@ -255,13 +180,10 @@ public class Enemy : MonoBehaviour
     public void EndSlow()
     {
         movementSpeed = originalSpeed;
-        attackSpeed = enemyStats.AttackSpeed; // 원래 공격 속도로 복구
+        attackSpeed = enemyStats.AttackSpeed;
         isSlowed = false;
     }
 
-    /// <summary>
-    /// 스턴 효과 적용 (공격 중단 및 이동 불가)
-    /// </summary>
     public void ApplyStun(float duration)
     {
         if (isDead) return;
@@ -270,7 +192,7 @@ public class Enemy : MonoBehaviour
         movementSpeed = 0f;
         enemyRigidbody.isKinematic = false;
         isAttacking = false;
-        StopCoroutine(AttackLoop()); // 공격 중단
+        StopCoroutine(AttackLoop());
         Invoke("EndStun", duration);
     }
 
@@ -280,7 +202,7 @@ public class Enemy : MonoBehaviour
         enemyRigidbody.isKinematic = true;
         if (currentTarget != null && !currentTarget.IsDestroyed() && !isDead)
         {
-            StartCoroutine(AttackLoop()); // 스턴 후 다시 공격 시작
+            StartCoroutine(AttackLoop());
         }
     }
 }

@@ -1,18 +1,21 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class TowerManager : MonoBehaviour
 {
     public static TowerManager Instance { get; private set; }
 
-    private int selectedTowerID = -1; // 현재 선택된 타워 ID (SO의 ID 값)
-    private List<Tower> towers = new List<Tower>();
+    private Dictionary<int, GameObject> towerPrefabDictionary = new Dictionary<int, GameObject>();
+    private Dictionary<int, TowerSO> towerDataDictionary = new Dictionary<int, TowerSO>();
+    private int selectedTowerID = -1;
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
+            InitializeTowers();
         }
         else
         {
@@ -20,10 +23,65 @@ public class TowerManager : MonoBehaviour
         }
     }
 
-    // **타워 선택 (TowerSO의 ID 기반)**
+    private void InitializeTowers()
+    {
+        Debug.Log("TowerManager: 모든 타워 프리팹과 SO 데이터를 불러옵니다.");
+
+        TowerSO[] towerDataList = Resources.LoadAll<TowerSO>("TowerSO");
+        foreach (var towerData in towerDataList)
+        {
+            towerDataDictionary[towerData.ID] = towerData;
+        }
+
+        GameObject[] towerPrefabs = Resources.LoadAll<GameObject>("Prefabs/Towers");
+        foreach (var prefab in towerPrefabs)
+        {
+            Tower towerComponent = prefab.GetComponent<Tower>();
+            if (towerComponent == null)
+            {
+                Debug.LogError($"{prefab.name} 프리팹에서 Tower 컴포넌트를 찾을 수 없습니다!");
+                continue;
+            }
+
+            if (!towerDataDictionary.TryGetValue(towerComponent.TowerID, out TowerSO towerSO))
+            {
+                Debug.LogError($"{prefab.name} 프리팹에 해당하는 TowerSO (ID: {towerComponent.TowerID})를 찾을 수 없습니다!");
+                continue;
+            }
+
+            towerComponent.towerStats = towerSO; // 자동 연결
+            towerPrefabDictionary[towerComponent.TowerID] = prefab;
+            Debug.Log($"Tower ID {towerComponent.TowerID} - {prefab.name} 프리팹과 자동 연결됨.");
+        }
+    }
+
+    public GameObject GetTowerPrefab(int towerID)
+    {
+        if (towerPrefabDictionary.TryGetValue(towerID, out GameObject prefab))
+        {
+            return prefab;
+        }
+        Debug.LogError($"TowerManager: Tower ID {towerID}에 대한 프리팹을 찾을 수 없습니다!");
+        return null;
+    }
+
+    public TowerSO GetTowerData(int towerID)
+    {
+        return towerDataDictionary.TryGetValue(towerID, out TowerSO towerData) ? towerData : null;
+    }
+
+    public List<int> GetAllLevel1TowerIDs()
+    {
+        return towerDataDictionary.Values
+            .Where(tower => tower.Level == 1)
+            .OrderBy(tower => tower.ID)
+            .Select(tower => tower.ID)
+            .ToList();
+    }
+
     public void SelectTower(int towerID)
     {
-        if (DataManager.GetTowerData(towerID) != null)
+        if (towerDataDictionary.ContainsKey(towerID))
         {
             selectedTowerID = towerID;
             Debug.Log($"타워 {towerID} 선택됨.");
@@ -34,7 +92,6 @@ public class TowerManager : MonoBehaviour
         }
     }
 
-    // **선택된 타워 배치 (타일에 배치)**
     public void PlaceSelectedTower(Tiles tile)
     {
         if (selectedTowerID == -1)
@@ -44,24 +101,19 @@ public class TowerManager : MonoBehaviour
         }
 
         SpawnTower(tile, selectedTowerID);
-        selectedTowerID = -1; // 선택 해제
+        selectedTowerID = -1;
     }
 
     public void SpawnTower(Tiles tile, int towerID)
     {
-        TowerSO towerData = DataManager.GetTowerData(towerID);
-        if (towerData == null)
+        if (!towerDataDictionary.ContainsKey(towerID) || !towerPrefabDictionary.ContainsKey(towerID))
         {
-            Debug.LogError($"TowerManager: 타워 데이터 ({towerID})를 찾을 수 없습니다!");
+            Debug.LogError($"TowerManager: Tower ID {towerID}에 대한 데이터 또는 프리팹을 찾을 수 없습니다!");
             return;
         }
 
-        GameObject towerPrefab = DataManager.GetTowerPrefab(towerID); // ID 기반으로 프리팹 검색
-        if (towerPrefab == null)
-        {
-            Debug.LogError($"TowerManager: TowerID {towerID}에 대한 프리팹을 찾을 수 없습니다!");
-            return;
-        }
+        GameObject towerPrefab = towerPrefabDictionary[towerID];
+        TowerSO towerData = towerDataDictionary[towerID];
 
         Vector3 spawnPosition = tile.transform.position;
         GameObject newTowerObj = Instantiate(towerPrefab, spawnPosition, Quaternion.identity);

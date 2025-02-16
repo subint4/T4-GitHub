@@ -15,8 +15,8 @@ MonoBehaviour:
   ID: 2
   Name: Zombie2
   Health: 20
-  MovementSpeed: 0
-  AttackSpeed: 0
+  MovementSpeed: 0.8
+  AttackSpeed: 1
   AttackPower: 20
-  SpawnCount: 3
+  SpawnCount: 0
   RewardMoney: 25

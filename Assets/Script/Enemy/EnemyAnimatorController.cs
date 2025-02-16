@@ -75,15 +75,4 @@ public class EnemyAnimatorController : MonoBehaviour
         }
     }
 
-
-
-
-
-    public void OnDeathAnimationEnd()
-    {
-        if (enemy != null)
-        {
-            enemy.DestroyEnemy();
-        }
-    }
 }

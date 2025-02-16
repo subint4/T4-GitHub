@@ -15,8 +15,8 @@ MonoBehaviour:
   ID: 1
   Name: Zombie1
   Health: 10
-  MovementSpeed: 0
-  AttackSpeed: 0
+  MovementSpeed: 1
+  AttackSpeed: 1
   AttackPower: 10
-  SpawnCount: 5
+  SpawnCount: 0
   RewardMoney: 20

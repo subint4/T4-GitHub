@@ -15,8 +15,8 @@ MonoBehaviour:
   ID: 4
   Name: Boss_Zombie
   Health: 40
-  MovementSpeed: 0
-  AttackSpeed: 0
+  MovementSpeed: 1.2
+  AttackSpeed: 1
   AttackPower: 50
-  SpawnCount: 4
+  SpawnCount: 0
   RewardMoney: 50
