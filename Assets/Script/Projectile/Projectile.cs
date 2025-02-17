@@ -4,20 +4,11 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public ProjectileSO projectileStats; // 투사체 데이터 저장
-
+    public ProjectileSO projectileStats;
     private Vector3 direction = Vector3.right;
     private List<Enemy> hitEnemies = new List<Enemy>();
+    private int damage;
 
-    int damage;
-    private void Start()
-    {
-        if (projectileStats == null)
-        {
-            Debug.LogError("투사체 데이터가 없습니다!");
-            return;
-        }
-    }
     public void SetDamage(int towerDamage)
     {
         damage = towerDamage;
@@ -36,46 +27,19 @@ public class Projectile : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Enemy enemy = collision.GetComponent<Enemy>();
-        Debug.Log($"충돌 대상 : {collision}");
-        if (enemy != null)
+        if (enemy != null && !hitEnemies.Contains(enemy))
         {
-                    enemy.TakeDamage(projectileStats.Damage);
-                    hitEnemies.Add(enemy);
+            enemy.TakeDamage(damage);
+            hitEnemies.Add(enemy);
 
-                    if (projectileStats.CanSlow)
-                        enemy.ApplySlow(projectileStats.SlowEffect,projectileStats.SlowDuration);
-                        
-                    else if (projectileStats.CanStun)
-                        enemy.ApplyStun(projectileStats.StunDuration);
-                    if (!projectileStats.CanPierce)
-                        Destroy(gameObject);
-                   
+            if (projectileStats.CanSlow)
+                enemy.ApplySlow(projectileStats.SlowEffect, projectileStats.SlowDuration);
+
+            if (projectileStats.CanStun)
+                enemy.ApplyStun(projectileStats.StunDuration);
+
+            if (!projectileStats.CanPierce)
+                Destroy(gameObject);
         }
     }
-
-    //private IEnumerator Stun(Enemy enemy)
-    //{
-    //    float originalSpeed = enemy.movementSpeed;
-    //    enemy.movementSpeed = 0f;
-    //    enemy.enemyRigidbody.isKinematic = false;
-    //    enemy.isAttacking = false;
-
-    //    yield return new WaitForSeconds(projectileStats.stunDuration);
-
-    //    enemy.movementSpeed = originalSpeed;
-    //    enemy.enemyRigidbody.isKinematic = false;
-    //    enemy.isAttacking = true;
-
-    //}
-
-    //private IEnumerator ApplySlowEffect(Enemy enemy)
-    //{
-    //    float originalSpeed = enemy.movementSpeed;
-    //    enemy.movementSpeed *= (1f - projectileData.SlowEffect);
-
-    //    yield return new WaitForSeconds(projectileData.SlowDuration);
-
-    //    enemy.movementSpeed = originalSpeed;
-    //}
 }
-

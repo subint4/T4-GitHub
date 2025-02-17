@@ -42,7 +42,7 @@ public class GoldManager : MonoBehaviour
 
     private void LoadGoldData()
     {
-        string path = Path.Combine(Application.streamingAssetsPath, "GoldData.json");
+        string path = Path.Combine(Application.dataPath, "Resources/JsonData/GoldData.json");
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);

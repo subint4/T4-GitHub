@@ -94,10 +94,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TowerID: 1
-  towerStats: {fileID: 0}
+  towerStats: {fileID: 11400000, guid: d0742f1091e40e2488949a509a547475, type: 2}
   currentTile: {fileID: 0}
   towerAnimatorController: {fileID: 1996960879429322502}
   isDead: 0
+  projectilePrefab: {fileID: 6417698670388423150, guid: 03d5cc79257dbe44fb7918e6ff95b1d9, type: 3}
+  firePoint: {fileID: 3616390627942122568}
 --- !u!61 &534829281914593320
 BoxCollider2D:
   m_ObjectHideFlags: 0
