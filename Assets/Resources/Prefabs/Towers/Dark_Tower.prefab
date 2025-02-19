@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TowerID: 16
-  towerStats: {fileID: 11400000, guid: e29a576bdb4fc614285ee8376fab1d05, type: 2}
+  towerStats: {fileID: 0}
   currentTile: {fileID: 0}
   towerAnimatorController: {fileID: 1511237542480347695}
   isDead: 0

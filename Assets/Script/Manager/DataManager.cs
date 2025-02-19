@@ -1,79 +1,35 @@
-using System.Collections.Generic;
 using UnityEngine;
 
-public static class DataManager
+public class DataManager : MonoBehaviour
 {
-    private static Dictionary<int, EnemySO> enemyDataDictionary = new Dictionary<int, EnemySO>();
-    private static Dictionary<int, TowerSO> towerDataDictionary = new Dictionary<int, TowerSO>();
-    private static Dictionary<int, WaveSO> waveDataDictionary = new Dictionary<int, WaveSO>();
+    public static DataManager Instance { get; private set; }
 
-    static DataManager()
+    private void Awake()
     {
-        InitializeData();
-    }
-
-    private static void InitializeData()
-    {
-        Debug.Log("DataManager: 데이터 초기화 시작...");
-
-        LoadEnemyData();
-        LoadTowerData();
-        LoadWaveData();
-    }
-
-    private static void LoadEnemyData()
-    {
-        EnemySO[] enemyDataList = Resources.LoadAll<EnemySO>("EnemySO");
-        foreach (var enemy in enemyDataList)
+        if (Instance == null)
         {
-            if (enemy != null)
-            {
-                enemyDataDictionary[enemy.ID] = enemy;
-            }
+            Instance = this;
+            DontDestroyOnLoad(gameObject); // 씬이 변경되어도 유지
+            Debug.Log("DataManager가 정상적으로 초기화되었습니다.");
+        }
+        else
+        {
+            Debug.LogWarning("DataManager의 중복 인스턴스가 감지되었습니다! 기존 인스턴스를 유지하고 새로 생성된 인스턴스를 삭제합니다.");
+            Destroy(gameObject);
         }
     }
-
-    private static void LoadTowerData()
+public EnemySO GetEnemyData(int enemyID)
     {
-        TowerSO[] towerDataList = Resources.LoadAll<TowerSO>("TowerSO");
-        foreach (var tower in towerDataList)
-        {
-            if (tower != null)
-            {
-                towerDataDictionary[tower.ID] = tower;
-            }
-        }
+        return EnemyManager.Instance?.GetEnemyData(enemyID);
     }
 
-    private static void LoadWaveData()
+    public TowerSO GetTowerData(int towerID)
     {
-        WaveSO[] waveDataList = Resources.LoadAll<WaveSO>("WaveSO");
-        foreach (var wave in waveDataList)
-        {
-            if (wave != null)
-            {
-                waveDataDictionary[wave.ID] = wave;
-            }
-        }
+        return TowerManager.Instance?.GetTowerData(towerID);
     }
 
-    public static EnemySO GetEnemyData(int enemyID)
+    public WaveSO GetWaveData(int waveID)
     {
-        return enemyDataDictionary.TryGetValue(enemyID, out var enemy) ? enemy : null;
-    }
-
-    public static TowerSO GetTowerData(int towerID)
-    {
-        return towerDataDictionary.TryGetValue(towerID, out var tower) ? tower : null;
-    }
-    public static List<TowerSO> GetAllTowerData()
-    {
-        return new List<TowerSO>(towerDataDictionary.Values);
-    }
-
-
-public static WaveSO GetWaveData(int waveID)
-    {
-        return waveDataDictionary.TryGetValue(waveID, out var wave) ? wave : null;
+        return WaveManager.Instance?.GetWaveData(waveID);
     }
 }

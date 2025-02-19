@@ -61,18 +61,31 @@ public class UpgradeUI : MonoBehaviour
         Debug.Log($"업그레이드 UI가 {tower.name} 위에 나타남.");
     }
 
-    private void UpgradeSelectedTower()
+    public void UpgradeSelectedTower()
     {
-        if (selectedTower != null && UpgradeManager.Instance != null)
+        if (UpgradeManager.Instance == null)
         {
-            UpgradeManager.Instance.UpgradeTower(selectedTower);
-            upgradePanel.SetActive(false);
+            Debug.LogError("UpgradeManager가 존재하지 않습니다. 씬에 추가되었는지 확인하세요.");
+            return;
+        }
+
+        if (selectedTower == null)
+        {
+            Debug.LogError("업그레이드할 타워가 선택되지 않았습니다.");
+            return;
+        }
+
+        bool success = UpgradeManager.Instance.UpgradeTower(selectedTower);
+        if (success)
+        {
+            Debug.Log($"{selectedTower.towerStats.Name} 업그레이드 성공!");
         }
         else
         {
-            Debug.LogError("업그레이드할 타워가 선택되지 않았거나, UpgradeManager가 없음.");
+            Debug.LogError("업그레이드 실패!");
         }
     }
+
 
     public void CloseUpgradeUI()
     {

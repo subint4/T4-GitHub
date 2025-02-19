@@ -11,37 +11,38 @@ public class TowerAnimatorController : MonoBehaviour
     {
         if (towerAnimator != null && !isDead)
         {
-            if (isAttacking != attacking)
+            isAttacking = attacking;
+            towerAnimator.SetBool("isAttacking", attacking);
+
+            if (attacking)
             {
-                isAttacking = attacking;
-                towerAnimator.SetBool("isAttacking", attacking);
+                Debug.Log($"[TowerAnimator] {tower.gameObject.name}: 공격 애니메이션 실행!");
             }
+            else
+            {
+                Debug.Log($"[TowerAnimator] {tower.gameObject.name}: 공격 종료, Idle 상태 전환");
+            }
+        }
+        else
+        {
+            Debug.LogError($"[TowerAnimator] {tower.gameObject.name}: 공격 애니메이션 실행 실패! Animator 또는 isDead 상태 확인 필요.");
         }
     }
 
     public bool IsPlayingAttackAnimation()
     {
-        if (towerAnimator == null) return false;
+        if (towerAnimator == null)
+        {
+            Debug.LogError($"[TowerAnimator] {tower.gameObject.name}: Animator가 NULL입니다!");
+            return false;
+        }
+
         AnimatorStateInfo stateInfo = towerAnimator.GetCurrentAnimatorStateInfo(0);
-        return stateInfo.IsName("Throwing") && stateInfo.normalizedTime < 1.0f;
+        bool isPlaying = stateInfo.IsName("Attack") && stateInfo.normalizedTime < 1.0f;
+
+        Debug.Log($"[TowerAnimator] {tower.gameObject.name}: 현재 애니메이션 상태 - {isPlaying}, NormalizedTime: {stateInfo.normalizedTime}");
+        return isPlaying;
     }
-
-    public void OnAttackAnimationEnd()
-    {
-        if (tower == null || isDead) return;
-
-        isAttacking = false;
-        SetAttackState(false);
-
-        tower.FireProjectile(); // 애니메이션 종료 시 투사체 발사 보장
-
-        Debug.Log($"[TowerAnimator] {tower.gameObject.name}: 공격 애니메이션 종료, 다음 공격 준비.");
-
-        // 공격 루프 강제 실행
-        tower.Invoke("RestartAttack", tower.towerStats.AttackSpeed);
-    }
-
-
 
     public void PlayDeathAnimation()
     {
@@ -49,14 +50,17 @@ public class TowerAnimatorController : MonoBehaviour
         {
             isDead = true;
             towerAnimator.SetTrigger("isDead");
+            Debug.Log($"[TowerAnimator] {tower.gameObject.name}: 사망 애니메이션 실행!");
         }
     }
 
     public void OnDeathAnimationEnd()
     {
-        if (tower != null && tower.isDead)
-        {
-            tower.OnDeathAnimationEnd();
-        }
+        tower.OnDeathAnimationEnd();
+    }
+
+    public void OnAttackAnimationEnd()
+    {
+        tower.OnAttackAnimationEnd();
     }
 }

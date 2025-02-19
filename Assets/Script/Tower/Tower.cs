@@ -16,39 +16,6 @@ public class Tower : MonoBehaviour
     public GameObject projectilePrefab;
     public Transform firePoint;
 
-    private void Awake()
-    {
-        AssignTowerSO();
-        if (towerStats == null)
-        {
-            Debug.LogError($"TowerStats가 {gameObject.name}에서 할당되지 않았습니다! 프리팹을 확인하세요.");
-        }
-        else
-        {
-            Debug.Log($"{gameObject.name}의 TowerStats가 올바르게 설정됨. Tower ID: {towerStats.ID}");
-        }
-    }
-
-    private void AssignTowerSO()
-    {
-        if (TowerID <= 0)
-        {
-            Debug.LogError($"{gameObject.name}의 TowerID가 올바르지 않습니다! (현재 ID: {TowerID})");
-            return;
-        }
-
-        towerStats = DataManager.GetTowerData(TowerID);
-
-        if (towerStats == null)
-        {
-            Debug.LogError($"{gameObject.name}에서 TowerID {TowerID}에 해당하는 SO를 찾을 수 없습니다!");
-        }
-        else
-        {
-            Debug.Log($"{gameObject.name}에 TowerSO({towerStats.Name})가 정상 할당됨 (ID: {TowerID})");
-        }
-    }
-
     private void Start()
     {
         if (towerStats != null)
@@ -56,6 +23,20 @@ public class Tower : MonoBehaviour
             health = towerStats.Health;
         }
         StartCoroutine(AttackLoop());
+    }
+
+    public void Initialize(TowerSO towerData)
+    {
+        towerStats = towerData;
+        if (towerStats != null)
+        {
+            health = towerStats.Health;
+            Debug.Log($"[Tower] {gameObject.name}: {towerStats.Name} 데이터로 초기화 완료!");
+        }
+        else
+        {
+            Debug.LogError($"[Tower] {gameObject.name}: 타워 데이터가 NULL입니다! 초기화 실패.");
+        }
     }
 
     private void Update()
@@ -73,7 +54,7 @@ public class Tower : MonoBehaviour
 
         foreach (var enemy in enemies)
         {
-            if (enemy.CompareTag("Enemy"))
+            if (enemy.CompareTag("Enemy") && enemy.transform.position.x > transform.position.x)
             {
                 currentTarget = enemy.gameObject;
                 return;
@@ -81,7 +62,6 @@ public class Tower : MonoBehaviour
         }
         currentTarget = null;
     }
-
     private IEnumerator AttackLoop()
     {
         while (!isDead)
@@ -91,56 +71,64 @@ public class Tower : MonoBehaviour
                 if (!isAttacking)
                 {
                     isAttacking = true;
-
-                    // 애니메이션을 강제로 다시 실행
-                    towerAnimatorController.SetAttackState(false);
-                    yield return new WaitForSeconds(0.1f);
                     towerAnimatorController.SetAttackState(true);
 
+                    Debug.Log($"[Tower] {gameObject.name}: 공격 애니메이션 실행 요청!");
+
+                    // 공격 애니메이션이 실행될 때까지 대기
                     yield return new WaitUntil(() => towerAnimatorController.IsPlayingAttackAnimation());
-                    yield return new WaitForSeconds(0.1f); // 애니메이션 실행 대기
+
+                    Debug.Log($"[Tower] {gameObject.name}: 공격 애니메이션 실행됨!");
+
+                    yield return new WaitForSeconds(0.1f);
+
                     FireProjectile();
+                    Debug.Log($"[Tower] {gameObject.name}: 투사체 발사!");
+
                     yield return new WaitForSeconds(towerStats.AttackSpeed);
+
                     isAttacking = false;
                     towerAnimatorController.SetAttackState(false);
+                    Debug.Log($"[Tower] {gameObject.name}: 공격 종료, 다음 공격 준비.");
                 }
             }
             yield return new WaitForSeconds(0.1f);
         }
     }
 
-
     public void FireProjectile()
     {
-        if (currentTarget != null && projectilePrefab != null && firePoint != null)
+        if (currentTarget == null)
         {
-            Debug.Log($"[Tower] {gameObject.name}: 투사체 발사!");
-            GameObject projectile = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
-            Projectile projectileScript = projectile.GetComponent<Projectile>();
-            if (projectileScript != null)
-            {
-                projectileScript.SetDamage(towerStats.AttackPower);
-            }
+            Debug.LogError($"[Tower] {gameObject.name}: 투사체 발사 실패! 타겟이 NULL입니다.");
+            return;
         }
-        else
+
+        if (projectilePrefab == null || firePoint == null)
         {
-            Debug.LogError($"[Tower] {gameObject.name}: 투사체 발사 실패! currentTarget: {currentTarget}, projectilePrefab: {projectilePrefab}, firePoint: {firePoint}");
+            Debug.LogError($"[Tower] {gameObject.name}: 투사체 프리팹 또는 발사 위치가 설정되지 않음.");
+            return;
+        }
+
+        Debug.Log($"[Tower] {gameObject.name}: 투사체 발사 - 타겟: {currentTarget.name}");
+        GameObject projectile = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
+        Projectile projectileScript = projectile.GetComponent<Projectile>();
+        if (projectileScript != null)
+        {
+            projectileScript.SetDamage(towerStats.AttackPower);
         }
     }
+
+
     public void RestartAttack()
     {
         if (!isDead)
         {
             Debug.Log($"[Tower] {gameObject.name}: 공격 재개");
-            StopCoroutine(AttackLoop()); // 기존 AttackLoop 중지
-            StartCoroutine(AttackLoop()); // 다시 실행
-
-            // 공격 애니메이션을 강제로 다시 실행
-            towerAnimatorController.SetAttackState(false);
-            towerAnimatorController.SetAttackState(true);
+            StopCoroutine(AttackLoop());
+            StartCoroutine(AttackLoop());
         }
     }
-
 
     private void OnMouseDown()
     {
@@ -178,21 +166,21 @@ public class Tower : MonoBehaviour
         }
     }
 
-    private void Die()
+    public void Die()
     {
         if (isDead) return;
         isDead = true;
-
-        if (towerAnimatorController != null)
-        {
-            towerAnimatorController.PlayDeathAnimation();
-        }
+        towerAnimatorController?.PlayDeathAnimation();
     }
-
-
 
     public void OnDeathAnimationEnd()
     {
         Destroy(gameObject);
+    }
+
+    public void OnAttackAnimationEnd()
+    {
+        isAttacking = false;
+        towerAnimatorController.SetAttackState(false);
     }
 }

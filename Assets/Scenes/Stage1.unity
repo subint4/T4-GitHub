@@ -3662,7 +3662,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bdc52f572a0edc44b5b71493e384f96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  towerID: 10
+  towerID: 7
 --- !u!222 &745363558
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4995,8 +4995,8 @@ RectTransform:
   m_Children:
   - {fileID: 398357132}
   - {fileID: 1394521651}
-  - {fileID: 1679952668}
   - {fileID: 745363555}
+  - {fileID: 1679952668}
   - {fileID: 17913585}
   - {fileID: 1806717178}
   - {fileID: 1592825892}
@@ -7532,6 +7532,7 @@ GameObject:
   - component: {fileID: 1549554035}
   - component: {fileID: 1549554036}
   - component: {fileID: 1549554037}
+  - component: {fileID: 1549554038}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -7635,6 +7636,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   goldText: {fileID: 1247398330}
+--- !u!114 &1549554038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1549554029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 685faa7d2c9a92b498f273e4814bad40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1550903658
 GameObject:
   m_ObjectHideFlags: 0
@@ -8933,7 +8946,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bdc52f572a0edc44b5b71493e384f96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  towerID: 7
+  towerID: 10
 --- !u!222 &1679952671
 CanvasRenderer:
   m_ObjectHideFlags: 0

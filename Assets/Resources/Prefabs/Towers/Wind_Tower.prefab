@@ -93,7 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e11748d549f7b844a0bd5cef0550cc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TowerID: 10
+  TowerID: 7
   towerStats: {fileID: 11400000, guid: 68609c8d0843af64c9e80771568430af, type: 2}
   currentTile: {fileID: 0}
   towerAnimatorController: {fileID: 6311083365789828730}

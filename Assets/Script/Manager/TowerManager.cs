@@ -49,7 +49,7 @@ public class TowerManager : MonoBehaviour
                 continue;
             }
 
-            towerComponent.towerStats = towerSO; // 자동 연결
+            towerComponent.Initialize(towerSO); // 자동 연결
             towerPrefabDictionary[towerComponent.TowerID] = prefab;
             Debug.Log($"Tower ID {towerComponent.TowerID} - {prefab.name} 프리팹과 자동 연결됨.");
         }
@@ -121,7 +121,7 @@ public class TowerManager : MonoBehaviour
 
         if (newTower != null)
         {
-            newTower.towerStats = towerData;
+            newTower.Initialize(towerData);
             newTower.currentTile = tile;
             tile.PlaceTower(newTower);
             Debug.Log($"타워 스폰 완료: {newTower.towerStats.Name} (ID: {towerID})");

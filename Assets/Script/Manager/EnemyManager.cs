@@ -14,6 +14,7 @@ public class EnemyManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            LoadEnemyData();
             InitializeEnemies();
         }
         else
@@ -22,15 +23,21 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
+    private void LoadEnemyData()
+    {
+        EnemySO[] enemyDataList = Resources.LoadAll<EnemySO>("EnemySO");
+        foreach (var enemy in enemyDataList)
+        {
+            if (enemy != null)
+            {
+                enemyDataDictionary[enemy.ID] = enemy;
+            }
+        }
+    }
+
     private void InitializeEnemies()
     {
         Debug.Log("EnemyManager: 모든 적 프리팹과 SO 데이터를 불러옵니다.");
-
-        EnemySO[] enemyDataList = Resources.LoadAll<EnemySO>("EnemySO");
-        foreach (var enemyData in enemyDataList)
-        {
-            enemyDataDictionary[enemyData.ID] = enemyData;
-        }
 
         GameObject[] enemyPrefabs = Resources.LoadAll<GameObject>("Prefabs/Enemy");
         foreach (var prefab in enemyPrefabs)
@@ -52,6 +59,11 @@ public class EnemyManager : MonoBehaviour
             enemyPrefabDictionary[enemyComponent.EnemyID] = prefab;
             Debug.Log($"Enemy ID {enemyComponent.EnemyID} - {prefab.name} 프리팹과 자동 연결됨.");
         }
+    }
+
+    public EnemySO GetEnemyData(int id)
+    {
+        return enemyDataDictionary.TryGetValue(id, out var data) ? data : null;
     }
 
     public GameObject SpawnEnemy(int enemyID)
@@ -77,7 +89,7 @@ public class EnemyManager : MonoBehaviour
 
         if (newEnemy != null)
         {
-            newEnemy.Initialize(enemyData);  // 반드시 호출하여 movementSpeed 및 localScale 설정
+            newEnemy.Initialize(enemyData);
             activeEnemies.Add(newEnemy);
             return newEnemyObj;
         }
@@ -94,5 +106,10 @@ public class EnemyManager : MonoBehaviour
         {
             activeEnemies.Remove(enemy);
         }
+    }
+
+    public int GetActiveEnemyCount()
+    {
+        return activeEnemies.Count;
     }
 }
