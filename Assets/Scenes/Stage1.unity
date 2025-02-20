@@ -4207,7 +4207,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Button
+  m_text: "\uBA54\uC778 \uBA54\uB274"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 93be4ffc6f86870438df201b8a7e7c7b, type: 2}
   m_sharedMaterial: {fileID: -7951351756599304605, guid: 93be4ffc6f86870438df201b8a7e7c7b, type: 2}
@@ -4883,7 +4883,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uAC8C\uC784\uC9C4\uD589"
+  m_text: "\uAC8C\uC784 \uC9C4\uD589"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 93be4ffc6f86870438df201b8a7e7c7b, type: 2}
   m_sharedMaterial: {fileID: -7951351756599304605, guid: 93be4ffc6f86870438df201b8a7e7c7b, type: 2}
