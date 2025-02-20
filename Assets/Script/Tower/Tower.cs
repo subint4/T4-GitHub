@@ -49,19 +49,35 @@ public class Tower : MonoBehaviour
 
     private void FindTarget()
     {
-        float detectionRange = 1000f;
+        float detectionRange = 100000f; // 감지 범위 설정
         Collider2D[] enemies = Physics2D.OverlapCircleAll(transform.position, detectionRange);
+        float closestDistance = float.MaxValue;
+        GameObject closestEnemy = null;
 
         foreach (var enemy in enemies)
         {
-            if (enemy.CompareTag("Enemy") && enemy.transform.position.x > transform.position.x)
+            if (enemy.CompareTag("Enemy"))
             {
-                currentTarget = enemy.gameObject;
-                return;
+                float xDifference = Mathf.Abs(enemy.transform.position.x - transform.position.x);
+                float yDifference = Mathf.Abs(enemy.transform.position.y - transform.position.y);
+
+                // X좌표가 일정 범위 내 && 같은 Y축(같은 가로줄)
+                if (xDifference < detectionRange && yDifference < 0.5f)
+                {
+                    float distance = Vector2.Distance(transform.position, enemy.transform.position);
+                    if (distance < closestDistance)
+                    {
+                        closestDistance = distance;
+                        closestEnemy = enemy.gameObject;
+                    }
+                }
             }
         }
-        currentTarget = null;
+
+        // 가장 가까운 적을 타겟으로 설정
+        currentTarget = closestEnemy;
     }
+
     private IEnumerator AttackLoop()
     {
         while (!isDead)
@@ -71,54 +87,46 @@ public class Tower : MonoBehaviour
                 if (!isAttacking)
                 {
                     isAttacking = true;
+
+                    // 공격 애니메이션 실행
                     towerAnimatorController.SetAttackState(true);
+                    Debug.Log($"[Tower] {gameObject.name}: 공격 애니메이션 실행!");
 
-                    Debug.Log($"[Tower] {gameObject.name}: 공격 애니메이션 실행 요청!");
-
-                    // 공격 애니메이션이 실행될 때까지 대기
-                    yield return new WaitUntil(() => towerAnimatorController.IsPlayingAttackAnimation());
-
-                    Debug.Log($"[Tower] {gameObject.name}: 공격 애니메이션 실행됨!");
-
-                    yield return new WaitForSeconds(0.1f);
-
-                    FireProjectile();
-                    Debug.Log($"[Tower] {gameObject.name}: 투사체 발사!");
-
+                    // 공격 속도에 맞춰 대기 후 다음 공격
                     yield return new WaitForSeconds(towerStats.AttackSpeed);
 
-                    isAttacking = false;
+                    // 애니메이션 종료 후 Idle 전환
                     towerAnimatorController.SetAttackState(false);
-                    Debug.Log($"[Tower] {gameObject.name}: 공격 종료, 다음 공격 준비.");
+
+                    // 다음 공격을 위해 약간의 대기 후 초기화
+                    yield return new WaitForSeconds(0.1f);
+                    isAttacking = false;
                 }
             }
             yield return new WaitForSeconds(0.1f);
         }
     }
 
+    // 애니메이션 이벤트에서 호출될 함수
     public void FireProjectile()
     {
-        if (currentTarget == null)
+        if (currentTarget != null && projectilePrefab != null && firePoint != null)
         {
-            Debug.LogError($"[Tower] {gameObject.name}: 투사체 발사 실패! 타겟이 NULL입니다.");
-            return;
-        }
+            Debug.Log($"[Tower] {gameObject.name}: 애니메이션과 동기화된 투사체 발사!");
 
-        if (projectilePrefab == null || firePoint == null)
-        {
-            Debug.LogError($"[Tower] {gameObject.name}: 투사체 프리팹 또는 발사 위치가 설정되지 않음.");
-            return;
-        }
+            GameObject projectile = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
+            Projectile projectileScript = projectile.GetComponent<Projectile>();
 
-        Debug.Log($"[Tower] {gameObject.name}: 투사체 발사 - 타겟: {currentTarget.name}");
-        GameObject projectile = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
-        Projectile projectileScript = projectile.GetComponent<Projectile>();
-        if (projectileScript != null)
+            if (projectileScript != null)
+            {
+                projectileScript.SetDamage(towerStats.AttackPower);
+            }
+        }
+        else
         {
-            projectileScript.SetDamage(towerStats.AttackPower);
+            Debug.LogError($"[Tower] {gameObject.name}: 투사체 발사 실패! currentTarget: {currentTarget}, projectilePrefab: {projectilePrefab}, firePoint: {firePoint}");
         }
     }
-
 
     public void RestartAttack()
     {
