@@ -29,11 +29,11 @@ public class Enemy : MonoBehaviour
 
         if (enemyAnimatorController == null)
         {
-            Debug.LogError($"[Enemy] {gameObject.name}: EnemyAnimatorController¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù! ¾Ö´Ï¸ÞÀÌ¼Ç ½ÇÇà ºÒ°¡.");
+            Debug.LogError($"[Enemy] {gameObject.name}: EnemyAnimatorControllerï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½! ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò°ï¿½.");
         }
         else
         {
-            Debug.Log($"[Enemy] {gameObject.name}: EnemyAnimatorController Á¤»ó ÇÒ´çµÊ.");
+            Debug.Log($"[Enemy] {gameObject.name}: EnemyAnimatorController ï¿½ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½ï¿½.");
             enemyAnimatorController.gameObject.SetActive(true);
         }
     }
@@ -53,11 +53,11 @@ public class Enemy : MonoBehaviour
 
             transform.localScale = new Vector3(-1, 1, 1);
 
-            Debug.Log($"[Enemy] {gameObject.name}: ÃÊ±âÈ­ ¿Ï·á! Ã¼·Â: {health}, °ø°Ý·Â: {attackPower}, ÀÌµ¿¼Óµµ: {MovementSpeed}");
+            Debug.Log($"[Enemy] {gameObject.name}: ï¿½Ê±ï¿½È­ ï¿½Ï·ï¿½! Ã¼ï¿½ï¿½: {health}, ï¿½ï¿½ï¿½Ý·ï¿½: {attackPower}, ï¿½Ìµï¿½ï¿½Óµï¿½: {MovementSpeed}");
         }
         else
         {
-            Debug.LogError($"[Enemy] {gameObject.name}: enemyStats°¡ NULLÀÔ´Ï´Ù! ÃÊ±âÈ­ ½ÇÆÐ.");
+            Debug.LogError($"[Enemy] {gameObject.name}: enemyStatsï¿½ï¿½ NULLï¿½Ô´Ï´ï¿½! ï¿½Ê±ï¿½È­ ï¿½ï¿½ï¿½ï¿½.");
         }
     }
 
@@ -70,7 +70,7 @@ public class Enemy : MonoBehaviour
         }
         else if (isAttacking)
         {
-            // °ø°Ý ÁßÀÏ ¶§ ÀÌµ¿ ¸ØÃã
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½
             transform.Translate(Vector3.zero);
         }
     }
@@ -78,19 +78,19 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log($"[Enemy] {gameObject.name} - Ãæµ¹ °¨Áö: {collision.gameObject.name} ({collision.tag})");
+        Debug.Log($"[Enemy] {gameObject.name} - ï¿½æµ¹ ï¿½ï¿½ï¿½ï¿½: {collision.gameObject.name} ({collision.tag})");
 
         if (collision.CompareTag("Tower"))
         {
             float xDifference = Mathf.Abs(collision.transform.position.x - transform.position.x);
-            Debug.Log($"[Enemy] {gameObject.name} - °¨ÁöµÈ Å¸¿ö¿Í XÃà Â÷ÀÌ: {xDifference}");
+            Debug.Log($"[Enemy] {gameObject.name} - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ï¿½ï¿½ Xï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: {xDifference}");
 
-            if (xDifference < 0.5f) // °¨Áö ¹üÀ§ È®Àå
+            if (xDifference < 0.5f) // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
             {
-                if (currentTarget == null || currentTarget.isDead) // ±âÁ¸ Å¸°ÙÀÌ Á×¾úÀ» ¶§ »õ·Î °¨Áö
+                if (currentTarget == null || currentTarget.isDead) // ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½×¾ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 {
                     currentTarget = collision.GetComponent<Tower>();
-                    Debug.Log($"[Enemy] {gameObject.name} - Å¸¿ö °¨Áö: {currentTarget.name}, °ø°Ý ½ÃÀÛ");
+                    Debug.Log($"[Enemy] {gameObject.name} - Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: {currentTarget.name}, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
                     StartCoroutine(AttackLoop());
                 }
             }
@@ -103,7 +103,7 @@ public class Enemy : MonoBehaviour
             if (currentTarget == null || currentTarget.isDead)
             {
                 currentTarget = collision.GetComponent<Tower>();
-                Debug.Log($"[Enemy] {gameObject.name} - Å¸¿ö Áö¼Ó °¨Áö: {currentTarget.name}, °ø°Ý ½ÃÀÛ");
+                Debug.Log($"[Enemy] {gameObject.name} - Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: {currentTarget.name}, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
                 StartCoroutine(AttackLoop());
             }
         }
@@ -112,7 +112,7 @@ public class Enemy : MonoBehaviour
     {
         if (collision.gameObject == currentTarget)
         {
-            Debug.Log($"[Enemy] {gameObject.name} - {currentTarget.name}¿¡¼­ ¹þ¾î³², 1ÃÊ ÈÄ ÀçÈ®ÀÎ");
+            Debug.Log($"[Enemy] {gameObject.name} - {currentTarget.name}ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½î³², 1ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½È®ï¿½ï¿½");
             StartCoroutine(ResetTargetAfterDelay(0.1f));
         }
     }
@@ -125,7 +125,7 @@ public class Enemy : MonoBehaviour
             currentTarget = null;
             isAttacking = false;
             enemyAnimatorController.SetAttackState(false);
-            Debug.Log($"[Enemy] {gameObject.name} - °ø°Ý ÁßÁö, ÀÌµ¿ Àç°³");
+            Debug.Log($"[Enemy] {gameObject.name} - ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½Ìµï¿½ ï¿½ç°³");
         }
     }
     private IEnumerator AttackLoop()
@@ -135,15 +135,15 @@ public class Enemy : MonoBehaviour
 
         if (enemyAnimatorController == null)
         {
-            Debug.LogError($"[Enemy] {gameObject.name}: AttackLoop ½ÃÀÛ Àü enemyAnimatorController°¡ NULL!");
+            Debug.LogError($"[Enemy] {gameObject.name}: AttackLoop ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ enemyAnimatorControllerï¿½ï¿½ NULL!");
             yield break;
         }
 
         enemyAnimatorController.SetAttackState(true);
-        Debug.Log($"[Enemy] {gameObject.name}: °ø°Ý ¾Ö´Ï¸ÞÀÌ¼Ç ½ÇÇà!");
+        Debug.Log($"[Enemy] {gameObject.name}: ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½!");
 
         float waitTime = 0f;
-        while (!enemyAnimatorController.IsPlayingAttackAnimation() && waitTime < 1.0f) // ÃÖ´ë 1ÃÊ ´ë±â
+        while (!enemyAnimatorController.IsPlayingAttackAnimation() && waitTime < 1.0f) // ï¿½Ö´ï¿½ 1ï¿½ï¿½ ï¿½ï¿½ï¿½
         {
             yield return null;
             waitTime += Time.deltaTime;
@@ -151,14 +151,14 @@ public class Enemy : MonoBehaviour
 
         if (!enemyAnimatorController.IsPlayingAttackAnimation())
         {
-            Debug.LogError($"[Enemy] {gameObject.name}: °ø°Ý ¾Ö´Ï¸ÞÀÌ¼Ç ½ÇÇà ½ÇÆÐ!");
+            Debug.LogError($"[Enemy] {gameObject.name}: ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½!");
             isAttacking = false;
             yield break;
         }
 
         yield return new WaitForSeconds(attackSpeed);
 
-        // Å¸°ÙÀÌ »ì¾ÆÀÖÀ¸¸é ´Ù½Ã °ø°Ý ½ÇÇà
+        // Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (currentTarget != null && !currentTarget.isDead)
         {
             StartCoroutine(AttackLoop());
@@ -180,7 +180,7 @@ public class Enemy : MonoBehaviour
             isAttacking = false;
             currentTarget = null;
             enemyAnimatorController.SetAttackState(false);
-            Debug.Log($"[Enemy] {gameObject.name}: °ø°Ý ÁßÁö, ÀÌµ¿ Àç°³");
+            Debug.Log($"[Enemy] {gameObject.name}: ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½Ìµï¿½ ï¿½ç°³");
         }
     }
 
@@ -199,21 +199,21 @@ public class Enemy : MonoBehaviour
     {
         if (isDead) return;
         isDead = true;
-
         if (enemyAnimatorController == null)
         {
-            Debug.LogWarning($"[Enemy] {gameObject.name}: enemyAnimatorController°¡ NULL! °­Á¦ ÇÒ´ç ½Ãµµ.");
+            Debug.LogWarning($"[Enemy] {gameObject.name}: enemyAnimatorControllerï¿½ï¿½ NULL! ï¿½ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½ ï¿½Ãµï¿½.");
             enemyAnimatorController = GetComponentInChildren<EnemyAnimatorController>();
 
             if (enemyAnimatorController == null)
             {
-                Debug.LogError($"[Enemy] {gameObject.name}: »ç¸Á ¾Ö´Ï¸ÞÀÌ¼Ç ½ÇÇà ½ÇÆÐ! EnemyAnimatorController¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+                Debug.LogError($"[Enemy] {gameObject.name}: ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½! EnemyAnimatorControllerï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
                 Destroy(gameObject);
                 return;
             }
         }
 
         enemyAnimatorController.PlayDeathAnimation();
+
     }
 
     public void OnDeathAnimationEnd()
