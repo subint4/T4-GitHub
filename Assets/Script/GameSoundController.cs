@@ -37,6 +37,6 @@ public class GameSoundController : MonoBehaviour
     void UpdateButtonImage()
     {
         // 버튼의 이미지를 현재 음소거 상태에 따라 변경
-        toggleButton.image.sprite = isMuted ? soundOnImage : soundOffImage;
+        toggleButton.image.sprite = isMuted ? soundOffImage : soundOnImage;
     }
 }
