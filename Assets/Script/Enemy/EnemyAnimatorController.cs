@@ -62,7 +62,6 @@ public class EnemyAnimatorController : MonoBehaviour
     {
         enemy.OnDeathAnimationEnd();
     }
-
     public void OnAttackAnimationEnd()
     {
         if (!isDead && enemy.currentTarget != null)
@@ -77,8 +76,6 @@ public class EnemyAnimatorController : MonoBehaviour
             Debug.Log($"[EnemyAnimator] {gameObject.name}: 공격 애니메이션 종료 감지됨! {enemy.enemyStats.AttackPower} 피해!");
             enemy.currentTarget.TakeDamage(enemy.enemyStats.AttackPower);
 
-            // 공격 애니메이션이 끝난 후에도 계속 공격 유지
-            enemy.StartAttack();
         }
     }
 

@@ -51,7 +51,7 @@ public class UpgradeManager : MonoBehaviour
         }
 
         int upgradeCost = newTowerStats.UpgradeCost;
-        if (ResourceManager.Instance != null && ResourceManager.Instance.SpendGold(upgradeCost))
+        if (GoldManager.Instance != null && GoldManager.Instance.SpendGold(upgradeCost))
         {
             tower.UpgradeTower(newTowerStats);
             return true;
