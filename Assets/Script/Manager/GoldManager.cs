@@ -5,12 +5,17 @@ using UnityEngine;
 using TMPro;
 using System.IO;
 using Newtonsoft.Json;
+using DG.Tweening;
+using UnityEngine.UI;
 
 public class GoldManager : MonoBehaviour
 {
     public static GoldManager Instance { get; private set; }
 
     [SerializeField] private TMP_Text goldText;
+    [SerializeField] private GameObject goldEffectPrefab;
+    [SerializeField] private Transform goldUIPosition;
+
     private int currentGold;
     private int gainGold;
     private float gainInterval;
@@ -35,6 +40,10 @@ public class GoldManager : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log("GoldManager Start() 실행됨");
+
+        Debug.Log($"현재 goldText: {goldText?.name}");
+        Debug.Log($"현재 goldUIPosition: {goldUIPosition?.name}");
         SetStage(currentStage);
         StartCoroutine(AutoGainGold());
         UpdateGoldUI();
@@ -82,7 +91,7 @@ public class GoldManager : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(gainInterval);
-            AddGold(gainGold);
+            AddGold(gainGold, true);
         }
     }
 
@@ -103,19 +112,65 @@ public class GoldManager : MonoBehaviour
         }
     }
 
-    public void AddGold(int amount)
+    public void AddGold(int amount, bool useAnimation = false)
     {
         currentGold += amount;
         UpdateGoldUI();
+
+        if (useAnimation)
+        {
+            PlayGoldAnimation(amount);
+        }
     }
 
     private void UpdateGoldUI()
     {
+        Debug.Log($"골드 UI 업데이트됨: {currentGold}");
+
         OnGoldChanged?.Invoke(currentGold);
         if (goldText != null)
         {
             goldText.text = currentGold.ToString();
         }
+    }
+    private void PlayGoldAnimation(int amount)
+    {
+        if (goldEffectPrefab == null || goldUIPosition == null)
+        {
+            Debug.LogError("골드 애니메이션 프리팹 또는 UI 위치가 설정되지 않았습니다!");
+            return;
+        }
+
+        // 새로운 골드 이펙트 생성
+        GameObject goldEffect = Instantiate(goldEffectPrefab, goldUIPosition.position, Quaternion.identity, goldUIPosition.parent);
+        CanvasGroup canvasGroup = goldEffect.GetComponent<CanvasGroup>();
+
+        TMP_Text goldTextEffect = goldEffect.transform.Find("GoldTextEffect").GetComponent<TMP_Text>();
+        Image goldIconEffect = goldEffect.transform.Find("GoldIcon").GetComponent<Image>();
+
+        if (goldTextEffect != null)
+        {            
+            goldTextEffect.enableVertexGradient = false;
+            goldTextEffect.color = new Color(1f, 0.84f, 0f);
+            goldTextEffect.fontMaterial.SetColor("_FaceColor", new Color(1f, 0.84f, 0f));
+            goldTextEffect.text = $"+{amount}";
+        }
+
+        if (goldIconEffect != null)
+        {
+            Destroy(goldIconEffect.gameObject);
+        }
+
+        Vector3 startPosition = goldText.transform.position + new Vector3(-0.9f, -0.5f, 0);
+        Vector3 endPosition = startPosition + new Vector3(0, -0.3f, 0);
+        goldEffect.transform.position = startPosition;
+
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(goldEffect.transform.DOMoveY(endPosition.y, 0.5f).SetEase(Ease.OutQuad))
+                .Join(canvasGroup.DOFade(1, 0.2f)) // 페이드인 효과
+                .AppendInterval(1.0f) // 유지 시간
+                .Append(canvasGroup.DOFade(0, 0.5f)) // 페이드아웃
+                .OnComplete(() => Destroy(goldEffect)); // 애니메이션 종료 후 삭제
     }
 }
 
