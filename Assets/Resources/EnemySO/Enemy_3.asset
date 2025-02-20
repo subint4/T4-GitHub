@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 3
   Name: Zombie3
-  Health: 30
-  MovementSpeed: 0.5
+  Health: 20
+  MovementSpeed: 0.3
   AttackSpeed: 1
-  AttackPower: 15
+  AttackPower: 20
   SpawnCount: 0
   RewardMoney: 30

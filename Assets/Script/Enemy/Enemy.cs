@@ -1,31 +1,31 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
     public int EnemyID;
     public EnemySO enemyStats;
-    public float CurrentHealth => currentHealth;
-    public bool IsDead => isDead;
-    public bool IsAttacking => isAttacking;
-    public float MovementSpeed { get; private set; }
-
-    public Tower currentTarget;
-    public bool isSlowed = false;
-    public bool isStunned = false;
-    public bool isAttacking = false;
-
-    private float currentHealth;
-    private bool isDead = false;
-    private Rigidbody2D enemyRigidbody;
-    private float attackSpeed;
+    public bool isDead = false;
+    private bool isAttacking = false;
+    private bool isSlowed = false;
+    private bool isStunned = false;
+    private float health;
+    private float attackPower;
     private float originalSpeed;
-    private EnemyAnimatorController enemyAnimatorController;
+    private float attackSpeed;
+    public float MovementSpeed;
+    public Tower currentTarget;
+    public EnemyAnimatorController enemyAnimatorController;
+    private Rigidbody2D rb;
 
     private void Start()
     {
-        enemyAnimatorController = GetComponentInChildren<EnemyAnimatorController>();
+        enemyAnimatorController = GetComponent<EnemyAnimatorController>();
+
+        if (enemyAnimatorController == null)
+        {
+            enemyAnimatorController = GetComponentInChildren<EnemyAnimatorController>();
+        }
 
         if (enemyAnimatorController == null)
         {
@@ -34,25 +34,33 @@ public class Enemy : MonoBehaviour
         else
         {
             Debug.Log($"[Enemy] {gameObject.name}: EnemyAnimatorController 정상 할당됨.");
+            enemyAnimatorController.gameObject.SetActive(true);
         }
-
-        transform.localScale = new Vector3(-1, 1, 1); // 왼쪽 바라보기
     }
 
-    public void Initialize(EnemySO stats)
+
+
+    public void Initialize(EnemySO enemyData)
     {
-        enemyStats = stats;
+        enemyStats = enemyData;
+
         if (enemyStats != null)
         {
-            currentHealth = enemyStats.Health;
-            MovementSpeed = enemyStats.MovementSpeed;
+            health = enemyStats.Health;
+            attackPower = enemyStats.AttackPower;
             attackSpeed = enemyStats.AttackSpeed;
+            MovementSpeed = enemyStats.MovementSpeed;
+
+            transform.localScale = new Vector3(-1, 1, 1);
+
+            Debug.Log($"[Enemy] {gameObject.name}: 초기화 완료! 체력: {health}, 공격력: {attackPower}, 이동속도: {MovementSpeed}");
         }
         else
         {
-            Debug.LogError($"[Enemy] {gameObject.name}: enemyStats가 NULL입니다! 데이터 로딩 실패!");
+            Debug.LogError($"[Enemy] {gameObject.name}: enemyStats가 NULL입니다! 초기화 실패.");
         }
     }
+
 
     private void Update()
     {
@@ -60,99 +68,128 @@ public class Enemy : MonoBehaviour
         {
             transform.Translate(Vector3.left * MovementSpeed * Time.deltaTime);
         }
+        else if (isAttacking)
+        {
+            // 공격 중일 때 이동 멈춤
+            transform.Translate(Vector3.zero);
+        }
     }
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Tower") && currentTarget == null)
+        Debug.Log($"[Enemy] {gameObject.name} - 충돌 감지: {collision.gameObject.name} ({collision.tag})");
+
+        if (collision.CompareTag("Tower"))
         {
-            currentTarget = collision.GetComponent<Tower>();
-            if (currentTarget != null && !isAttacking)
+            float xDifference = Mathf.Abs(collision.transform.position.x - transform.position.x);
+            Debug.Log($"[Enemy] {gameObject.name} - 감지된 타워와 X축 차이: {xDifference}");
+
+            if (xDifference < 0.5f) // 감지 범위 확장
             {
-                Debug.Log($"[Enemy] {gameObject.name}: 타워 충돌 -> {currentTarget.name} 공격 시작");
+                if (currentTarget == null || currentTarget.isDead) // 기존 타겟이 죽었을 때 새로 감지
+                {
+                    currentTarget = collision.GetComponent<Tower>();
+                    Debug.Log($"[Enemy] {gameObject.name} - 타워 감지: {currentTarget.name}, 공격 시작");
+                    StartCoroutine(AttackLoop());
+                }
+            }
+        }
+    }
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Tower"))
+        {
+            if (currentTarget == null || currentTarget.isDead)
+            {
+                currentTarget = collision.GetComponent<Tower>();
+                Debug.Log($"[Enemy] {gameObject.name} - 타워 지속 감지: {currentTarget.name}, 공격 시작");
                 StartCoroutine(AttackLoop());
             }
         }
     }
-
-    private void OnTriggerExit2D(Collider2D collision)
+        private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Tower") && currentTarget != null && collision.gameObject == currentTarget.gameObject)
+        if (collision.gameObject == currentTarget)
         {
-            Debug.Log($"[Enemy] {gameObject.name}: {currentTarget.name} 벗어남, 이동 재개");
-            StopAttack();
+            Debug.Log($"[Enemy] {gameObject.name} - {currentTarget.name}에서 벗어남, 1초 후 재확인");
+            StartCoroutine(ResetTargetAfterDelay(0.1f));
+        }
+    }
+
+    private IEnumerator ResetTargetAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (currentTarget != null)
+        {
             currentTarget = null;
+            isAttacking = false;
+            enemyAnimatorController.SetAttackState(false);
+            Debug.Log($"[Enemy] {gameObject.name} - 공격 중지, 이동 재개");
         }
     }
     private IEnumerator AttackLoop()
     {
-        while (!isDead && currentTarget != null)
+        if (isAttacking || isStunned) yield break;
+        isAttacking = true;
+
+        if (enemyAnimatorController == null)
         {
-            if (currentTarget.IsDestroyed())
-            {
-                Debug.Log($"[Enemy] {gameObject.name}: 타겟이 파괴됨, 이동 재개");
-                StopAttack();
-                yield break;
-            }
+            Debug.LogError($"[Enemy] {gameObject.name}: AttackLoop 시작 전 enemyAnimatorController가 NULL!");
+            yield break;
+        }
 
-            isAttacking = true;
+        enemyAnimatorController.SetAttackState(true);
+        Debug.Log($"[Enemy] {gameObject.name}: 공격 애니메이션 실행!");
 
-            if (enemyAnimatorController != null)
-            {
-                enemyAnimatorController.SetAttackState(true);
-                Debug.Log($"[Enemy] {gameObject.name}: 공격 애니메이션 실행");
-            }
+        float waitTime = 0f;
+        while (!enemyAnimatorController.IsPlayingAttackAnimation() && waitTime < 1.0f) // 최대 1초 대기
+        {
+            yield return null;
+            waitTime += Time.deltaTime;
+        }
 
-            float elapsedTime = 0f;
-            while (!enemyAnimatorController.IsPlayingAttackAnimation() && elapsedTime < 1.0f)
-            {
-                yield return new WaitForSeconds(0.1f);
-                elapsedTime += 0.1f;
-            }
-
-            if (!enemyAnimatorController.IsPlayingAttackAnimation())
-            {
-                Debug.LogError($"[Enemy] {gameObject.name}: 공격 애니메이션 실행 실패!");
-            }
-
-            Debug.Log($"[Enemy] {gameObject.name}: {currentTarget.name}을(를) 공격! 공격력: {enemyStats.AttackPower}");
-            currentTarget.TakeDamage(enemyStats.AttackPower);
-
-            yield return new WaitForSeconds(attackSpeed);
-
-            if (enemyAnimatorController != null)
-            {
-                enemyAnimatorController.SetAttackState(false);
-            }
-
-            yield return new WaitUntil(() => !enemyAnimatorController.IsPlayingAttackAnimation());
-
+        if (!enemyAnimatorController.IsPlayingAttackAnimation())
+        {
+            Debug.LogError($"[Enemy] {gameObject.name}: 공격 애니메이션 실행 실패!");
             isAttacking = false;
-            Debug.Log($"[Enemy] {gameObject.name}: 공격 종료, 다음 공격 준비");
+            yield break;
+        }
 
-            if (currentTarget != null && !currentTarget.IsDestroyed())
-            {
-                StartCoroutine(AttackLoop());
-            }
-            else
-            {
-                StopAttack();
-            }
+        yield return new WaitForSeconds(attackSpeed);
+
+        // 타겟이 살아있으면 다시 공격 실행
+        if (currentTarget != null && !currentTarget.isDead)
+        {
+            StartCoroutine(AttackLoop());
+        }
+    }
+
+    public void StartAttack()
+    {
+        if (!isAttacking && currentTarget != null && !isDead)
+        {
+            StartCoroutine(AttackLoop());
         }
     }
 
     public void StopAttack()
     {
-        isAttacking = false;
-        currentTarget = null;
+        if (!isDead)
+        {
+            isAttacking = false;
+            currentTarget = null;
+            enemyAnimatorController.SetAttackState(false);
+            Debug.Log($"[Enemy] {gameObject.name}: 공격 중지, 이동 재개");
+        }
     }
 
-public void TakeDamage(float damage)
+        public void TakeDamage(float damage)
     {
         if (isDead) return;
 
-        currentHealth -= damage;
-        if (currentHealth <= 0)
+        health -= damage;
+        if (health <= 0)
         {
             Die();
         }
@@ -162,25 +199,41 @@ public void TakeDamage(float damage)
     {
         if (isDead) return;
         isDead = true;
-        Debug.Log($"[Enemy] {gameObject.name}: 사망!");
-        Destroy(gameObject);
+
+        if (enemyAnimatorController == null)
+        {
+            Debug.LogWarning($"[Enemy] {gameObject.name}: enemyAnimatorController가 NULL! 강제 할당 시도.");
+            enemyAnimatorController = GetComponentInChildren<EnemyAnimatorController>();
+
+            if (enemyAnimatorController == null)
+            {
+                Debug.LogError($"[Enemy] {gameObject.name}: 사망 애니메이션 실행 실패! EnemyAnimatorController를 찾을 수 없습니다.");
+                Destroy(gameObject);
+                return;
+            }
+        }
+
+        enemyAnimatorController.PlayDeathAnimation();
     }
 
-
-public void ApplySlow(float slowFactor, float duration)
+    public void OnDeathAnimationEnd()
+    {
+        Destroy(gameObject);
+    }
+    public void ApplySlow(float slowFactor, float duration)
     {
         if (!isSlowed)
         {
             originalSpeed = MovementSpeed;
             float adjustedSlowFactor = Mathf.Clamp(1f - slowFactor, 0.1f, 1f);
-            MovementSpeed = Mathf.Max(MovementSpeed * adjustedSlowFactor, 0.1f);
+            MovementSpeed *= adjustedSlowFactor;
             attackSpeed /= adjustedSlowFactor;
             isSlowed = true;
         }
-        Invoke("EndSlow", duration);
+        Invoke(nameof(EndSlow), duration);
     }
 
-    public void EndSlow()
+    private void EndSlow()
     {
         MovementSpeed = originalSpeed;
         attackSpeed = enemyStats.AttackSpeed;
@@ -194,23 +247,23 @@ public void ApplySlow(float slowFactor, float duration)
         isStunned = true;
         MovementSpeed = 0f;
         attackSpeed = 0f;
-        if (enemyRigidbody != null)
-        {
-            enemyRigidbody.velocity = Vector2.zero;
-        }
+        isAttacking = false;
 
-        Invoke("EndStun", duration);
+        StopCoroutine(AttackLoop());
+        enemyAnimatorController.SetAttackState(false);
+
+        Invoke(nameof(EndStun), duration);
     }
 
-    public void EndStun()
+    private void EndStun()
     {
         isStunned = false;
         MovementSpeed = originalSpeed;
         attackSpeed = enemyStats.AttackSpeed;
-    }
 
-    public void SetMovementSpeed(float speed)
-    {
-        MovementSpeed = speed;
+        if (currentTarget != null)
+        {
+            StartCoroutine(AttackLoop());
+        }
     }
 }

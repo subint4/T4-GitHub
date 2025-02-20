@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 2
   Name: Zombie2
-  Health: 20
-  MovementSpeed: 0.8
+  Health: 15
+  MovementSpeed: 0.4
   AttackSpeed: 1
-  AttackPower: 20
+  AttackPower: 15
   SpawnCount: 0
   RewardMoney: 25

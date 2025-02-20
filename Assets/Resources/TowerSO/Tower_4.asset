@@ -22,7 +22,7 @@ MonoBehaviour:
   DeployCost: 30
   UpgradeCost: 0
   TowerType: 1
-  SlowEffect: 0
-  SlowDuration: 0
+  SlowEffect: 0.3
+  SlowDuration: 2
   PierceCount: 1
   StunDuration: 0

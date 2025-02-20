@@ -4,77 +4,82 @@ public class EnemyAnimatorController : MonoBehaviour
 {
     public Enemy enemy;
     public Animator enemyAnimator;
+
+    private bool isAttacking = false;
     private bool isDead = false;
-
-    private void Start()
-    {
-        if (enemyAnimator == null)
-        {
-            enemyAnimator = GetComponent<Animator>();
-            if (enemyAnimator == null)
-            {
-                Debug.LogError($"[EnemyAnimator] {gameObject.name}: Animator를 찾을 수 없습니다!");
-            }
-        }
-
-        if (enemy == null)
-        {
-            enemy = GetComponentInParent<Enemy>();
-            if (enemy == null)
-            {
-                Debug.LogError($"[EnemyAnimator] {gameObject.name}: Enemy 스크립트를 찾을 수 없습니다!");
-            }
-        }
-    }
 
     public void SetAttackState(bool attacking)
     {
-        if (enemyAnimator == null || isDead) return;
+        if (enemyAnimator == null)
+        {
+            Debug.LogError($"[EnemyAnimator] {gameObject.name}: Animator가 NULL입니다!");
+            return;
+        }
 
-        enemyAnimator.SetBool("isAttacking", attacking);
+        isAttacking = attacking;
 
         if (attacking)
         {
-            if (AnimatorHasParameter(enemyAnimator, "Attack"))
-            {
-                enemyAnimator.ResetTrigger("Attack");
-                enemyAnimator.SetTrigger("Attack");
-
-                Debug.Log($"[EnemyAnimator] {gameObject.name}: Attack 애니메이션 실행!");
-            }
-            else
-            {
-                Debug.LogError($"[EnemyAnimator] {gameObject.name}: 'Attack' 파라미터가 Animator에 없습니다!");
-            }
+            string attackTrigger = (Random.value > 0.5f) ? "Attack1" : "Attack2";
+            enemyAnimator.SetTrigger(attackTrigger);
+            enemyAnimator.SetBool("isAttacking", true);
+            Debug.Log($"[EnemyAnimator] {gameObject.name}: {attackTrigger} 애니메이션 실행!");
         }
         else
         {
+            enemyAnimator.SetBool("isAttacking", false);
             Debug.Log($"[EnemyAnimator] {gameObject.name}: 공격 종료, Idle 상태 전환");
         }
     }
 
     public bool IsPlayingAttackAnimation()
     {
-        if (enemyAnimator == null) return false;
+        if (enemyAnimator == null)
+        {
+            Debug.LogError($"[EnemyAnimator] {gameObject.name}: Animator가 NULL입니다!");
+            return false;
+        }
 
         AnimatorStateInfo stateInfo = enemyAnimator.GetCurrentAnimatorStateInfo(0);
-        bool isPlaying = stateInfo.IsName("Attack");
+        bool isPlaying = isAttacking && (stateInfo.IsName("Attack1") || stateInfo.IsName("Attack2")) && stateInfo.normalizedTime < 1.0f;
 
-        Debug.Log($"[EnemyAnimator] {gameObject.name}: 현재 애니메이션 상태 - {isPlaying}, " +
-                  $"NormalizedTime: {stateInfo.normalizedTime}, Length: {stateInfo.length}");
+        Debug.Log($"[EnemyAnimator] {gameObject.name}: 현재 애니메이션 상태 - {isPlaying}, NormalizedTime: {stateInfo.normalizedTime}");
 
-        return isPlaying && stateInfo.normalizedTime < 1.0f;
+        return isPlaying;
     }
 
-    private bool AnimatorHasParameter(Animator animator, string paramName)
+    public void PlayDeathAnimation()
     {
-        foreach (AnimatorControllerParameter param in animator.parameters)
+        if (enemyAnimator != null && !isDead)
         {
-            if (param.name == paramName)
-            {
-                return true;
-            }
+            isDead = true;
+            enemyAnimator.SetTrigger("isDead");
+            Debug.Log($"[EnemyAnimator] {gameObject.name}: 사망 애니메이션 실행!");
         }
-        return false;
     }
+
+    public void OnDeathAnimationEnd()
+    {
+        enemy.OnDeathAnimationEnd();
+    }
+
+    public void OnAttackAnimationEnd()
+    {
+        if (!isDead && enemy.currentTarget != null)
+        {
+            if (enemy.currentTarget.IsDestroyed())
+            {
+                Debug.Log($"[EnemyAnimator] {gameObject.name}: 타겟이 이미 파괴됨 -> 공격 취소");
+                enemy.StopAttack();
+                return;
+            }
+
+            Debug.Log($"[EnemyAnimator] {gameObject.name}: 공격 애니메이션 종료 감지됨! {enemy.enemyStats.AttackPower} 피해!");
+            enemy.currentTarget.TakeDamage(enemy.enemyStats.AttackPower);
+
+            // 공격 애니메이션이 끝난 후에도 계속 공격 유지
+            enemy.StartAttack();
+        }
+    }
+
 }

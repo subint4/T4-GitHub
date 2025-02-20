@@ -14,7 +14,7 @@
       "ID": 1,
       "Name": "Zombie1",
       "Health": 10.0,
-      "MovementSpeed": 1.0,
+      "MovementSpeed": 0.5,
       "AttackSpeed": 1.0,
       "AttackPower": 10.0,
       "RewardMoney": 20
@@ -22,29 +22,29 @@
     {
       "ID": 2,
       "Name": "Zombie2",
-      "Health": 20.0,
-      "MovementSpeed": 0.8,
+      "Health": 15.0,
+      "MovementSpeed": 0.4,
       "AttackSpeed": 1.0,
-      "AttackPower": 20.0,
+      "AttackPower": 15.0,
       "RewardMoney": 25
     },
     {
       "ID": 3,
       "Name": "Zombie3",
-      "Health": 30.0,
-      "MovementSpeed": 0.5,
+      "Health": 20.0,
+      "MovementSpeed": 0.3,
       "AttackSpeed": 1.0,
-      "AttackPower": 15.0,
+      "AttackPower": 20.0,
       "RewardMoney": 30
     },
     {
       "ID": 4,
       "Name": "Boss_Zombie",
-      "Health": 40.0,
-      "MovementSpeed": 1.2,
+      "Health": 100.0,
+      "MovementSpeed": 0.25,
       "AttackSpeed": 1.0,
       "AttackPower": 50.0,
-      "RewardMoney": 50
+      "RewardMoney": 300
     }
   ]
 }

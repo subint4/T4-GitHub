@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 4
   Name: Boss_Zombie
-  Health: 40
-  MovementSpeed: 1.2
+  Health: 100
+  MovementSpeed: 0.25
   AttackSpeed: 1
   AttackPower: 50
   SpawnCount: 0
-  RewardMoney: 50
+  RewardMoney: 300

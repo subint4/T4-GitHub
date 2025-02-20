@@ -185,6 +185,10 @@ public class Tower : MonoBehaviour
     {
         Destroy(gameObject);
     }
+    public bool IsDestroyed()
+    {
+        return isDead;
+    }
 
     public void OnAttackAnimationEnd()
     {

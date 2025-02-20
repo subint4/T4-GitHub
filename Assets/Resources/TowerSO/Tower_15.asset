@@ -25,4 +25,4 @@ MonoBehaviour:
   SlowEffect: 0
   SlowDuration: 0
   PierceCount: 1
-  StunDuration: 0
+  StunDuration: 3

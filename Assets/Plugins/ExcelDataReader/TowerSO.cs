@@ -24,6 +24,8 @@ public class TowerSO : ScriptableObject
     public float SlowDuration;
     public int PierceCount;
     public float StunDuration;
+    public string AttackAnimationName;  // 추가된 필드
+
 
     public void LoadFromJson(TowerData data)
     {
