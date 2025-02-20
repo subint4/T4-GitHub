@@ -43,7 +43,7 @@ public class ButtonDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
             if (hit != null && hit.CompareTag("Tile"))
             {
-                if (ResourceManager.Instance.SpendGold(towerCost))
+                if (GoldManager.Instance.SpendGold(towerCost))
                 {
                     draggingObject.transform.position = hit.transform.position;
                     Debug.Log("설치 완료");

@@ -103,17 +103,22 @@ public class Enemy : MonoBehaviour
             if (currentTarget == null || currentTarget.isDead)
             {
                 currentTarget = collision.GetComponent<Tower>();
-                Debug.Log($"[Enemy] {gameObject.name} - Ÿ�� ���� ����: {currentTarget.name}, ���� ����");
-                StartCoroutine(AttackLoop());
+                Debug.Log($"[Enemy] {gameObject.name} - 타워 지속 감지: {currentTarget.name}, 공격 시작");
+
+                if (!isAttacking)
+                {
+                    StartCoroutine(AttackLoop());
+                }
             }
         }
     }
-        private void OnTriggerExit2D(Collider2D collision)
+
+    private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject == currentTarget)
         {
-            Debug.Log($"[Enemy] {gameObject.name} - {currentTarget.name}���� ���, 1�� �� ��Ȯ��");
-            StartCoroutine(ResetTargetAfterDelay(0.1f));
+            Debug.Log($"[Enemy] {gameObject.name} - {currentTarget.name}에서 벗어남, 공격 중단");
+            StopAttack();
         }
     }
 
@@ -130,48 +135,39 @@ public class Enemy : MonoBehaviour
     }
     private IEnumerator AttackLoop()
     {
-        if (isAttacking || isStunned) yield break;
+        if (isAttacking || isStunned || currentTarget == null || isDead) yield break;
+
         isAttacking = true;
-
-        if (enemyAnimatorController == null)
-        {
-            Debug.LogError($"[Enemy] {gameObject.name}: AttackLoop ���� �� enemyAnimatorController�� NULL!");
-            yield break;
-        }
-
         enemyAnimatorController.SetAttackState(true);
-        Debug.Log($"[Enemy] {gameObject.name}: ���� �ִϸ��̼� ����!");
+        Debug.Log($"[Enemy] {gameObject.name}: 공격 애니메이션 실행!");
 
-        float waitTime = 0f;
-        while (!enemyAnimatorController.IsPlayingAttackAnimation() && waitTime < 1.0f) // �ִ� 1�� ���
+        while (currentTarget != null && !isDead && !isStunned)
         {
-            yield return null;
-            waitTime += Time.deltaTime;
+            if (!enemyAnimatorController.IsPlayingAttackAnimation())
+            {
+                Debug.LogError($"[Enemy] {gameObject.name}: 공격 애니메이션 실행 실패!");
+                break;
+            }
+
+            yield return new WaitForSeconds(attackSpeed);
+
+            if (currentTarget != null && !currentTarget.isDead)
+            {
+                Debug.Log($"[Enemy] {gameObject.name}: {currentTarget.name}에게 {enemyStats.AttackPower} 피해!");
+                currentTarget.TakeDamage(enemyStats.AttackPower);
+            }
+            else
+            {
+                Debug.Log($"[Enemy] {gameObject.name}: 타겟이 죽어서 공격 중지!");
+                StopAttack();
+                yield break;
+            }
         }
 
-        if (!enemyAnimatorController.IsPlayingAttackAnimation())
-        {
-            Debug.LogError($"[Enemy] {gameObject.name}: ���� �ִϸ��̼� ���� ����!");
-            isAttacking = false;
-            yield break;
-        }
-
-        yield return new WaitForSeconds(attackSpeed);
-
-        // Ÿ���� ��������� �ٽ� ���� ����
-        if (currentTarget != null && !currentTarget.isDead)
-        {
-            StartCoroutine(AttackLoop());
-        }
+        isAttacking = false;
+        enemyAnimatorController.SetAttackState(false);
     }
 
-    public void StartAttack()
-    {
-        if (!isAttacking && currentTarget != null && !isDead)
-        {
-            StartCoroutine(AttackLoop());
-        }
-    }
 
     public void StopAttack()
     {
@@ -180,11 +176,11 @@ public class Enemy : MonoBehaviour
             isAttacking = false;
             currentTarget = null;
             enemyAnimatorController.SetAttackState(false);
-            Debug.Log($"[Enemy] {gameObject.name}: ���� ����, �̵� �簳");
+            Debug.Log($"[Enemy] {gameObject.name}: 공격 중지, 이동 재개");
         }
     }
 
-        public void TakeDamage(float damage)
+    public void TakeDamage(float damage)
     {
         if (isDead) return;
 

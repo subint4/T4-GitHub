@@ -2852,7 +2852,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 437ea37019208d04093ea359e10be053, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gaugeFill: {fileID: 578589531}
+  gaugeFill: {fileID: 0}
 --- !u!1 &593120067
 GameObject:
   m_ObjectHideFlags: 0
@@ -8037,8 +8037,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   goldText: {fileID: 1247398330}
-  goldEffectPrefab: {fileID: 0}
-  goldUIPosition: {fileID: 0}
+  goldEffectPrefab: {fileID: 950907624796428377, guid: 5797b69036d0356409812e4a235a98e9, type: 3}
+  goldUIPosition: {fileID: 1247398329}
 --- !u!114 &1549554038
 MonoBehaviour:
   m_ObjectHideFlags: 0
