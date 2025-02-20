@@ -9,6 +9,10 @@ public class EnemyManager : MonoBehaviour
     private List<Enemy> activeEnemies = new List<Enemy>();
     public Transform[] spawnPoints;
 
+    public GaugeManager progressBar;
+    public int totalEnemies = 10;
+    private int defeatedEnemies = 0;
+
     private void Awake()
     {
         if (Instance == null)
@@ -111,5 +115,27 @@ public class EnemyManager : MonoBehaviour
     public int GetActiveEnemyCount()
     {
         return activeEnemies.Count;
+    }
+    public void OnEnemyDefeated()
+    {
+        defeatedEnemies++;
+
+        // 게이지바 업데이트
+        if (progressBar != null)
+        {
+            progressBar.UpdateGauge(defeatedEnemies, totalEnemies);
+        }
+
+        Debug.Log($"몬스터 처치 진행률: {defeatedEnemies} / {totalEnemies}");
+
+        if (defeatedEnemies >= totalEnemies)
+        {
+            StageClear();
+        }
+    }
+
+    private void StageClear()
+    {
+        Debug.Log("스테이지 클리어!");
     }
 }

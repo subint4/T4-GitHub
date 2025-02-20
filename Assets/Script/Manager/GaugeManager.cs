@@ -5,41 +5,14 @@ using UnityEngine.UI;
 
 public class GaugeManager : MonoBehaviour
 {
-    public Slider gaugeBar;
-    //게이지 아무것도 없을때 색
-    public Color normalColor = Color.white;
-    //게이지 바 찰때 색
-    public Color fullColor = Color.blue;
+    public Image gaugeFill;
 
-    private int totalEnemies;
-    private int defeatedEnemies = 0;
-
-    private void Start()
+    // 게이지 업데이트 함수
+    public void UpdateGauge(float current, float max)
     {
-        if (gaugeBar == null)
+        if (gaugeFill != null)
         {
-            Debug.LogError("게이지 바 UI가 안됬습니다");
-        }
-        gaugeBar.value = 0;
-    }
-
-    public void InitializeGauge(int total)
-    {
-        totalEnemies = total;
-        defeatedEnemies = 0;
-        gaugeBar.value = 0;
-        gaugeBar.fillRect.GetComponent<Image>().color = normalColor;
-    }
-
-    public void UpdateGage()
-    {
-        defeatedEnemies += 1;
-        gaugeBar.value = (float)defeatedEnemies / totalEnemies;
-
-        if (defeatedEnemies >= totalEnemies)
-        {
-            gaugeBar.fillRect.GetComponent <Image>().color = fullColor;
-            Debug.Log("색깔 변했나?");
+            gaugeFill.fillAmount = current / max; // 게이지 값을 비율로 설정
         }
     }
 }

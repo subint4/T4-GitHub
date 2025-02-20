@@ -163,6 +163,12 @@ public void TakeDamage(float damage)
         if (isDead) return;
         isDead = true;
         Debug.Log($"[Enemy] {gameObject.name}: »ç¸Á!");
+
+        if (EnemyManager.Instance != null)
+        {
+            EnemyManager.Instance.OnEnemyDefeated();
+        }
+
         Destroy(gameObject);
     }
 
