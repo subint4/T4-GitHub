@@ -159,7 +159,7 @@ public class Tower : MonoBehaviour
         }
 
         towerStats = newStats;
-        transform.localScale *= 1.3f;
+        transform.localScale *= 1.1f;
         Debug.Log($"{towerStats.Name} 업그레이드 완료! 새로운 공격력: {towerStats.AttackPower}");
     }
 

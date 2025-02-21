@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
+public enum EnemyType { Melee, Ranged } // 근접/원거리 구분 추가
 
 [CreateAssetMenu(fileName = "NewEnemyData", menuName = "Game Data/Enemy")]
+
 public class EnemySO : ScriptableObject
 {
     public int ID;
+    public EnemyType Type;
     public string Name;
     public float Health;
     public float MovementSpeed;

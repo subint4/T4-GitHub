@@ -5,7 +5,7 @@ public class ProjectileSO : ScriptableObject
 {
     public string ProjectileName;
     public float Speed;
-    public int Damage;
+    public float Damage;
     public bool CanPierce;
     public int PierceCount;
     public bool CanStun;

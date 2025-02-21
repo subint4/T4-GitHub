@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement; // 씬 리로드를 위해 추가
 using System.Collections;
 
 public class GameManager : MonoBehaviour
@@ -64,6 +65,32 @@ public class GameManager : MonoBehaviour
         if (isGameOver) return;
 
         isGameOver = true;
-        Debug.Log("게임 오버!");
+        Debug.Log("게임 오버! 화면을 클릭하면 다시 시작됩니다.");
+
+        // **게임 멈추기**
+        Time.timeScale = 0f; // 게임 전체 정지
+    }
+
+    private void Update()
+    {
+        if (isGameOver && Input.GetMouseButtonDown(0)) // 클릭 감지
+        {
+            RestartGame();
+        }
+    }
+
+    private void RestartGame()
+    {
+        Debug.Log("게임 다시 시작!");
+
+        // DOTween 정리
+        DG.Tweening.DOTween.KillAll();
+
+        // **시간 복구**
+        Time.timeScale = 1f;
+
+        // **씬 다시 로드**
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
     }
 }

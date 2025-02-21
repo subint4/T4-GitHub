@@ -7,7 +7,8 @@
     "MovementSpeed": "float",
     "AttackSpeed": "float",
     "AttackPower": "float",
-    "RewardMoney": "int"
+    "RewardMoney": "int",
+    "EnemyType": "string"
   },
   "Data": [
     {
@@ -17,7 +18,8 @@
       "MovementSpeed": 0.5,
       "AttackSpeed": 1.0,
       "AttackPower": 10.0,
-      "RewardMoney": 20
+      "RewardMoney": 20,
+      "EnemyType": "Melee"
     },
     {
       "ID": 2,
@@ -26,7 +28,8 @@
       "MovementSpeed": 0.4,
       "AttackSpeed": 1.0,
       "AttackPower": 15.0,
-      "RewardMoney": 25
+      "RewardMoney": 25,
+      "EnemyType": "Melee"
     },
     {
       "ID": 3,
@@ -35,7 +38,8 @@
       "MovementSpeed": 0.3,
       "AttackSpeed": 1.0,
       "AttackPower": 20.0,
-      "RewardMoney": 30
+      "RewardMoney": 30,
+      "EnemyType": "Melee"
     },
     {
       "ID": 4,
@@ -44,7 +48,8 @@
       "MovementSpeed": 0.25,
       "AttackSpeed": 1.0,
       "AttackPower": 50.0,
-      "RewardMoney": 300
+      "RewardMoney": 300,
+      "EnemyType": "Melee"
     }
   ]
 }

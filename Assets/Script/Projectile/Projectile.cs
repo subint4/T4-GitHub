@@ -7,9 +7,9 @@ public class Projectile : MonoBehaviour
     public ProjectileSO projectileStats;
     private Vector3 direction = Vector3.right;
     private List<Enemy> hitEnemies = new List<Enemy>();
-    private int damage;
+    private float damage;
 
-    public void SetDamage(int towerDamage)
+    public void SetDamage(float towerDamage)
     {
         damage = towerDamage;
     }

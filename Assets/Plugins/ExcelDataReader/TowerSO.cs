@@ -13,9 +13,9 @@ public class TowerSO : ScriptableObject
     public int ID;
     public string Name;
     public int NextLevelID;
-    public int Health;
+    public float Health;
     public int Level;
-    public int AttackPower;
+    public float AttackPower;
     public float AttackSpeed;
     public int DeployCost;
     public int UpgradeCost;

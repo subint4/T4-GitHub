@@ -59,9 +59,13 @@ public class EnemyManager : MonoBehaviour
                 continue;
             }
 
-            enemyComponent.enemyStats = enemySO;
+            // EnemySO 데이터를 Enemy 컴포넌트에 적용
+            enemyComponent.Initialize(enemySO, enemySO.Type);
+
+            // 적 프리팹을 Dictionary에 저장
             enemyPrefabDictionary[enemyComponent.EnemyID] = prefab;
-            Debug.Log($"Enemy ID {enemyComponent.EnemyID} - {prefab.name} 프리팹과 자동 연결됨.");
+
+            Debug.Log($"Enemy ID {enemyComponent.EnemyID} - {prefab.name} 프리팹과 자동 연결됨. (Type: {enemySO.Type})");
         }
     }
 
@@ -93,7 +97,7 @@ public class EnemyManager : MonoBehaviour
 
         if (newEnemy != null)
         {
-            newEnemy.Initialize(enemyData);
+            newEnemy.Initialize(enemyData,enemyData.Type);
             activeEnemies.Add(newEnemy);
             return newEnemyObj;
         }

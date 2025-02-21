@@ -123,7 +123,7 @@ public static class ExcelToJson
 
     private static bool IsValidType(string type)
     {
-        return type == "int" || type == "float" || type == "string" || type == "bool";
+        return type == "int" || type == "float" || type == "string" || type == "bool" || type == "enum";
     }
 
     private static object ConvertToCorrectType(object value, string expectedType)
@@ -142,16 +142,21 @@ public static class ExcelToJson
         {
             return boolValue;
         }
+        else if (expectedType == "enum") // Enum 값은 그대로 문자열로 저장
+        {
+            return value.ToString().Trim();
+        }
 
         return value.ToString();
     }
-}
 
-//  JsonToSO에서 사용하는 형식과 맞추기 위해 래퍼 클래스 추가
-[Serializable]
-public class JsonWrapper
-{
-    public string DataType;
-    public Dictionary<string, string> Metadata;
-    public List<Dictionary<string, object>> Data;
+
+    //  JsonToSO에서 사용하는 형식과 맞추기 위해 래퍼 클래스 추가
+    [Serializable]
+    public class JsonWrapper
+    {
+        public string DataType;
+        public Dictionary<string, string> Metadata;
+        public List<Dictionary<string, object>> Data;
+    }
 }
