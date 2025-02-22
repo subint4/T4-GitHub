@@ -54,6 +54,15 @@ public class TowerManager : MonoBehaviour
             Debug.Log($"Tower ID {towerComponent.TowerID} - {prefab.name} 프리팹과 자동 연결됨.");
         }
     }
+    public int GetTowerDeployCost(int towerID)
+    {
+        if (towerDataDictionary.TryGetValue(towerID, out TowerSO towerData))
+        {
+            return towerData.DeployCost;
+        }
+        Debug.LogError($"Tower ID {towerID}에 대한 DeployCost를 찾을 수 없습니다!");
+        return int.MaxValue;
+    }
 
     public GameObject GetTowerPrefab(int towerID)
     {
@@ -97,6 +106,14 @@ public class TowerManager : MonoBehaviour
         if (selectedTowerID == -1)
         {
             Debug.LogError("타워가 선택되지 않았습니다. 먼저 타워 버튼을 클릭하세요.");
+            return;
+        }
+
+        int deployCost = GetTowerDeployCost(selectedTowerID);
+
+        if (!GoldManager.Instance.SpendGold(deployCost))
+        {
+            Debug.LogWarning($"골드 부족! 배치 비용 {deployCost} 필요.");
             return;
         }
 

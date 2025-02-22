@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: -1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6357064106867269085}
@@ -62,11 +62,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EnemyID: 1
-  enemyStats: {fileID: 0}
+  enemyStats: {fileID: 11400000, guid: 6d4543444155da94981410dcbb055ce0, type: 2}
   isDead: 0
-  MovementSpeed: 0
+  MovementSpeed: 0.5
   currentTarget: {fileID: 0}
   enemyAnimatorController: {fileID: 3800284140812706936}
+  projectilePrefab: {fileID: 0}
+  firePoint: {fileID: 0}
+  attackRange: 1.5
 --- !u!50 &3538306792262835736
 Rigidbody2D:
   serializedVersion: 4

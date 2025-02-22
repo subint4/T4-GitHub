@@ -17,8 +17,6 @@ public class GameSoundController : MonoBehaviour
     void Start()
     {
         toggleButton.onClick.AddListener(ToggleSound);
-
-        UpdateButtonImage();
     }
 
     void ToggleSound()
@@ -29,14 +27,6 @@ public class GameSoundController : MonoBehaviour
         // 오디오 음소거 설정
         audioSource.mute = isMuted;
 
-        // 버튼 이미지 업데이트
-        UpdateButtonImage();
-
         Debug.Log($"음소거 상태: {isMuted}, AudioSource Mute 상태: {audioSource.mute}");
-    }
-    void UpdateButtonImage()
-    {
-        // 버튼의 이미지를 현재 음소거 상태에 따라 변경
-        toggleButton.image.sprite = isMuted ? soundOffImage : soundOnImage;
     }
 }

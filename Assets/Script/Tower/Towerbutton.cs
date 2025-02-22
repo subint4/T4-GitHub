@@ -1,14 +1,19 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using TMPro;
+using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class TowerButton : MonoBehaviour, IPointerClickHandler
 {
     public int towerID; // 선택할 타워의 ID (직접 지정 가능)
+    public int towerCost;
+    [SerializeField] private TMP_Text costText;
 
     private void Start()
     {
         AssignTowerIDByHierarchy(); // 버튼 순서를 Hierarchy 기준으로 할당
+        UpdateCostText();
     }
 
     // Hierarchy 순서대로 Tower ID 할당
@@ -26,6 +31,7 @@ public class TowerButton : MonoBehaviour, IPointerClickHandler
         if (index >= 0 && index < sortedTowerIDs.Count)
         {
             towerID = sortedTowerIDs[index]; // **버튼 순서대로 ID 매칭**
+            towerCost = TowerManager.Instance.GetTowerDeployCost(towerID);
             Debug.Log($"버튼 {gameObject.name}에 Tower ID {towerID} 할당 (Index: {index})");
         }
         else
@@ -33,7 +39,13 @@ public class TowerButton : MonoBehaviour, IPointerClickHandler
             Debug.LogWarning($"{gameObject.name} 버튼의 인덱스 {index}가 타워 ID 목록보다 큽니다.");
         }
     }
-
+    private void UpdateCostText()
+    {
+        if (costText != null)
+        {
+            costText.text = towerCost.ToString();
+        }
+    }
     // 버튼 클릭 시 실행
     public void OnPointerClick(PointerEventData eventData)
     {
@@ -43,7 +55,14 @@ public class TowerButton : MonoBehaviour, IPointerClickHandler
             return;
         }
 
-        TowerManager.Instance.SelectTower(towerID);
-        Debug.Log($"버튼 클릭됨: 타워 ID {towerID} 선택됨");
+        if (GoldManager.Instance.SpendGold(towerCost))
+        {
+            TowerManager.Instance.SelectTower(towerID);
+            Debug.Log($"타워 {towerID} 선택됨, 비용 {towerCost} 차감됨");
+        }
+        else
+        {
+            Debug.Log("골드 부족!");
+        }
     }
 }

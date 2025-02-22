@@ -32,7 +32,7 @@ public class StageSelectManager : MonoBehaviour
     {
         unlockedStage = PlayerPrefs.GetInt("UnlockedStage"); 
 
-        Debug.Log($"🔍 현재 저장된 해금된 스테이지: {unlockedStage}");
+        Debug.Log($" 현재 저장된 해금된 스테이지: {unlockedStage}");
 
         if (unlockedStage < 1)
         {
@@ -46,7 +46,7 @@ public class StageSelectManager : MonoBehaviour
             unlockedStage = maxUnlockedStage;
         }
 
-        Debug.Log($"🔍 최종 적용된 해금된 스테이지: {unlockedStage}");
+        Debug.Log($" 최종 적용된 해금된 스테이지: {unlockedStage}");
     }
 
     public void NextPage()
@@ -72,7 +72,7 @@ public class StageSelectManager : MonoBehaviour
         int buttonCount = Mathf.Min(StageButtons.Length, StagePlayImages.Length, stagesPerPage); // 배열 크기 초과 방지
 
         // 🔥 추가한 디버그 로그
-        Debug.Log($"🔍 buttonCount : {StageButtons.Length} / {StagePlayImages.Length} / {stagesPerPage} / {buttonCount}");
+        Debug.Log($" buttonCount : {StageButtons.Length} / {StagePlayImages.Length} / {stagesPerPage} / {buttonCount}");
 
         for (int i = 0; i < buttonCount; i++)
         {
@@ -81,13 +81,13 @@ public class StageSelectManager : MonoBehaviour
             // 🔥 스테이지 번호 예외처리 추가
             if (stageNumber <= 0)
             {
-                Debug.LogError($"❌ 잘못된 스테이지 번호 계산됨: {stageNumber}");
+                Debug.LogError($" 잘못된 스테이지 번호 계산됨: {stageNumber}");
                 continue;
             }
 
             if (StageButtons[i] == null || StagePlayImages[i] == null)
             {
-                Debug.LogError($"❌ StageButtons[{i}] 또는 StagePlayImages[{i}]이(가) null입니다! Inspector에서 연결 확인 필요.");
+                Debug.LogError($" StageButtons[{i}] 또는 StagePlayImages[{i}]이(가) null입니다! Inspector에서 연결 확인 필요.");
                 continue;
             }
 
@@ -99,7 +99,7 @@ public class StageSelectManager : MonoBehaviour
                 StageButtons[i].interactable = isUnlocked;
                 StagePlayImages[i].gameObject.SetActive(stageNumber == unlockedStage);
 
-                Debug.Log($"🟢 Stage {stageNumber}: isUnlocked = {isUnlocked}, PlayImage 활성화 여부 - {stageNumber == unlockedStage}");
+                Debug.Log($" Stage {stageNumber}: isUnlocked = {isUnlocked}, PlayImage 활성화 여부 - {stageNumber == unlockedStage}");
 
                 Text buttonText = StageButtons[i].GetComponentInChildren<Text>();
                 TMP_Text tmpText = StageButtons[i].GetComponentInChildren<TMP_Text>();
@@ -128,12 +128,12 @@ public class StageSelectManager : MonoBehaviour
     {
         if (stageNumber <= 0)
         {
-            Debug.LogError($"❌ 잘못된 스테이지 번호: {stageNumber} - 1 이상이어야 합니다!");
+            Debug.LogError($" 잘못된 스테이지 번호: {stageNumber} - 1 이상이어야 합니다!");
             return;
         }
 
         string sceneName = "Stage" + stageNumber;
-        Debug.Log($"🚀 스테이지 {sceneName} 이동 시도");
+        Debug.Log($" 스테이지 {sceneName} 이동 시도");
         SceneManager.LoadScene(sceneName);
     }
 

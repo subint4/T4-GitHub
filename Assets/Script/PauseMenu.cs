@@ -16,12 +16,10 @@ public class PauseMenu : MonoBehaviour
     public Button ImpactToggleButton;
     // 홈 버튼 (추가)
     public Button homeButton;
-    // 효과음 토글 텍스트
-    public Text ImpactToggleText;
 
     private bool isPaused = false;  
     // 현재 효과음 상태
-    private bool isSFXOn = true;
+    private bool isSFXOn = true;    
 
     void Start()
     {
@@ -59,6 +57,12 @@ public class PauseMenu : MonoBehaviour
     {
         // 시간 흐르게하기
         Time.timeScale = 1f;
+        AudioSource[] allAudio = FindObjectsOfType<AudioSource>();
+
+        foreach (AudioSource audio in allAudio)
+        {
+            audio.mute = true;
+        }
         // "MainMenu" 씬으로 이동
         SceneManager.LoadScene("MainMenu");
     }
@@ -67,18 +71,15 @@ public class PauseMenu : MonoBehaviour
     public void ToggleImpact()
     {
         isSFXOn = !isSFXOn;
+        AudioSource[] allAudio = FindObjectsOfType<AudioSource>();
 
         // 모든 AudioSource 찾기 (배경음악 제외)
-        AudioSource[] allAudio = FindObjectsOfType<AudioSource>();
         foreach (AudioSource audio in allAudio)
         {
             if (!audio.CompareTag("BGM")) // "BGM" 태그가 있는 오브젝트는 제외
                 audio.mute = !isSFXOn;
         }
 
-
         Debug.Log("효과금 여기까지 오나?");
-        // 버튼 텍스트 변경
-        ImpactToggleText.text = isSFXOn ? "효과음 OFF" : "효과음 ON";
     }
 }
