@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Enemy_2
   m_EditorClassIdentifier: 
   ID: 2
+  Type: 0
   Name: Zombie2
   Health: 15
   MovementSpeed: 0.4

@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Enemy_3
   m_EditorClassIdentifier: 
   ID: 3
+  Type: 0
   Name: Zombie3
   Health: 20
-  MovementSpeed: 0.3
+  MovementSpeed: 0.4
   AttackSpeed: 1
   AttackPower: 20
   SpawnCount: 0

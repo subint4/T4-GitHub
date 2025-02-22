@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Enemy_4
   m_EditorClassIdentifier: 
   ID: 4
+  Type: 0
   Name: Boss_Zombie
   Health: 100
   MovementSpeed: 0.25
