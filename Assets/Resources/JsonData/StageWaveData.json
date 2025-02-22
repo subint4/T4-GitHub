@@ -17,11 +17,11 @@
       "stagenum": 1,
       "wave": 1,
       "enemyID": 1,
-      "count": 5,
-      "SpawnGroup": 4,
-      "SpawnDelay": 0.0,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
       "interval": 2.0,
-      "SpawnLaneID": 2
+      "SpawnLaneID": 0
     },
     {
       "ID": 2,
@@ -29,10 +29,10 @@
       "wave": 1,
       "enemyID": 1,
       "count": 3,
-      "SpawnGroup": 2,
-      "SpawnDelay": 10.0,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
       "interval": 2.0,
-      "SpawnLaneID": 22
+      "SpawnLaneID": 0
     },
     {
       "ID": 3,
@@ -40,32 +40,32 @@
       "wave": 1,
       "enemyID": 2,
       "count": 3,
-      "SpawnGroup": 3,
-      "SpawnDelay": 15.0,
-      "interval": 3.0,
-      "SpawnLaneID": 19
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
     },
     {
       "ID": 4,
       "stagenum": 1,
       "wave": 2,
       "enemyID": 3,
-      "count": 6,
-      "SpawnGroup": 2,
-      "SpawnDelay": 25.0,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
       "interval": 2.0,
-      "SpawnLaneID": 8
+      "SpawnLaneID": 0
     },
     {
       "ID": 5,
       "stagenum": 1,
       "wave": 2,
       "enemyID": 3,
-      "count": 6,
-      "SpawnGroup": 2,
-      "SpawnDelay": 35.0,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
       "interval": 2.0,
-      "SpawnLaneID": 16
+      "SpawnLaneID": 0
     },
     {
       "ID": 6,
@@ -73,10 +73,340 @@
       "wave": 2,
       "enemyID": 4,
       "count": 1,
-      "SpawnGroup": 1,
-      "SpawnDelay": 40.0,
-      "interval": 0.0,
-      "SpawnLaneID": 31
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 7,
+      "stagenum": 2,
+      "wave": 1,
+      "enemyID": 5,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 8,
+      "stagenum": 2,
+      "wave": 1,
+      "enemyID": 5,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 9,
+      "stagenum": 2,
+      "wave": 1,
+      "enemyID": 6,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 10,
+      "stagenum": 2,
+      "wave": 2,
+      "enemyID": 7,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 11,
+      "stagenum": 2,
+      "wave": 2,
+      "enemyID": 7,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 12,
+      "stagenum": 2,
+      "wave": 2,
+      "enemyID": 8,
+      "count": 1,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 13,
+      "stagenum": 3,
+      "wave": 1,
+      "enemyID": 9,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 14,
+      "stagenum": 3,
+      "wave": 1,
+      "enemyID": 9,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 15,
+      "stagenum": 3,
+      "wave": 1,
+      "enemyID": 10,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 16,
+      "stagenum": 3,
+      "wave": 2,
+      "enemyID": 11,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 17,
+      "stagenum": 3,
+      "wave": 2,
+      "enemyID": 11,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 18,
+      "stagenum": 3,
+      "wave": 2,
+      "enemyID": 12,
+      "count": 1,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 19,
+      "stagenum": 4,
+      "wave": 1,
+      "enemyID": 13,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 20,
+      "stagenum": 4,
+      "wave": 1,
+      "enemyID": 13,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 21,
+      "stagenum": 4,
+      "wave": 1,
+      "enemyID": 14,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 22,
+      "stagenum": 4,
+      "wave": 2,
+      "enemyID": 15,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 23,
+      "stagenum": 4,
+      "wave": 2,
+      "enemyID": 15,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 24,
+      "stagenum": 4,
+      "wave": 2,
+      "enemyID": 16,
+      "count": 1,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 25,
+      "stagenum": 5,
+      "wave": 1,
+      "enemyID": 17,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 26,
+      "stagenum": 5,
+      "wave": 1,
+      "enemyID": 17,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 27,
+      "stagenum": 5,
+      "wave": 1,
+      "enemyID": 18,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 28,
+      "stagenum": 5,
+      "wave": 2,
+      "enemyID": 19,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 29,
+      "stagenum": 5,
+      "wave": 2,
+      "enemyID": 19,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 30,
+      "stagenum": 5,
+      "wave": 2,
+      "enemyID": 20,
+      "count": 1,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 31,
+      "stagenum": 6,
+      "wave": 1,
+      "enemyID": 21,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 32,
+      "stagenum": 6,
+      "wave": 1,
+      "enemyID": 21,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 33,
+      "stagenum": 6,
+      "wave": 1,
+      "enemyID": 22,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 34,
+      "stagenum": 6,
+      "wave": 2,
+      "enemyID": 23,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 35,
+      "stagenum": 6,
+      "wave": 2,
+      "enemyID": 23,
+      "count": 3,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
+    },
+    {
+      "ID": 36,
+      "stagenum": 6,
+      "wave": 2,
+      "enemyID": 24,
+      "count": 1,
+      "SpawnGroup": 0,
+      "SpawnDelay": 2.0,
+      "interval": 2.0,
+      "SpawnLaneID": 0
     }
   ]
 }

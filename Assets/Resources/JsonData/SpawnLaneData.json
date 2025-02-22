@@ -144,22 +144,17 @@
     {
       "ID": 28,
       "Pattern_name": "\"boss_mid\"",
-      "lanes": "\"2,3,4\""
+      "lanes": "\"3\""
     },
     {
       "ID": 29,
-      "Pattern_name": "\"boss_left\"",
-      "lanes": "\"1,2,3\""
+      "Pattern_name": "\"Boss_Top\"",
+      "lanes": "\"2\""
     },
     {
       "ID": 30,
-      "Pattern_name": "\"boss_right\"",
-      "lanes": "\"3,4,5\""
-    },
-    {
-      "ID": 31,
-      "Pattern_name": "\"boss_random\"",
-      "lanes": "\"6028\",\"6029\",\"6030\""
+      "Pattern_name": "\"boss_Bottom\"",
+      "lanes": "\"4\""
     }
   ]
 }

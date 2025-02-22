@@ -22,7 +22,7 @@ MonoBehaviour:
     wave: 1
     enemyID: 1
     count: 3
-    SpawnGroup: 2
-    SpawnDelay: 10
+    SpawnGroup: 0
+    SpawnDelay: 2
     interval: 2
-    SpawnLaneID: 22
+    SpawnLaneID: 0

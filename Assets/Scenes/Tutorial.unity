@@ -1313,7 +1313,7 @@ GameObject:
   - component: {fileID: 761773074}
   - component: {fileID: 761773073}
   m_Layer: 5
-  m_Name: DiamondButton
+  m_Name: GoodsButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1704,7 +1704,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uB2E4\uC774\uC544\n"
+  m_text: "\uC7AC\uD654\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 711301de4ecbde646912f28e8af8486f, type: 2}
   m_sharedMaterial: {fileID: -7371350948203849083, guid: 711301de4ecbde646912f28e8af8486f, type: 2}

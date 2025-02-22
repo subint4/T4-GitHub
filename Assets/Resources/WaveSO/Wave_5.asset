@@ -21,8 +21,8 @@ MonoBehaviour:
     stagenum: 1
     wave: 2
     enemyID: 3
-    count: 6
-    SpawnGroup: 2
-    SpawnDelay: 35
+    count: 3
+    SpawnGroup: 0
+    SpawnDelay: 2
     interval: 2
-    SpawnLaneID: 16
+    SpawnLaneID: 0
