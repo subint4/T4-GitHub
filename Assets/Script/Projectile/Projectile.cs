@@ -1,24 +1,54 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class Projectile : MonoBehaviour
 {
     public ProjectileSO projectileStats;
-    private Vector3 direction = Vector3.right;
-    private List<Enemy> hitEnemies = new List<Enemy>();
-    private float damage;
+    private HashSet<Enemy> hitEnemies = new HashSet<Enemy>();
 
-    public void SetDamage(float towerDamage)
+    private float damage;
+    private Vector3 moveDirection;
+    private float distanceTraveled = 0f; // 이동 거리 추적
+    private Vector3 startPosition;
+    private const float MaxRange = 1000f; // 최대 이동 거리 고정
+
+    private void Start()
     {
-        damage = towerDamage;
+        startPosition = transform.position;
     }
 
     private void Update()
     {
-        transform.position += direction * projectileStats.Speed * Time.deltaTime;
+        MoveStraight();
+    }
 
-        if (Vector3.Distance(transform.position, Vector3.zero) > 50f)
+    public void Initialize(Tower tower, Vector3 direction)
+    {
+        if (tower != null && tower.towerStats != null)
+        {
+            damage = tower.towerStats.AttackPower;
+            moveDirection = direction.normalized; // 방향 설정
+            Debug.Log($"[Projectile] {tower.name}에서 발사됨! 데미지: {damage}, 방향: {moveDirection}");
+        }
+    }
+
+    public void Initialize(Enemy enemy, Vector3 direction)
+    {
+        if (enemy != null && enemy.enemyStats != null)
+        {
+            damage = enemy.enemyStats.AttackPower;
+            moveDirection = direction.normalized; // 방향 설정
+            Debug.Log($"[Projectile] {enemy.name}에서 발사됨! 데미지: {damage}, 방향: {moveDirection}");
+        }
+    }
+
+    private void MoveStraight()
+    {
+        transform.position += moveDirection * projectileStats.Speed * Time.deltaTime;
+        distanceTraveled = Vector3.Distance(startPosition, transform.position);
+
+        // 최대 사거리 1000f 초과 시 자동 제거
+        if (distanceTraveled >= MaxRange)
         {
             Destroy(gameObject);
         }
@@ -26,20 +56,24 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Enemy enemy = collision.GetComponent<Enemy>();
-        if (enemy != null && !hitEnemies.Contains(enemy))
+        if (collision.CompareTag("Enemy") || collision.CompareTag("Boss"))
         {
-            enemy.TakeDamage(damage);
-            hitEnemies.Add(enemy);
+            Enemy enemy = collision.GetComponent<Enemy>();
 
-            if (projectileStats.CanSlow)
-                enemy.ApplySlow(projectileStats.SlowEffect, projectileStats.SlowDuration);
+            if (enemy != null && !hitEnemies.Contains(enemy))
+            {
+                enemy.TakeDamage(damage);
+                hitEnemies.Add(enemy);
 
-            if (projectileStats.CanStun)
-                enemy.ApplyStun(projectileStats.StunDuration);
+                if (projectileStats.CanSlow)
+                    enemy.ApplySlow(projectileStats.SlowEffect, projectileStats.SlowDuration);
 
-            if (!projectileStats.CanPierce)
-                Destroy(gameObject);
+                if (projectileStats.CanStun)
+                    enemy.ApplyStun(projectileStats.StunDuration);
+
+                if (!projectileStats.CanPierce)
+                    Destroy(gameObject);
+            }
         }
     }
 }

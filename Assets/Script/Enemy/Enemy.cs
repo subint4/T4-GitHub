@@ -165,12 +165,13 @@ public class Enemy : MonoBehaviour
 
         if (currentTarget != null && projectilePrefab != null && firePoint != null)
         {
-            GameObject projectile = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
-            Projectile projectileScript = projectile.GetComponent<Projectile>();
+            Vector3 shootDirection = -transform.right;
+            GameObject projectileObj = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
+            Projectile projectileScript = projectileObj.GetComponent<Projectile>();
 
             if (projectileScript != null)
             {
-                projectileScript.SetDamage(enemyStats.AttackPower);
+                projectileScript.Initialize(this,shootDirection); // Projectile이 적의 공격력을 자동으로 설정
             }
         }
 
@@ -178,6 +179,7 @@ public class Enemy : MonoBehaviour
         enemyAnimatorController.SetWalkingState(true);
         enemyAnimatorController.SetAttackState(false);
     }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("EndLine"))

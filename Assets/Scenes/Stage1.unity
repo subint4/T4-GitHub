@@ -173,6 +173,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!1 &17913584
 GameObject:
   m_ObjectHideFlags: 0
@@ -272,7 +273,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   towerID: 13
-  towerCost: 0
   costText: {fileID: 1358244050}
 --- !u!222 &17913588
 CanvasRenderer:
@@ -326,7 +326,7 @@ GameObject:
   - component: {fileID: 54782123}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-4"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -384,9 +384,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -412,6 +412,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &54782123
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -441,7 +442,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -471,7 +472,7 @@ GameObject:
   - component: {fileID: 62040515}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-2"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -529,9 +530,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -557,6 +558,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &62040515
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -586,7 +588,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -616,7 +618,7 @@ GameObject:
   - component: {fileID: 63524383}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-1"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -674,9 +676,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -702,6 +704,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &63524383
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -731,7 +734,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -867,7 +870,7 @@ GameObject:
   - component: {fileID: 127642532}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-5"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -925,9 +928,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -953,6 +956,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &127642532
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -982,7 +986,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -1341,7 +1345,7 @@ GameObject:
   - component: {fileID: 212096749}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-2"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1399,9 +1403,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1427,6 +1431,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &212096749
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1456,7 +1461,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -1848,9 +1853,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1876,6 +1881,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &372770216
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1905,7 +1911,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -2028,7 +2034,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   towerID: 1
-  towerCost: 0
   costText: {fileID: 782280718}
 --- !u!114 &398357137
 MonoBehaviour:
@@ -2759,7 +2764,7 @@ GameObject:
   - component: {fileID: 476514803}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-1"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2817,9 +2822,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -2845,6 +2850,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &476514803
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2874,7 +2880,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -2904,7 +2910,7 @@ GameObject:
   - component: {fileID: 509642442}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-1"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2962,9 +2968,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -2990,6 +2996,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &509642442
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3019,7 +3026,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -3138,7 +3145,7 @@ GameObject:
   - component: {fileID: 593120071}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-3"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3196,9 +3203,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -3224,6 +3231,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &593120071
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3253,7 +3261,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -3439,7 +3447,7 @@ GameObject:
   - component: {fileID: 652323886}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-1"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3497,9 +3505,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -3525,6 +3533,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &652323886
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3554,7 +3563,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -3642,9 +3651,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -3670,6 +3679,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &668728570
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3699,7 +3709,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -3841,6 +3851,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!1 &723106830
 GameObject:
   m_ObjectHideFlags: 0
@@ -3990,7 +4001,7 @@ GameObject:
   - component: {fileID: 741280993}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-2"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4048,9 +4059,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -4076,6 +4087,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &741280993
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4105,7 +4117,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -4220,7 +4232,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   towerID: 7
-  towerCost: 0
   costText: {fileID: 413404590}
 --- !u!222 &745363558
 CanvasRenderer:
@@ -4514,7 +4525,7 @@ GameObject:
   - component: {fileID: 852897689}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-5"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4572,9 +4583,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -4600,6 +4611,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &852897689
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4629,7 +4641,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -4863,7 +4875,7 @@ GameObject:
   - component: {fileID: 1010399494}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-4"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4921,9 +4933,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -4949,6 +4961,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &1010399494
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4978,7 +4991,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -5008,7 +5021,7 @@ GameObject:
   - component: {fileID: 1078107276}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-4"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5066,9 +5079,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -5094,6 +5107,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &1078107276
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5123,7 +5137,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -5397,7 +5411,7 @@ GameObject:
   - component: {fileID: 1154199003}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-4"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5455,9 +5469,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -5483,6 +5497,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &1154199003
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5512,7 +5527,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -5579,6 +5594,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!1 &1207181633
 GameObject:
   m_ObjectHideFlags: 0
@@ -5724,7 +5740,7 @@ GameObject:
   - component: {fileID: 1231779760}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-5"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5782,9 +5798,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -5810,6 +5826,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &1231779760
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5839,7 +5856,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -6040,6 +6057,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!1 &1253295938
 GameObject:
   m_ObjectHideFlags: 0
@@ -6054,7 +6072,7 @@ GameObject:
   - component: {fileID: 1253295942}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-3"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6112,9 +6130,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -6140,6 +6158,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &1253295942
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6169,7 +6188,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -6199,7 +6218,7 @@ GameObject:
   - component: {fileID: 1259433272}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-3"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6257,9 +6276,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -6285,6 +6304,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &1259433272
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6314,7 +6334,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -6920,7 +6940,7 @@ GameObject:
   - component: {fileID: 1392907886}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-4"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6978,9 +6998,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -7006,6 +7026,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &1392907886
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7035,7 +7056,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -7150,7 +7171,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   towerID: 4
-  towerCost: 0
   costText: {fileID: 2091147172}
 --- !u!222 &1394521654
 CanvasRenderer:
@@ -7504,9 +7524,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -7532,6 +7552,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &1411416722
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7561,7 +7582,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -7697,7 +7718,7 @@ GameObject:
   - component: {fileID: 1474033307}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-2"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7755,9 +7776,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -7783,6 +7804,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &1474033307
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7812,7 +7834,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -8037,7 +8059,7 @@ GameObject:
   - component: {fileID: 1498753086}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-2"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8095,9 +8117,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -8123,6 +8145,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &1498753086
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8152,7 +8175,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -8240,9 +8263,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -8268,6 +8291,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &1548204503
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8297,7 +8321,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -8328,7 +8352,6 @@ GameObject:
   - component: {fileID: 1549554035}
   - component: {fileID: 1549554036}
   - component: {fileID: 1549554037}
-  - component: {fileID: 1549554038}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -8363,14 +8386,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74f4b74d656b6b3488d29c8b8eeec481, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPoints:
-  - {fileID: 469889828}
-  - {fileID: 1401152980}
-  - {fileID: 2080945646}
-  - {fileID: 1420659930}
-  - {fileID: 72707617}
-  progressBar: {fileID: 0}
-  totalEnemies: 10
 --- !u!114 &1549554033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8383,6 +8398,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49bd48940e637d24cb68c1299a4202ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnPoints:
+  - {fileID: 469889828}
+  - {fileID: 1401152980}
+  - {fileID: 2080945646}
+  - {fileID: 1420659930}
+  - {fileID: 72707617}
+  progressBar: {fileID: 578589533}
 --- !u!114 &1549554034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8436,18 +8458,6 @@ MonoBehaviour:
   goldText: {fileID: 1247398330}
   goldEffectPrefab: {fileID: 950907624796428377, guid: 5797b69036d0356409812e4a235a98e9, type: 3}
   goldUIPosition: {fileID: 1247398329}
---- !u!114 &1549554038
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1549554029}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 685faa7d2c9a92b498f273e4814bad40, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1550903658
 GameObject:
   m_ObjectHideFlags: 0
@@ -8462,7 +8472,7 @@ GameObject:
   - component: {fileID: 1550903662}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-1"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8520,9 +8530,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -8548,6 +8558,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &1550903662
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8577,7 +8588,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -8607,7 +8618,7 @@ GameObject:
   - component: {fileID: 1570467012}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-2"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8665,9 +8676,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -8693,6 +8704,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &1570467012
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8722,7 +8734,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -8827,7 +8839,7 @@ GameObject:
   - component: {fileID: 1577534786}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-3"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8885,9 +8897,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -8913,6 +8925,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &1577534786
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8942,7 +8955,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -9147,6 +9160,7 @@ GameObject:
   - component: {fileID: 1583350421}
   - component: {fileID: 1583350420}
   - component: {fileID: 1583350423}
+  - component: {fileID: 1583350424}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -9244,6 +9258,22 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_MaxRayIntersections: 0
+--- !u!114 &1583350424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1583350419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56666c5a40171f54783dd416a44f42bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EventMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_MaxRayIntersections: 0
 --- !u!1 &1588742753
 GameObject:
   m_ObjectHideFlags: 0
@@ -9258,7 +9288,7 @@ GameObject:
   - component: {fileID: 1588742757}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-1"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9316,9 +9346,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -9344,6 +9374,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &1588742757
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -9373,7 +9404,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -9526,6 +9557,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!1 &1646410410
 GameObject:
   m_ObjectHideFlags: 0
@@ -9792,7 +9824,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   towerID: 10
-  towerCost: 0
   costText: {fileID: 1919592562}
 --- !u!222 &1679952671
 CanvasRenderer:
@@ -9921,7 +9952,7 @@ GameObject:
   - component: {fileID: 1770809607}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-5"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9979,9 +10010,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -10007,6 +10038,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &1770809607
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10036,7 +10068,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -10066,7 +10098,7 @@ GameObject:
   - component: {fileID: 1786166642}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-5"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10124,9 +10156,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -10152,6 +10184,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &1786166642
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10181,7 +10214,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -10421,7 +10454,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   towerID: 16
-  towerCost: 0
   costText: {fileID: 177069377}
 --- !u!222 &1806717181
 CanvasRenderer:
@@ -10475,7 +10507,7 @@ GameObject:
   - component: {fileID: 1878521250}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-4"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10533,9 +10565,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -10561,6 +10593,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &1878521250
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10590,7 +10623,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -10829,7 +10862,7 @@ GameObject:
   - component: {fileID: 1940331029}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-5"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10887,9 +10920,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -10915,6 +10948,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &1940331029
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10944,7 +10978,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -11086,6 +11120,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!1 &2007482028
 GameObject:
   m_ObjectHideFlags: 0
@@ -11184,7 +11219,7 @@ GameObject:
   - component: {fileID: 2016239840}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-3"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11242,9 +11277,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -11270,6 +11305,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &2016239840
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11299,7 +11335,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -11387,9 +11423,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -11415,6 +11451,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &2018245577
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11444,7 +11481,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}
@@ -11714,7 +11751,7 @@ GameObject:
   - component: {fileID: 2147215345}
   m_Layer: 11
   m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-3"
-  m_TagString: Untagged
+  m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11772,9 +11809,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -254458177
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 6b79498530dffd94ba56c9e14453cab2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -11800,6 +11837,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
+  tileXPosition: 0
 --- !u!61 &2147215345
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11829,7 +11867,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: -0.1}

@@ -7,8 +7,8 @@ public class TowerManager : MonoBehaviour
     public static TowerManager Instance { get; private set; }
 
     private Dictionary<int, GameObject> towerPrefabDictionary = new Dictionary<int, GameObject>();
-    private Dictionary<int, TowerSO> towerDataDictionary = new Dictionary<int, TowerSO>();
     private int selectedTowerID = -1;
+    private List<Tower> activeTowers = new List<Tower>();
 
     private void Awake()
     {
@@ -25,13 +25,7 @@ public class TowerManager : MonoBehaviour
 
     private void InitializeTowers()
     {
-        Debug.Log("TowerManager: 모든 타워 프리팹과 SO 데이터를 불러옵니다.");
-
-        TowerSO[] towerDataList = Resources.LoadAll<TowerSO>("TowerSO");
-        foreach (var towerData in towerDataList)
-        {
-            towerDataDictionary[towerData.ID] = towerData;
-        }
+        Debug.Log("TowerManager: 모든 타워 프리팹을 불러옵니다.");
 
         GameObject[] towerPrefabs = Resources.LoadAll<GameObject>("Prefabs/Towers");
         foreach (var prefab in towerPrefabs)
@@ -43,25 +37,21 @@ public class TowerManager : MonoBehaviour
                 continue;
             }
 
-            if (!towerDataDictionary.TryGetValue(towerComponent.TowerID, out TowerSO towerSO))
+            TowerSO towerSO = DataManager.Instance.TowerDataManager.GetTowerData(towerComponent.TowerID);
+            if (towerSO == null)
             {
                 Debug.LogError($"{prefab.name} 프리팹에 해당하는 TowerSO (ID: {towerComponent.TowerID})를 찾을 수 없습니다!");
                 continue;
             }
 
-            towerComponent.Initialize(towerSO); // 자동 연결
-            towerPrefabDictionary[towerComponent.TowerID] = prefab;
-            Debug.Log($"Tower ID {towerComponent.TowerID} - {prefab.name} 프리팹과 자동 연결됨.");
+            towerPrefabDictionary[towerSO.ID] = prefab;
+            Debug.Log($"Tower ID {towerSO.ID} - {prefab.name} 프리팹과 자동 연결됨.");
         }
     }
-    public int GetTowerDeployCost(int towerID)
+
+    public TowerSO GetTowerData(int towerID)
     {
-        if (towerDataDictionary.TryGetValue(towerID, out TowerSO towerData))
-        {
-            return towerData.DeployCost;
-        }
-        Debug.LogError($"Tower ID {towerID}에 대한 DeployCost를 찾을 수 없습니다!");
-        return int.MaxValue;
+        return DataManager.Instance.TowerDataManager.GetTowerData(towerID);
     }
 
     public GameObject GetTowerPrefab(int towerID)
@@ -74,78 +64,76 @@ public class TowerManager : MonoBehaviour
         return null;
     }
 
-    public TowerSO GetTowerData(int towerID)
+    public int GetTowerDeployCost(int towerID)
     {
-        return towerDataDictionary.TryGetValue(towerID, out TowerSO towerData) ? towerData : null;
-    }
-
-    public List<int> GetAllLevel1TowerIDs()
-    {
-        return towerDataDictionary.Values
-            .Where(tower => tower.Level == 1)
-            .OrderBy(tower => tower.ID)
-            .Select(tower => tower.ID)
-            .ToList();
+        TowerSO towerData = GetTowerData(towerID);
+        return towerData != null ? towerData.DeployCost : int.MaxValue;
     }
 
     public void SelectTower(int towerID)
     {
-        if (towerDataDictionary.ContainsKey(towerID))
+        if (DataManager.Instance.TowerDataManager.GetTowerData(towerID) != null)
         {
             selectedTowerID = towerID;
-            Debug.Log($"타워 {towerID} 선택됨.");
+            Debug.Log($"[TowerManager] 타워 {towerID} 선택됨.");
         }
         else
         {
-            Debug.LogError($"선택한 타워 {towerID}가 존재하지 않습니다!");
+            Debug.LogError($"[TowerManager] 선택한 타워 {towerID}가 존재하지 않습니다!");
         }
     }
 
-    public void PlaceSelectedTower(Tiles tile)
+    public int GetSelectedTowerID()
+    {
+        return selectedTowerID;
+    }
+
+    public List<int> GetAllLevel1TowerIDs()
+    {
+        return DataManager.Instance.TowerDataManager.GetAllLevel1TowerIDs();
+    }
+
+    public void SpawnTower(Vector3 position)
     {
         if (selectedTowerID == -1)
         {
-            Debug.LogError("타워가 선택되지 않았습니다. 먼저 타워 버튼을 클릭하세요.");
+            Debug.LogError("[TowerManager] 타워가 선택되지 않았습니다!");
             return;
         }
 
-        int deployCost = GetTowerDeployCost(selectedTowerID);
-
-        if (!GoldManager.Instance.SpendGold(deployCost))
+        GameObject towerPrefab = GetTowerPrefab(selectedTowerID);
+        if (towerPrefab == null)
         {
-            Debug.LogWarning($"골드 부족! 배치 비용 {deployCost} 필요.");
             return;
         }
 
-        SpawnTower(tile, selectedTowerID);
-        selectedTowerID = -1;
-    }
-
-    public void SpawnTower(Tiles tile, int towerID)
-    {
-        if (!towerDataDictionary.ContainsKey(towerID) || !towerPrefabDictionary.ContainsKey(towerID))
-        {
-            Debug.LogError($"TowerManager: Tower ID {towerID}에 대한 데이터 또는 프리팹을 찾을 수 없습니다!");
-            return;
-        }
-
-        GameObject towerPrefab = towerPrefabDictionary[towerID];
-        TowerSO towerData = towerDataDictionary[towerID];
-
-        Vector3 spawnPosition = tile.transform.position;
-        GameObject newTowerObj = Instantiate(towerPrefab, spawnPosition, Quaternion.identity);
+        GameObject newTowerObj = Instantiate(towerPrefab, position, Quaternion.identity);
         Tower newTower = newTowerObj.GetComponent<Tower>();
 
         if (newTower != null)
         {
-            newTower.Initialize(towerData);
-            newTower.currentTile = tile;
-            tile.PlaceTower(newTower);
-            Debug.Log($"타워 스폰 완료: {newTower.towerStats.Name} (ID: {towerID})");
+            newTower.Initialize(GetTowerData(selectedTowerID));
+            activeTowers.Add(newTower);
+            Debug.Log($"[TowerManager] 타워 배치 완료: ID {selectedTowerID} 위치 {position}");
         }
         else
         {
-            Debug.LogError("TowerManager: 생성된 타워에 Tower 컴포넌트가 없습니다!");
+            Debug.LogError("[TowerManager] 생성된 타워에 Tower 컴포넌트가 없습니다!");
         }
+    }
+
+    public void RemoveTower(Tower tower)
+    {
+        if (activeTowers.Contains(tower))
+        {
+            activeTowers.Remove(tower);
+            Destroy(tower.gameObject);
+            Debug.Log($"[TowerManager] 타워 제거 완료: {tower.TowerID}");
+        }
+    }
+
+    public int GetActiveTowerCount()
+    {
+        return activeTowers.Count;
     }
 }

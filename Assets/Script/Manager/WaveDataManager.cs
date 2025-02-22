@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WaveDateManager
+public class WaveDataManager
 {
     private Dictionary<int, WaveSO> waveDataDictionary = new Dictionary<int, WaveSO>();
     public void LoadWaveData()

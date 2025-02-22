@@ -1,0 +1,33 @@
+{
+  "DataType": "ItemSettings",
+  "Metadata": {
+    "ID": "int",
+    "ItemName": "string",
+    "MaxCount": "int",
+    "Damage": "float",
+    "StunDuration": "float"
+  },
+  "Data": [
+    {
+      "ID": 1,
+      "ItemName": "Bomb",
+      "MaxCount": 3,
+      "Damage": 20.0,
+      "StunDuration": 0.0
+    },
+    {
+      "ID": 2,
+      "ItemName": "Rocket",
+      "MaxCount": 3,
+      "Damage": 40.0,
+      "StunDuration": 0.0
+    },
+    {
+      "ID": 3,
+      "ItemName": "Stun",
+      "MaxCount": 3,
+      "Damage": 0.0,
+      "StunDuration": 5.0
+    }
+  ]
+}

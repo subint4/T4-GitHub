@@ -1,7 +1,8 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class Tower : MonoBehaviour
+public class Tower : MonoBehaviour, IPointerClickHandler
 {
     public int TowerID;
     private int currentLevel;
@@ -49,19 +50,18 @@ public class Tower : MonoBehaviour
 
     private void FindTarget()
     {
-        float detectionRange = 100000f; // 감지 범위 설정
+        float detectionRange = 100000f;
         Collider2D[] enemies = Physics2D.OverlapCircleAll(transform.position, detectionRange);
         float closestDistance = float.MaxValue;
         GameObject closestEnemy = null;
 
         foreach (var enemy in enemies)
         {
-            if (enemy.CompareTag("Enemy"))
+            if (enemy.CompareTag("Enemy") || enemy.CompareTag("Boss")) // Boss 태그도 감지
             {
                 float xDifference = Mathf.Abs(enemy.transform.position.x - transform.position.x);
                 float yDifference = Mathf.Abs(enemy.transform.position.y - transform.position.y);
 
-                // X좌표가 일정 범위 내 && 같은 Y축(같은 가로줄)
                 if (xDifference < detectionRange && yDifference < 0.5f)
                 {
                     float distance = Vector2.Distance(transform.position, enemy.transform.position);
@@ -74,9 +74,9 @@ public class Tower : MonoBehaviour
             }
         }
 
-        // 가장 가까운 적을 타겟으로 설정
         currentTarget = closestEnemy;
     }
+
 
     private IEnumerator AttackLoop()
     {
@@ -112,22 +112,16 @@ public class Tower : MonoBehaviour
     {
         if (currentTarget != null && projectilePrefab != null && firePoint != null)
         {
-            Debug.Log($"[Tower] {gameObject.name}: 애니메이션과 동기화된 투사체 발사!");
+            Vector3 shootDirection = transform.right; 
+            GameObject projectileObj = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
+            Projectile projectile = projectileObj.GetComponent<Projectile>();
 
-            GameObject projectile = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
-            Projectile projectileScript = projectile.GetComponent<Projectile>();
-
-            if (projectileScript != null)
+            if (projectile != null)
             {
-                projectileScript.SetDamage(towerStats.AttackPower);
+                projectile.Initialize(this,shootDirection); // 타워에서 발사됨
             }
         }
-        else
-        {
-            Debug.LogError($"[Tower] {gameObject.name}: 투사체 발사 실패! currentTarget: {currentTarget}, projectilePrefab: {projectilePrefab}, firePoint: {firePoint}");
-        }
     }
-
     public void RestartAttack()
     {
         if (!isDead)
@@ -138,9 +132,11 @@ public class Tower : MonoBehaviour
         }
     }
 
-    private void OnMouseDown()
+    public void OnPointerClick(PointerEventData eventData)
     {
-        if (UpgradeUI.Instance != null)
+        Debug.Log($"타워 클릭됨: {gameObject.name}");
+
+        if (!isDead && UpgradeUI.Instance != null)
         {
             UpgradeUI.Instance.OpenUpgradeUI(this);
         }

@@ -1,32 +1,36 @@
 using UnityEngine;
 
-public class DataManager : MonoBehaviour
+public class DataManager
 {
-    public static DataManager Instance { get; private set; }
-    public WaveDateManager Wave = new WaveDateManager();
-
-    private void Awake()
+    private static DataManager instance;
+    public static DataManager Instance
     {
-        if (Instance == null)
+        get
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject); // 씬이 변경되어도 유지
-            Wave.LoadWaveData();
-            Debug.Log("DataManager가 정상적으로 초기화되었습니다.");
-        }
-        else
-        {
-            Debug.LogWarning("DataManager의 중복 인스턴스가 감지되었습니다! 기존 인스턴스를 유지하고 새로 생성된 인스턴스를 삭제합니다.");
-            Destroy(gameObject);
+            if (instance == null)
+            {
+                instance = new DataManager();
+                instance.Initialize();
+            }
+            return instance;
         }
     }
-public EnemySO GetEnemyData(int enemyID)
-    {
-        return EnemyManager.Instance?.GetEnemyData(enemyID);
-    }
 
-    public TowerSO GetTowerData(int towerID)
+    public EnemyDataManager EnemyDataManager { get; private set; }
+    public WaveDataManager WaveDataManager { get; private set; }
+    public TowerDataManager TowerDataManager { get; private set; }
+
+    private DataManager() { }
+
+    private void Initialize()
     {
-        return TowerManager.Instance?.GetTowerData(towerID);
+        EnemyDataManager = new EnemyDataManager();
+        WaveDataManager = new WaveDataManager();
+        TowerDataManager = new TowerDataManager();
+
+        EnemyDataManager.LoadData();
+        TowerDataManager.LoadData();
+        WaveDataManager.LoadWaveData();
+        Debug.Log("DataManager가 정상적으로 초기화되었습니다.");
     }
 }

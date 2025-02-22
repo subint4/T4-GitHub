@@ -43,7 +43,7 @@ public class UpgradeManager : MonoBehaviour
             return false;
         }
 
-        TowerSO newTowerStats = DataManager.Instance.GetTowerData(tower.towerStats.NextLevelID);
+        TowerSO newTowerStats = TowerManager.Instance.GetTowerData(tower.towerStats.NextLevelID);
         if (newTowerStats == null)
         {
             Debug.Log($"{tower.towerStats.Name}은(는) 최대 레벨입니다.");
