@@ -3,6 +3,7 @@ using UnityEngine;
 public class DataManager : MonoBehaviour
 {
     public static DataManager Instance { get; private set; }
+    public WaveDateManager Wave = new WaveDateManager();
 
     private void Awake()
     {
@@ -10,6 +11,7 @@ public class DataManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject); // 씬이 변경되어도 유지
+            Wave.LoadWaveData();
             Debug.Log("DataManager가 정상적으로 초기화되었습니다.");
         }
         else
@@ -26,10 +28,5 @@ public EnemySO GetEnemyData(int enemyID)
     public TowerSO GetTowerData(int towerID)
     {
         return TowerManager.Instance?.GetTowerData(towerID);
-    }
-
-    public WaveSO GetWaveData(int waveID)
-    {
-        return WaveManager.Instance?.GetWaveData(waveID);
     }
 }

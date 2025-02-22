@@ -5,7 +5,6 @@ using System.Collections;
 public class WaveManager : MonoBehaviour
 {
     public static WaveManager Instance { get; private set; }
-    private Dictionary<int, WaveSO> waveDataDictionary = new Dictionary<int, WaveSO>();
     private int currentWaveIndex = 1;
     private bool isSpawning = false;
 
@@ -14,31 +13,13 @@ public class WaveManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            LoadWaveData();
         }
         else
         {
             Destroy(gameObject);
         }
     }
-
-    private void LoadWaveData()
-    {
-        WaveSO[] waveDataList = Resources.LoadAll<WaveSO>("WaveSO");
-        foreach (var wave in waveDataList)
-        {
-            if (wave != null)
-            {
-                waveDataDictionary[wave.ID] = wave;
-            }
-        }
-    }
-
-    public WaveSO GetWaveData(int id)
-    {
-        return waveDataDictionary.TryGetValue(id, out var data) ? data : null;
-    }
-
+    
     public void StartWave()
     {
         if (isSpawning) return;
@@ -49,7 +30,7 @@ public class WaveManager : MonoBehaviour
     {
         isSpawning = true;
 
-        WaveSO currentWave = GetWaveData(currentWaveIndex);
+        WaveSO currentWave = DataManager.Instance.Wave.GetWaveData(currentWaveIndex);
         if (currentWave == null)
         {
             Debug.Log("모든 웨이브 완료!");
