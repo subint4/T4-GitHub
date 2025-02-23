@@ -1,0 +1,190 @@
+{
+  "DataType": "StageData",
+  "Metadata": {
+    "ID": "int",
+    "stagenum": "int",
+    "SubStagenum": "int"
+  },
+  "Data": [
+    {
+      "ID": 1,
+      "stagenum": 1,
+      "SubStagenum": 1
+    },
+    {
+      "ID": 2,
+      "stagenum": 1,
+      "SubStagenum": 2
+    },
+    {
+      "ID": 3,
+      "stagenum": 1,
+      "SubStagenum": 3
+    },
+    {
+      "ID": 4,
+      "stagenum": 1,
+      "SubStagenum": 4
+    },
+    {
+      "ID": 5,
+      "stagenum": 1,
+      "SubStagenum": 5
+    },
+    {
+      "ID": 6,
+      "stagenum": 1,
+      "SubStagenum": 6
+    },
+    {
+      "ID": 7,
+      "stagenum": 2,
+      "SubStagenum": 1
+    },
+    {
+      "ID": 8,
+      "stagenum": 2,
+      "SubStagenum": 2
+    },
+    {
+      "ID": 9,
+      "stagenum": 2,
+      "SubStagenum": 3
+    },
+    {
+      "ID": 10,
+      "stagenum": 2,
+      "SubStagenum": 4
+    },
+    {
+      "ID": 11,
+      "stagenum": 2,
+      "SubStagenum": 5
+    },
+    {
+      "ID": 12,
+      "stagenum": 2,
+      "SubStagenum": 6
+    },
+    {
+      "ID": 13,
+      "stagenum": 3,
+      "SubStagenum": 1
+    },
+    {
+      "ID": 14,
+      "stagenum": 3,
+      "SubStagenum": 2
+    },
+    {
+      "ID": 15,
+      "stagenum": 3,
+      "SubStagenum": 3
+    },
+    {
+      "ID": 16,
+      "stagenum": 3,
+      "SubStagenum": 4
+    },
+    {
+      "ID": 17,
+      "stagenum": 3,
+      "SubStagenum": 5
+    },
+    {
+      "ID": 18,
+      "stagenum": 3,
+      "SubStagenum": 6
+    },
+    {
+      "ID": 19,
+      "stagenum": 4,
+      "SubStagenum": 1
+    },
+    {
+      "ID": 20,
+      "stagenum": 4,
+      "SubStagenum": 2
+    },
+    {
+      "ID": 21,
+      "stagenum": 4,
+      "SubStagenum": 3
+    },
+    {
+      "ID": 22,
+      "stagenum": 4,
+      "SubStagenum": 4
+    },
+    {
+      "ID": 23,
+      "stagenum": 4,
+      "SubStagenum": 5
+    },
+    {
+      "ID": 24,
+      "stagenum": 4,
+      "SubStagenum": 6
+    },
+    {
+      "ID": 25,
+      "stagenum": 5,
+      "SubStagenum": 1
+    },
+    {
+      "ID": 26,
+      "stagenum": 5,
+      "SubStagenum": 2
+    },
+    {
+      "ID": 27,
+      "stagenum": 5,
+      "SubStagenum": 3
+    },
+    {
+      "ID": 28,
+      "stagenum": 5,
+      "SubStagenum": 4
+    },
+    {
+      "ID": 29,
+      "stagenum": 5,
+      "SubStagenum": 5
+    },
+    {
+      "ID": 30,
+      "stagenum": 5,
+      "SubStagenum": 6
+    },
+    {
+      "ID": 31,
+      "stagenum": 6,
+      "SubStagenum": 1
+    },
+    {
+      "ID": 32,
+      "stagenum": 6,
+      "SubStagenum": 2
+    },
+    {
+      "ID": 33,
+      "stagenum": 6,
+      "SubStagenum": 3
+    },
+    {
+      "ID": 34,
+      "stagenum": 6,
+      "SubStagenum": 4
+    },
+    {
+      "ID": 35,
+      "stagenum": 6,
+      "SubStagenum": 5
+    },
+    {
+      "ID": 36,
+      "stagenum": 6,
+      "SubStagenum": 6
+    }
+  ]
+}

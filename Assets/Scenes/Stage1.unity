@@ -122,58 +122,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &8248340
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8248341}
-  - component: {fileID: 8248342}
-  m_Layer: 11
-  m_Name: "\uD0C0\uC77C 2"
-  m_TagString: SpawnableArea
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8248341
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8248340}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.25, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 476514800}
-  - {fileID: 1474033304}
-  - {fileID: 1253295939}
-  - {fileID: 54782120}
-  - {fileID: 1940331026}
-  m_Father: {fileID: 1399336425}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8248342
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8248340}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e90e1aa010a4954096f2c3de8fcd5d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isOccupied: 0
-  currentTower: {fileID: 0}
-  tileXPosition: 0
 --- !u!1 &17913584
 GameObject:
   m_ObjectHideFlags: 0
@@ -274,6 +222,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   towerID: 13
   costText: {fileID: 1358244050}
+  buttonComponent: {fileID: 0}
 --- !u!222 &17913588
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -325,7 +274,7 @@ GameObject:
   - component: {fileID: 54782122}
   - component: {fileID: 54782123}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-4"
+  m_Name: Tile9
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -340,11 +289,11 @@ Transform:
   m_GameObject: {fileID: 54782119}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: -1.5, z: 0}
+  m_LocalPosition: {x: -5.75, y: -1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8248341}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &54782121
 SpriteRenderer:
@@ -412,7 +361,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &54782123
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -471,7 +420,7 @@ GameObject:
   - component: {fileID: 62040514}
   - component: {fileID: 62040515}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-2"
+  m_Name: Tile27
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -486,11 +435,11 @@ Transform:
   m_GameObject: {fileID: 62040511}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: 1, z: 0}
+  m_LocalPosition: {x: -0.75, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1171014183}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &62040513
 SpriteRenderer:
@@ -558,7 +507,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &62040515
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -617,7 +566,7 @@ GameObject:
   - component: {fileID: 63524382}
   - component: {fileID: 63524383}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-1"
+  m_Name: Tile11
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -632,11 +581,11 @@ Transform:
   m_GameObject: {fileID: 63524379}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: 2.25, z: 0}
+  m_LocalPosition: {x: -4.5, y: 2.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1612692815}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &63524381
 SpriteRenderer:
@@ -704,7 +653,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &63524383
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -869,7 +818,7 @@ GameObject:
   - component: {fileID: 127642531}
   - component: {fileID: 127642532}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-5"
+  m_Name: Tile15
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -884,11 +833,11 @@ Transform:
   m_GameObject: {fileID: 127642528}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: -2.75, z: 0}
+  m_LocalPosition: {x: -4.5, y: -2.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1612692815}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &127642530
 SpriteRenderer:
@@ -956,7 +905,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &127642532
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1344,7 +1293,7 @@ GameObject:
   - component: {fileID: 212096748}
   - component: {fileID: 212096749}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-2"
+  m_Name: Tile32
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1359,11 +1308,11 @@ Transform:
   m_GameObject: {fileID: 212096745}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: 1, z: 0}
+  m_LocalPosition: {x: 0.5, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1251143519}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &212096747
 SpriteRenderer:
@@ -1431,7 +1380,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &212096749
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1524,7 +1473,7 @@ GameObject:
   - component: {fileID: 342192126}
   - component: {fileID: 342192127}
   m_Layer: 0
-  m_Name: "\uB208\uBB3C\uC774 \uB09C\uB2E4 2"
+  m_Name: Wallpaper2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1794,7 +1743,7 @@ GameObject:
   - component: {fileID: 372770215}
   - component: {fileID: 372770216}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-2"
+  m_Name: Tile2
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1813,7 +1762,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 410936696}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &372770214
 SpriteRenderer:
@@ -1881,7 +1830,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &372770216
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2035,6 +1984,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   towerID: 1
   costText: {fileID: 782280718}
+  buttonComponent: {fileID: 0}
 --- !u!114 &398357137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2207,42 +2157,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 401315368}
---- !u!1 &410936695
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 410936696}
-  m_Layer: 11
-  m_Name: "\uD0C0\uC77C 1"
-  m_TagString: SpawnableArea
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &410936696
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 410936695}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 668728567}
-  - {fileID: 372770213}
-  - {fileID: 2018245574}
-  - {fileID: 1548204500}
-  - {fileID: 1411416719}
-  m_Father: {fileID: 1399336425}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &411269795
 GameObject:
   m_ObjectHideFlags: 0
@@ -2763,7 +2677,7 @@ GameObject:
   - component: {fileID: 476514802}
   - component: {fileID: 476514803}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-1"
+  m_Name: Tile6
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2778,11 +2692,11 @@ Transform:
   m_GameObject: {fileID: 476514799}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: 2.25, z: 0}
+  m_LocalPosition: {x: -5.75, y: 2.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8248341}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &476514801
 SpriteRenderer:
@@ -2850,7 +2764,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &476514803
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2909,7 +2823,7 @@ GameObject:
   - component: {fileID: 509642441}
   - component: {fileID: 509642442}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-1"
+  m_Name: Tile31
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2924,11 +2838,11 @@ Transform:
   m_GameObject: {fileID: 509642438}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: 2.25, z: 0}
+  m_LocalPosition: {x: 0.5, y: 2.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1251143519}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &509642440
 SpriteRenderer:
@@ -2996,7 +2910,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &509642442
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3144,7 +3058,7 @@ GameObject:
   - component: {fileID: 593120070}
   - component: {fileID: 593120071}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-3"
+  m_Name: Tile18
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3159,11 +3073,11 @@ Transform:
   m_GameObject: {fileID: 593120067}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: -0.25, z: 0}
+  m_LocalPosition: {x: -3.25, y: -0.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1995105902}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &593120069
 SpriteRenderer:
@@ -3231,7 +3145,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &593120071
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3446,7 +3360,7 @@ GameObject:
   - component: {fileID: 652323885}
   - component: {fileID: 652323886}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-1"
+  m_Name: Tile16
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3461,11 +3375,11 @@ Transform:
   m_GameObject: {fileID: 652323882}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: 2.25, z: 0}
+  m_LocalPosition: {x: -3.25, y: 2.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1995105902}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &652323884
 SpriteRenderer:
@@ -3533,7 +3447,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &652323886
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3592,7 +3506,7 @@ GameObject:
   - component: {fileID: 668728569}
   - component: {fileID: 668728570}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-1"
+  m_Name: Tile1
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3611,7 +3525,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 410936696}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &668728568
 SpriteRenderer:
@@ -3679,7 +3593,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &668728570
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3800,58 +3714,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 673668483}
   m_CullTransparentMesh: 1
---- !u!1 &691325404
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 691325405}
-  - component: {fileID: 691325406}
-  m_Layer: 11
-  m_Name: "\uD0C0\uC77C 5"
-  m_TagString: SpawnableArea
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &691325405
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 691325404}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1588742754}
-  - {fileID: 1570467009}
-  - {fileID: 1259433269}
-  - {fileID: 1010399491}
-  - {fileID: 852897686}
-  m_Father: {fileID: 1399336425}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &691325406
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 691325404}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e90e1aa010a4954096f2c3de8fcd5d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isOccupied: 0
-  currentTower: {fileID: 0}
-  tileXPosition: 0
 --- !u!1 &723106830
 GameObject:
   m_ObjectHideFlags: 0
@@ -4000,7 +3862,7 @@ GameObject:
   - component: {fileID: 741280992}
   - component: {fileID: 741280993}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-2"
+  m_Name: Tile17
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4015,11 +3877,11 @@ Transform:
   m_GameObject: {fileID: 741280989}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: 1, z: 0}
+  m_LocalPosition: {x: -3.25, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1995105902}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &741280991
 SpriteRenderer:
@@ -4087,7 +3949,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &741280993
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4233,6 +4095,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   towerID: 7
   costText: {fileID: 413404590}
+  buttonComponent: {fileID: 0}
 --- !u!222 &745363558
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4524,7 +4387,7 @@ GameObject:
   - component: {fileID: 852897688}
   - component: {fileID: 852897689}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-5"
+  m_Name: Tile25
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4539,11 +4402,11 @@ Transform:
   m_GameObject: {fileID: 852897685}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: -2.75, z: 0}
+  m_LocalPosition: {x: -2, y: -2.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 691325405}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &852897687
 SpriteRenderer:
@@ -4611,7 +4474,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &852897689
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4874,7 +4737,7 @@ GameObject:
   - component: {fileID: 1010399493}
   - component: {fileID: 1010399494}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-4"
+  m_Name: Tile24
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4889,11 +4752,11 @@ Transform:
   m_GameObject: {fileID: 1010399490}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: -1.5, z: 0}
+  m_LocalPosition: {x: -2, y: -1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 691325405}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1010399492
 SpriteRenderer:
@@ -4961,7 +4824,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &1010399494
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5020,7 +4883,7 @@ GameObject:
   - component: {fileID: 1078107275}
   - component: {fileID: 1078107276}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-4"
+  m_Name: Tile34
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5035,11 +4898,11 @@ Transform:
   m_GameObject: {fileID: 1078107272}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: -1.5, z: 0}
+  m_LocalPosition: {x: 0.5, y: -1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1251143519}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1078107274
 SpriteRenderer:
@@ -5107,7 +4970,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &1078107276
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5410,7 +5273,7 @@ GameObject:
   - component: {fileID: 1154199002}
   - component: {fileID: 1154199003}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-4"
+  m_Name: Tile29
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5425,11 +5288,11 @@ Transform:
   m_GameObject: {fileID: 1154198999}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: -1.5, z: 0}
+  m_LocalPosition: {x: -0.75, y: -1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1171014183}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1154199001
 SpriteRenderer:
@@ -5497,7 +5360,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &1154199003
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5543,58 +5406,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.8, y: 0.8}
   m_EdgeRadius: 0
---- !u!1 &1171014182
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1171014183}
-  - component: {fileID: 1171014184}
-  m_Layer: 11
-  m_Name: "\uD0C0\uC77C 6"
-  m_TagString: SpawnableArea
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1171014183
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1171014182}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.25, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1550903659}
-  - {fileID: 62040512}
-  - {fileID: 1577534783}
-  - {fileID: 1154199000}
-  - {fileID: 1786166639}
-  m_Father: {fileID: 1399336425}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1171014184
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1171014182}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e90e1aa010a4954096f2c3de8fcd5d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isOccupied: 0
-  currentTower: {fileID: 0}
-  tileXPosition: 0
 --- !u!1 &1207181633
 GameObject:
   m_ObjectHideFlags: 0
@@ -5739,7 +5550,7 @@ GameObject:
   - component: {fileID: 1231779759}
   - component: {fileID: 1231779760}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-5"
+  m_Name: Tile35
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5754,11 +5565,11 @@ Transform:
   m_GameObject: {fileID: 1231779756}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: -2.75, z: 0}
+  m_LocalPosition: {x: 0.5, y: -2.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1251143519}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1231779758
 SpriteRenderer:
@@ -5826,7 +5637,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &1231779760
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6006,58 +5817,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1247398328}
   m_CullTransparentMesh: 1
---- !u!1 &1251143518
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1251143519}
-  - component: {fileID: 1251143520}
-  m_Layer: 11
-  m_Name: "\uD0C0\uC77C 7"
-  m_TagString: SpawnableArea
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1251143519
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1251143518}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.5, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 509642439}
-  - {fileID: 212096746}
-  - {fileID: 2147215342}
-  - {fileID: 1078107273}
-  - {fileID: 1231779757}
-  m_Father: {fileID: 1399336425}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1251143520
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1251143518}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e90e1aa010a4954096f2c3de8fcd5d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isOccupied: 0
-  currentTower: {fileID: 0}
-  tileXPosition: 0
 --- !u!1 &1253295938
 GameObject:
   m_ObjectHideFlags: 0
@@ -6071,7 +5830,7 @@ GameObject:
   - component: {fileID: 1253295941}
   - component: {fileID: 1253295942}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-3"
+  m_Name: Tile8
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6086,11 +5845,11 @@ Transform:
   m_GameObject: {fileID: 1253295938}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: -0.25, z: 0}
+  m_LocalPosition: {x: -5.75, y: -0.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8248341}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1253295940
 SpriteRenderer:
@@ -6158,7 +5917,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &1253295942
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6217,7 +5976,7 @@ GameObject:
   - component: {fileID: 1259433271}
   - component: {fileID: 1259433272}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-3"
+  m_Name: Tile23
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6232,11 +5991,11 @@ Transform:
   m_GameObject: {fileID: 1259433268}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: -0.25, z: 0}
+  m_LocalPosition: {x: -2, y: -0.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 691325405}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1259433270
 SpriteRenderer:
@@ -6304,7 +6063,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &1259433272
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6939,7 +6698,7 @@ GameObject:
   - component: {fileID: 1392907885}
   - component: {fileID: 1392907886}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-4"
+  m_Name: Tile14
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6954,11 +6713,11 @@ Transform:
   m_GameObject: {fileID: 1392907882}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: -1.5, z: 0}
+  m_LocalPosition: {x: -4.5, y: -1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1612692815}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1392907884
 SpriteRenderer:
@@ -7026,7 +6785,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &1392907886
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7172,6 +6931,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   towerID: 4
   costText: {fileID: 2091147172}
+  buttonComponent: {fileID: 0}
 --- !u!222 &1394521654
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7221,7 +6981,7 @@ GameObject:
   - component: {fileID: 1399336425}
   - component: {fileID: 1399336426}
   m_Layer: 11
-  m_Name: "\uD0C0\uC77C"
+  m_Name: Tiles
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7240,13 +7000,41 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 410936696}
-  - {fileID: 8248341}
-  - {fileID: 1612692815}
-  - {fileID: 1995105902}
-  - {fileID: 691325405}
-  - {fileID: 1171014183}
-  - {fileID: 1251143519}
+  - {fileID: 668728567}
+  - {fileID: 372770213}
+  - {fileID: 2018245574}
+  - {fileID: 1548204500}
+  - {fileID: 1411416719}
+  - {fileID: 476514800}
+  - {fileID: 1474033304}
+  - {fileID: 1253295939}
+  - {fileID: 54782120}
+  - {fileID: 1940331026}
+  - {fileID: 63524380}
+  - {fileID: 1498753083}
+  - {fileID: 2016239837}
+  - {fileID: 1392907883}
+  - {fileID: 127642529}
+  - {fileID: 652323883}
+  - {fileID: 741280990}
+  - {fileID: 593120068}
+  - {fileID: 1878521247}
+  - {fileID: 1770809604}
+  - {fileID: 1588742754}
+  - {fileID: 1570467009}
+  - {fileID: 1259433269}
+  - {fileID: 1010399491}
+  - {fileID: 852897686}
+  - {fileID: 1550903659}
+  - {fileID: 62040512}
+  - {fileID: 1577534783}
+  - {fileID: 1154199000}
+  - {fileID: 1786166639}
+  - {fileID: 509642439}
+  - {fileID: 212096746}
+  - {fileID: 2147215342}
+  - {fileID: 1078107273}
+  - {fileID: 1231779757}
   m_Father: {fileID: 350393644}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1399336426
@@ -7465,7 +7253,7 @@ GameObject:
   - component: {fileID: 1411416721}
   - component: {fileID: 1411416722}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-5"
+  m_Name: Tile5
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7484,7 +7272,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 410936696}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1411416720
 SpriteRenderer:
@@ -7552,7 +7340,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &1411416722
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7717,7 +7505,7 @@ GameObject:
   - component: {fileID: 1474033306}
   - component: {fileID: 1474033307}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-2"
+  m_Name: Tile7
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7732,11 +7520,11 @@ Transform:
   m_GameObject: {fileID: 1474033303}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: 1, z: 0}
+  m_LocalPosition: {x: -5.75, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8248341}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1474033305
 SpriteRenderer:
@@ -7804,7 +7592,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &1474033307
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8058,7 +7846,7 @@ GameObject:
   - component: {fileID: 1498753085}
   - component: {fileID: 1498753086}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-2"
+  m_Name: Tile12
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8073,11 +7861,11 @@ Transform:
   m_GameObject: {fileID: 1498753082}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: 1, z: 0}
+  m_LocalPosition: {x: -4.5, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1612692815}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1498753084
 SpriteRenderer:
@@ -8145,7 +7933,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &1498753086
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8204,7 +7992,7 @@ GameObject:
   - component: {fileID: 1548204502}
   - component: {fileID: 1548204503}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-4"
+  m_Name: Tile4
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8223,7 +8011,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 410936696}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1548204501
 SpriteRenderer:
@@ -8291,7 +8079,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &1548204503
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8352,6 +8140,7 @@ GameObject:
   - component: {fileID: 1549554035}
   - component: {fileID: 1549554036}
   - component: {fileID: 1549554037}
+  - component: {fileID: 1549554038}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -8386,6 +8175,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74f4b74d656b6b3488d29c8b8eeec481, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  progressBar: {fileID: 0}
+  totalEnemies: 10
 --- !u!114 &1549554033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8458,6 +8249,18 @@ MonoBehaviour:
   goldText: {fileID: 1247398330}
   goldEffectPrefab: {fileID: 950907624796428377, guid: 5797b69036d0356409812e4a235a98e9, type: 3}
   goldUIPosition: {fileID: 1247398329}
+--- !u!114 &1549554038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1549554029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 013bbb2b5e79c7f4da5e4f9eb684b63d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1550903658
 GameObject:
   m_ObjectHideFlags: 0
@@ -8471,7 +8274,7 @@ GameObject:
   - component: {fileID: 1550903661}
   - component: {fileID: 1550903662}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-1"
+  m_Name: Tile26
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8486,11 +8289,11 @@ Transform:
   m_GameObject: {fileID: 1550903658}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: 2.25, z: 0}
+  m_LocalPosition: {x: -0.75, y: 2.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1171014183}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1550903660
 SpriteRenderer:
@@ -8558,7 +8361,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &1550903662
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8617,7 +8420,7 @@ GameObject:
   - component: {fileID: 1570467011}
   - component: {fileID: 1570467012}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-2"
+  m_Name: Tile22
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8632,11 +8435,11 @@ Transform:
   m_GameObject: {fileID: 1570467008}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: 1, z: 0}
+  m_LocalPosition: {x: -2, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 691325405}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1570467010
 SpriteRenderer:
@@ -8704,7 +8507,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &1570467012
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8838,7 +8641,7 @@ GameObject:
   - component: {fileID: 1577534785}
   - component: {fileID: 1577534786}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-3"
+  m_Name: Tile28
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8853,11 +8656,11 @@ Transform:
   m_GameObject: {fileID: 1577534782}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: -0.25, z: 0}
+  m_LocalPosition: {x: -0.75, y: -0.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1171014183}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1577534784
 SpriteRenderer:
@@ -8925,7 +8728,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &1577534786
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -9287,7 +9090,7 @@ GameObject:
   - component: {fileID: 1588742756}
   - component: {fileID: 1588742757}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-1"
+  m_Name: Tile21
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9302,11 +9105,11 @@ Transform:
   m_GameObject: {fileID: 1588742753}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: 2.25, z: 0}
+  m_LocalPosition: {x: -2, y: 2.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 691325405}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1588742755
 SpriteRenderer:
@@ -9374,7 +9177,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &1588742757
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -9506,58 +9309,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &1612692814
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1612692815}
-  - component: {fileID: 1612692816}
-  m_Layer: 11
-  m_Name: "\uD0C0\uC77C 3"
-  m_TagString: SpawnableArea
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1612692815
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1612692814}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.5, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 63524380}
-  - {fileID: 1498753083}
-  - {fileID: 2016239837}
-  - {fileID: 1392907883}
-  - {fileID: 127642529}
-  m_Father: {fileID: 1399336425}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1612692816
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1612692814}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e90e1aa010a4954096f2c3de8fcd5d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isOccupied: 0
-  currentTower: {fileID: 0}
-  tileXPosition: 0
 --- !u!1 &1646410410
 GameObject:
   m_ObjectHideFlags: 0
@@ -9825,6 +9576,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   towerID: 10
   costText: {fileID: 1919592562}
+  buttonComponent: {fileID: 0}
 --- !u!222 &1679952671
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9951,7 +9703,7 @@ GameObject:
   - component: {fileID: 1770809606}
   - component: {fileID: 1770809607}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-5"
+  m_Name: Tile20
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9966,11 +9718,11 @@ Transform:
   m_GameObject: {fileID: 1770809603}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: -2.75, z: 0}
+  m_LocalPosition: {x: -3.25, y: -2.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1995105902}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1770809605
 SpriteRenderer:
@@ -10038,7 +9790,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &1770809607
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10097,7 +9849,7 @@ GameObject:
   - component: {fileID: 1786166641}
   - component: {fileID: 1786166642}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-5"
+  m_Name: Tile30
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10112,11 +9864,11 @@ Transform:
   m_GameObject: {fileID: 1786166638}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: -2.75, z: 0}
+  m_LocalPosition: {x: -0.75, y: -2.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1171014183}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1786166640
 SpriteRenderer:
@@ -10184,7 +9936,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &1786166642
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10455,6 +10207,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   towerID: 16
   costText: {fileID: 177069377}
+  buttonComponent: {fileID: 0}
 --- !u!222 &1806717181
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10506,7 +10259,7 @@ GameObject:
   - component: {fileID: 1878521249}
   - component: {fileID: 1878521250}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-4"
+  m_Name: Tile19
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10521,11 +10274,11 @@ Transform:
   m_GameObject: {fileID: 1878521246}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: -1.5, z: 0}
+  m_LocalPosition: {x: -3.25, y: -1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1995105902}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1878521248
 SpriteRenderer:
@@ -10593,7 +10346,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &1878521250
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10861,7 +10614,7 @@ GameObject:
   - component: {fileID: 1940331028}
   - component: {fileID: 1940331029}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-5"
+  m_Name: Tile10
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10876,11 +10629,11 @@ Transform:
   m_GameObject: {fileID: 1940331025}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: -2.75, z: 0}
+  m_LocalPosition: {x: -5.75, y: -2.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8248341}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1940331027
 SpriteRenderer:
@@ -10948,7 +10701,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &1940331029
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11069,58 +10822,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1973416331}
   m_CullTransparentMesh: 1
---- !u!1 &1995105901
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1995105902}
-  - component: {fileID: 1995105903}
-  m_Layer: 11
-  m_Name: "\uD0C0\uC77C 4"
-  m_TagString: SpawnableArea
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1995105902
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1995105901}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.75, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 652323883}
-  - {fileID: 741280990}
-  - {fileID: 593120068}
-  - {fileID: 1878521247}
-  - {fileID: 1770809604}
-  m_Father: {fileID: 1399336425}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1995105903
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1995105901}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e90e1aa010a4954096f2c3de8fcd5d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isOccupied: 0
-  currentTower: {fileID: 0}
-  tileXPosition: 0
 --- !u!1 &2007482028
 GameObject:
   m_ObjectHideFlags: 0
@@ -11132,7 +10833,7 @@ GameObject:
   - component: {fileID: 2007482029}
   - component: {fileID: 2007482030}
   m_Layer: 0
-  m_Name: "\uB208\uBB3C\uC774 \uB09C\uB2E4 1"
+  m_Name: Wallpaper1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11218,7 +10919,7 @@ GameObject:
   - component: {fileID: 2016239839}
   - component: {fileID: 2016239840}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-3"
+  m_Name: Tile13
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11233,11 +10934,11 @@ Transform:
   m_GameObject: {fileID: 2016239836}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: -0.25, z: 0}
+  m_LocalPosition: {x: -4.5, y: -0.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1612692815}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2016239838
 SpriteRenderer:
@@ -11305,7 +11006,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &2016239840
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11364,7 +11065,7 @@ GameObject:
   - component: {fileID: 2018245576}
   - component: {fileID: 2018245577}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-3"
+  m_Name: Tile3
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11383,7 +11084,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 410936696}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2018245575
 SpriteRenderer:
@@ -11451,7 +11152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &2018245577
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11750,7 +11451,7 @@ GameObject:
   - component: {fileID: 2147215344}
   - component: {fileID: 2147215345}
   m_Layer: 11
-  m_Name: "\uBBF8\uB798\uB97C \uC0DD\uAC01\uD558\uB294 \uD0C0\uC77C 1-3"
+  m_Name: Tile33
   m_TagString: SpawnableArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11765,11 +11466,11 @@ Transform:
   m_GameObject: {fileID: 2147215341}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: -0.25, z: 0}
+  m_LocalPosition: {x: 0.5, y: -0.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1251143519}
+  m_Father: {fileID: 1399336425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2147215343
 SpriteRenderer:
@@ -11837,7 +11538,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   currentTower: {fileID: 0}
-  tileXPosition: 0
+  tileIndex: 0
 --- !u!61 &2147215345
 BoxCollider2D:
   m_ObjectHideFlags: 0

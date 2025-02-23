@@ -2,20 +2,30 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using TMPro;
-using System.Linq;
+using UnityEngine.UI;
 
 public class TowerButton : MonoBehaviour, IPointerClickHandler
 {
-    public int towerID; // 자동으로 할당될 타워 ID
+    public int towerID;
     private int towerCost;
     [SerializeField] private TMP_Text costText;
+    [SerializeField] private Button buttonComponent;
 
-    private static List<int> assignedTowerIDs; // 중복 방지를 위한 리스트
+    private static List<int> assignedTowerIDs;
+    private bool isSelected = false;
+
+    // 현재 선택된 버튼을 추적하는 static 변수
+    private static TowerButton selectedButton = null;
 
     private void Start()
     {
-        AssignTowerIDByUnitDataOrder(); // 버튼에 ID 배정
+        AssignTowerIDByUnitDataOrder();
         UpdateCostText();
+
+        if (buttonComponent == null)
+        {
+            buttonComponent = GetComponent<Button>();
+        }
     }
 
     private void AssignTowerIDByUnitDataOrder()
@@ -26,13 +36,11 @@ public class TowerButton : MonoBehaviour, IPointerClickHandler
             return;
         }
 
-        // 최초 1회만 Level 1 타워 ID 가져와서 중복 없이 리스트 저장
         if (assignedTowerIDs == null)
         {
             assignedTowerIDs = TowerManager.Instance.GetAllLevel1TowerIDs();
         }
 
-        // 부모 컨테이너에서 모든 버튼을 가져와 정렬 (왼쪽 → 오른쪽, 위 → 아래)
         Transform parentTransform = transform.parent;
         if (parentTransform == null)
         {
@@ -50,15 +58,12 @@ public class TowerButton : MonoBehaviour, IPointerClickHandler
             }
         }
 
-        // **Hierarchy에서 왼쪽 -> 오른쪽, 위 -> 아래 순서로 정렬**
         buttons.Sort((a, b) => a.transform.GetSiblingIndex().CompareTo(b.transform.GetSiblingIndex()));
 
-        // 현재 버튼의 Index 찾기
         int buttonIndex = buttons.IndexOf(this);
-
         if (buttonIndex >= 0 && buttonIndex < assignedTowerIDs.Count)
         {
-            towerID = assignedTowerIDs[buttonIndex]; // 리스트에서 Index 순서대로 가져오기
+            towerID = assignedTowerIDs[buttonIndex];
             towerCost = TowerManager.Instance.GetTowerDeployCost(towerID);
             Debug.Log($"버튼 {gameObject.name}에 Tower ID {towerID} 할당 (Index: {buttonIndex})");
         }
@@ -67,11 +72,18 @@ public class TowerButton : MonoBehaviour, IPointerClickHandler
             Debug.LogWarning($"{gameObject.name} 버튼의 인덱스 {buttonIndex}가 Level 1 타워 목록보다 큽니다.");
         }
     }
+
     public int GetTowerID()
     {
         return towerID;
     }
 
+    public void CancelSelection()
+    {
+        isSelected = false;
+        UpdateButtonVisual(false);
+        selectedButton = null;
+    }
 
     private void UpdateCostText()
     {
@@ -95,14 +107,45 @@ public class TowerButton : MonoBehaviour, IPointerClickHandler
             return;
         }
 
-        if (GoldManager.Instance.SpendGold(towerCost))
+        // 현재 선택된 버튼이 있고, 자신이 아닐 경우 기존 버튼 해제
+        if (selectedButton != null && selectedButton != this)
         {
-            TowerManager.Instance.SelectTower(towerID);
-            Debug.Log($"[TowerButton] 타워 {towerID} 선택됨, 비용 {towerCost} 차감됨");
+            selectedButton.CancelSelection();
+        }
+
+        if (isSelected)
+        {
+            TowerManager.Instance.CancelTowerSelection();
+            isSelected = false;
+            selectedButton = null;
+            Debug.Log($"[TowerButton] 타워 {towerID} 선택 취소됨");
         }
         else
         {
-            Debug.Log("[TowerButton] 골드 부족!");
+            // 여기에서 골드 차감을 제거 → 선택만 수행
+            TowerManager.Instance.SelectTower(towerID);
+            isSelected = true;
+            selectedButton = this;
+            Debug.Log($"[TowerButton] 타워 {towerID} 선택됨 (골드 차감 없음)");
+        }
+
+        UpdateButtonVisual(isSelected);
+    }
+
+
+    private void UpdateButtonVisual(bool selected)
+    {
+        if (buttonComponent != null)
+        {
+            buttonComponent.interactable = !selected; // 선택되면 비활성화, 취소되면 활성화
+        }
+    }
+
+    public void DisableButton()
+    {
+        if (buttonComponent != null)
+        {
+            buttonComponent.interactable = false;
         }
     }
 }

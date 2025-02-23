@@ -1,31 +1,52 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Tiles : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
+public class Tiles : MonoBehaviour, IPointerClickHandler
 {
     public bool isOccupied = false;
     public Tower currentTower = null;
-    private Transform parentTransform;
-    public float tileXPosition;
+    public int tileIndex; // 타일의 고유 인덱스 (1부터 시작)
 
     private void Start()
     {
-        parentTransform = transform.parent;
+        AssignTileIndex(); // 타일 인덱스 자동 배치
+    }
+
+    private void AssignTileIndex()
+    {
+        Transform parentTransform = transform.parent;
+
         if (parentTransform == null)
         {
             Debug.LogError("[Tiles] 부모 Transform을 찾을 수 없습니다!");
+            return;
         }
 
-        tileXPosition = parentTransform != null ? parentTransform.position.x : transform.position.x;
+        // 부모의 모든 자식(Tiles)을 가져와 순서대로 정렬
+        Tiles[] allTiles = parentTransform.GetComponentsInChildren<Tiles>();
+
+        // Hierarchy 순서대로 정렬
+        System.Array.Sort(allTiles, (a, b) => a.transform.GetSiblingIndex().CompareTo(b.transform.GetSiblingIndex()));
+
+        // 정렬된 순서대로 1부터 인덱스 할당
+        for (int i = 0; i < allTiles.Length; i++)
+        {
+            allTiles[i].tileIndex = i + 1; // 1부터 시작
+            Debug.Log($"[Tiles] 타일 인덱스 설정됨 - Name: {allTiles[i].gameObject.name}, Index: {allTiles[i].tileIndex}");
+        }
     }
-    // 마우스 클릭 & 터치 인식
+
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log($"[Tiles] OnPointerClick() 호출됨 - 위치: {transform.position}, isOccupied: {isOccupied}");
-
         if (isOccupied)
         {
             Debug.LogWarning($"[Tiles] 타워 배치 불가: {transform.position} (isOccupied: {isOccupied})");
+            return;
+        }
+
+        if (TowerManager.Instance == null)
+        {
+            Debug.LogError("[Tiles] TowerManager가 존재하지 않습니다!");
             return;
         }
 
@@ -36,68 +57,19 @@ public class Tiles : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, I
             return;
         }
 
-        SpawnTower(selectedTowerID);
-    }
+        int towerCost = TowerManager.Instance.GetTowerDeployCost(selectedTowerID);
 
-    // 터치 입력 감지 (손가락이 화면을 눌렀을 때)
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        Debug.Log($"[Tiles] OnPointerDown() 호출됨 - 위치: {transform.position}");
-    }
-
-    // 터치 입력 감지 (손가락을 떼었을 때)
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        Debug.Log($"[Tiles] OnPointerUp() 호출됨 - 위치: {transform.position}");
-    }
-
-    // 터치 입력을 직접 감지 (멀티 터치 포함)
-    private void Update()
-    {
-        if (Input.touchCount > 0)
+        // 타워 배치 전 골드 차감 (차감 실패 시 배치 취소)
+        if (!GoldManager.Instance.SpendGold(towerCost))
         {
-            Touch touch = Input.GetTouch(0); // 첫 번째 터치 감지
-            if (touch.phase == TouchPhase.Began)
-            {
-                Debug.Log("[Tiles] Touch 감지됨 - 터치 시작");
-                RaycastHit hit;
-                Ray ray = Camera.main.ScreenPointToRay(touch.position);
-
-                if (Physics.Raycast(ray, out hit))
-                {
-                    if (hit.transform == transform)
-                    {
-                        Debug.Log("[Tiles] 터치한 타일 감지됨 - OnPointerClick() 실행");
-                        OnPointerClick(null);
-                    }
-                }
-            }
-        }
-    }
-
-    private void SpawnTower(int towerID)
-    {
-        Debug.Log($"[Tiles] SpawnTower() 호출됨 - 타워 ID: {towerID}");
-
-        GameObject towerPrefab = TowerManager.Instance.GetTowerPrefab(towerID);
-        if (towerPrefab == null)
-        {
-            Debug.LogError($"[Tiles] Tower ID {towerID}에 대한 프리팹을 찾을 수 없습니다!");
+            Debug.LogError($"[Tiles] 골드 부족! (필요: {towerCost}, 보유: {GoldManager.Instance.GetGold()})");
             return;
         }
 
-        GameObject newTowerObj = Instantiate(towerPrefab, transform.position, Quaternion.identity);
-        Tower newTower = newTowerObj.GetComponent<Tower>();
+        Debug.Log($"[Tiles] 타워 배치 시도: ID {selectedTowerID}, 위치 {transform.position}");
 
-        if (newTower != null)
-        {
-            PlaceTower(newTower);
-            Debug.Log($"[Tiles] 타워 배치 완료: Tower ID {towerID} (위치: {transform.position})");
-        }
-        else
-        {
-            Debug.LogError("[Tiles] 생성된 타워에 Tower 컴포넌트가 없습니다!");
-        }
+        // 타워 배치는 `TowerManager`에서 수행
+        TowerManager.Instance.SpawnTower(this);
     }
 
     public void PlaceTower(Tower tower)
@@ -105,6 +77,6 @@ public class Tiles : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, I
         isOccupied = true;
         currentTower = tower;
         tower.currentTile = this;
-        Debug.Log($"[Tiles] 타워 배치됨: {transform.position}");
+        Debug.Log($"[Tiles] 타워 배치 완료: {transform.position}");
     }
 }

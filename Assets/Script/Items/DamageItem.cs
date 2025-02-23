@@ -10,7 +10,7 @@ public class DamageItemManager : MonoBehaviour
     public Button StunButton;
 
     private DamageItemSettings settings;
-    private float selectedTileX = float.MinValue; // 선택된 타일의 X좌표 저장
+    private float selectedTilePositionX = float.MinValue; // 선택된 타일의 X 좌표 저장
     private string selectedItemName = ""; // 선택된 아이템 이름 저장
     private LayerMask tileLayerMask; // `SpawnableArea` 감지용 레이어 마스크
 
@@ -57,17 +57,9 @@ public class DamageItemManager : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, Mathf.Infinity, tileLayerMask);
         if (hit.collider != null)
         {
-            Tiles tile = hit.collider.GetComponent<Tiles>();
-            if (tile != null)
-            {
-                selectedTileX = tile.tileXPosition;
-                Debug.Log($"[DamageItemManager] 타일 선택됨. 기준 X 좌표: {selectedTileX}");
-                UseItem(); // 타일 선택 후 아이템 실행
-            }
-            else
-            {
-                Debug.LogError("[DamageItemManager] 감지된 오브젝트가 `Tiles` 컴포넌트를 가지고 있지 않습니다!");
-            }
+            selectedTilePositionX = hit.collider.transform.position.x; // 타일의 X 좌표 저장
+            Debug.Log($"[DamageItemManager] 타일 선택됨. 기준 X 좌표: {selectedTilePositionX}");
+            UseItem(); // 타일 선택 후 아이템 실행
         }
         else
         {
@@ -77,7 +69,7 @@ public class DamageItemManager : MonoBehaviour
 
     private void UseItem()
     {
-        if (selectedTileX == float.MinValue || string.IsNullOrEmpty(selectedItemName))
+        if (selectedTilePositionX == float.MinValue || string.IsNullOrEmpty(selectedItemName))
         {
             Debug.LogError("[DamageItemManager] 아이템 또는 타일이 선택되지 않았습니다!");
             return;
@@ -92,16 +84,11 @@ public class DamageItemManager : MonoBehaviour
             return;
         }
 
-        Debug.Log($"[DamageItemManager] {selectedItemName} 사용 시작! 대상 X 좌표: {selectedTileX}");
+        Debug.Log($"[DamageItemManager] {selectedItemName} 사용 시작! 대상 X 좌표: {selectedTilePositionX}");
 
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        GameObject[] bosses = GameObject.FindGameObjectsWithTag("Boss");
+        GameObject[] allEnemies = GameObject.FindGameObjectsWithTag("Enemy");
 
-        List<GameObject> allTargets = new List<GameObject>();
-        allTargets.AddRange(enemies);
-        allTargets.AddRange(bosses);
-
-        if (allTargets.Count == 0)
+        if (allEnemies.Length == 0)
         {
             Debug.Log($"[DamageItemManager] {selectedItemName}: 현재 씬에 공격할 대상이 없습니다.");
             return;
@@ -109,38 +96,30 @@ public class DamageItemManager : MonoBehaviour
 
         bool targetHit = false;
 
-        // 선택한 타일의 X축에 있는 적들만 공격
-        foreach (GameObject target in allTargets)
+        // 선택한 타일의 X좌표와 적의 X좌표 비교
+        foreach (GameObject target in allEnemies)
         {
-            if (Mathf.Abs(target.transform.position.x - selectedTileX) < 0.1f)
+            Enemy enemyComponent = target.GetComponent<Enemy>();
+            if (enemyComponent != null)
             {
-                targetHit = true;
-                Enemy enemyComponent = target.GetComponent<Enemy>();
-                if (enemyComponent != null)
-                {
-                    if (itemData.damageAmount > 0)
-                    {
-                        enemyComponent.TakeDamage(itemData.damageAmount);
-                        Debug.Log($"[DamageItemManager] {target.name}에게 {itemData.damageAmount} 피해를 입힘.");
-                    }
+                float enemyX = enemyComponent.transform.position.x;
 
-                    if (itemData.stunDuration > 0)
-                    {
-                        enemyComponent.ApplyStun(itemData.stunDuration);
-                        Debug.Log($"[DamageItemManager] {target.name}에게 {itemData.stunDuration}초 스턴 적용.");
-                    }
+                if (Mathf.Abs(enemyX - selectedTilePositionX) < 0.5f) // 오차 범위 0.5 적용
+                {
+                    targetHit = true;
+                    enemyComponent.TakeDamage(itemData.damageAmount);
+                    enemyComponent.ApplyStun(itemData.stunDuration);
+                    Debug.Log($"[DamageItemManager] {target.name}에게 {itemData.damageAmount} 피해 및 {itemData.stunDuration}초 스턴 적용!");
                 }
             }
         }
 
         if (!targetHit)
         {
-            Debug.LogWarning($"[DamageItemManager] {selectedItemName} 아이템이 해당 X좌표({selectedTileX})에서 아무 적도 맞추지 못함.");
+            Debug.LogWarning($"[DamageItemManager] {selectedItemName} 아이템이 해당 X좌표({selectedTilePositionX})에서 아무 적도 맞추지 못함.");
         }
 
-        // 아이템 사용 후 선택 해제
         selectedItemName = "";
-        selectedTileX = float.MinValue;
-        Debug.Log("[DamageItemManager] 아이템 사용 완료! 다시 선택하세요.");
+        selectedTilePositionX = float.MinValue;
     }
 }

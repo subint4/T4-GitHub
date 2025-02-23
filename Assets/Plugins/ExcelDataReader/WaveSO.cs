@@ -7,6 +7,7 @@ public class WaveSO : ScriptableObject
 {
     public int ID;
     public int stagenum;
+    public int substagenum;
     public int wave;
     public float interval;
     public List<WaveSpawnData> spawnDataList = new List<WaveSpawnData>();

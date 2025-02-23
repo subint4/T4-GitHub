@@ -103,6 +103,7 @@ public class GoldManager : MonoBehaviour
         {
             currentGold -= amount;
             UpdateGoldUI();
+            Debug.Log($"[GoldManager] {amount} 골드 차감됨. 현재 보유 골드: {currentGold}");
             return true;
         }
         else

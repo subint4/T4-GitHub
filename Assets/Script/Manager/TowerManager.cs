@@ -93,7 +93,7 @@ public class TowerManager : MonoBehaviour
         return DataManager.Instance.TowerDataManager.GetAllLevel1TowerIDs();
     }
 
-    public void SpawnTower(Vector3 position)
+    public void SpawnTower(Tiles tile)
     {
         if (selectedTowerID == -1)
         {
@@ -104,22 +104,37 @@ public class TowerManager : MonoBehaviour
         GameObject towerPrefab = GetTowerPrefab(selectedTowerID);
         if (towerPrefab == null)
         {
+            Debug.LogError($"[TowerManager] ID {selectedTowerID}의 타워 프리팹을 찾을 수 없습니다.");
             return;
         }
 
-        GameObject newTowerObj = Instantiate(towerPrefab, position, Quaternion.identity);
+        // 타일 위치에 타워 생성
+        GameObject newTowerObj = Instantiate(towerPrefab, tile.transform.position, Quaternion.identity);
         Tower newTower = newTowerObj.GetComponent<Tower>();
 
         if (newTower != null)
         {
             newTower.Initialize(GetTowerData(selectedTowerID));
             activeTowers.Add(newTower);
-            Debug.Log($"[TowerManager] 타워 배치 완료: ID {selectedTowerID} 위치 {position}");
+
+            // 타일을 점유하도록 설정
+            tile.PlaceTower(newTower);
+
+            Debug.Log($"[TowerManager] 타워 배치 완료: ID {selectedTowerID}, 위치 {tile.transform.position}");
         }
         else
         {
             Debug.LogError("[TowerManager] 생성된 타워에 Tower 컴포넌트가 없습니다!");
+            Destroy(newTowerObj);
         }
+    }
+
+
+
+    public void CancelTowerSelection()
+    {
+        selectedTowerID = -1;
+        Debug.Log("[TowerManager] 타워 선택 취소됨");
     }
 
     public void RemoveTower(Tower tower)

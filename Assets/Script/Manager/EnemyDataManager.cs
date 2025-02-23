@@ -7,6 +7,8 @@ public class EnemyDataManager
 
     public void LoadData()
     {
+        Debug.Log("[EnemyDataManager] 적 데이터 로드 시작...");
+
         EnemySO[] enemyDataList = Resources.LoadAll<EnemySO>("EnemySO");
         foreach (var enemy in enemyDataList)
         {
@@ -15,7 +17,8 @@ public class EnemyDataManager
                 enemyDataDictionary[enemy.ID] = enemy;
             }
         }
-        Debug.Log($"[EnemyDataManager] {enemyDataDictionary.Count}개의 Enemy 데이터 로드 완료");
+
+        Debug.Log($"[EnemyDataManager] 적 데이터 로드 완료. 총 {enemyDataDictionary.Count}개의 데이터 로드됨.");
     }
 
     public EnemySO GetEnemyData(int enemyID)
