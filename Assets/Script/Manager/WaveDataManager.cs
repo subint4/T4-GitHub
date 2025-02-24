@@ -1,9 +1,10 @@
-using UnityEngine;
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class WaveDataManager
 {
-    private Dictionary<(int, int), List<WaveSO>> waveDataDictionary = new Dictionary<(int, int), List<WaveSO>>();
+    private Dictionary<int, WaveSO> waveDataDictionary = new Dictionary<int, WaveSO>();
 
     public void LoadWaveData()
     {
@@ -13,35 +14,47 @@ public class WaveDataManager
         {
             if (wave != null)
             {
-                var key = (wave.stagenum, wave.substagenum);
-
-                if (!waveDataDictionary.ContainsKey(key))
+                if (!waveDataDictionary.ContainsKey(wave.ID))
                 {
-                    waveDataDictionary[key] = new List<WaveSO>();
+                    waveDataDictionary[wave.ID] = wave;
                 }
-
-                waveDataDictionary[key].Add(wave);
+                else
+                {
+                    Debug.LogWarning($"[WaveDataManager] 중복된 웨이브 ID 발견: {wave.ID}");
+                }
             }
         }
 
-        Debug.Log("[WaveDataManager] 웨이브 데이터 로드 완료.");
+        Debug.Log("[WaveDataManager] 모든 웨이브 데이터 로드 완료.");
     }
 
-    public List<WaveSO> GetWaveDataList(int stageNum, int subStageNum)
+    /// <summary>
+    /// 특정 웨이브 ID에 해당하는 웨이브 데이터를 반환
+    /// </summary>
+    public WaveSO GetWaveData(int waveID)
     {
-        var key = (stageNum, subStageNum);
-        return waveDataDictionary.TryGetValue(key, out var waveList) ? waveList : new List<WaveSO>();
+        return waveDataDictionary.TryGetValue(waveID, out var data) ? data : null;
     }
 
-    public WaveSO GetWaveData(int stageNum, int subStageNum, int waveIndex)
+    /// <summary>
+    /// 특정 웨이브 ID 목록을 기반으로 웨이브 데이터를 가져옴
+    /// </summary>
+    public List<WaveSO> GetWaveDataList(List<int> waveIDs)
     {
-        var key = (stageNum, subStageNum);
-        if (waveDataDictionary.TryGetValue(key, out var waveList) && waveIndex < waveList.Count)
+        List<WaveSO> waveList = new List<WaveSO>();
+
+        foreach (var waveID in waveIDs)
         {
-            return waveList[waveIndex];
+            if (waveDataDictionary.TryGetValue(waveID, out var data))
+            {
+                waveList.Add(data);
+            }
+            else
+            {
+                Debug.LogWarning($"[WaveDataManager] 웨이브 {waveID} 데이터를 찾을 수 없습니다.");
+            }
         }
 
-        Debug.LogWarning($"[WaveDataManager] {stageNum}-{subStageNum}의 {waveIndex}번 웨이브 데이터를 찾을 수 없습니다.");
-        return null;
+        return waveList;
     }
 }

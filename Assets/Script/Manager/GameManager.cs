@@ -37,11 +37,27 @@ public class GameManager : MonoBehaviour
     {
         if (waveManager == null || enemyManager == null)
         {
-            Debug.LogError("GameManager: WaveManager 또는 EnemyManager를 찾을 수 없습니다! 씬에 존재하는지 확인하세요.");
+            Debug.LogError("[GameManager] WaveManager 또는 EnemyManager를 찾을 수 없습니다! 씬에 존재하는지 확인하세요.");
             return;
         }
 
-        Debug.Log("게임 시작! 10초 후 웨이브 시작...");
+        // **현재 스테이지 정보를 PlayerPrefs에서 가져옴**
+        int currentStage = PlayerPrefs.GetInt("CurrentStage", 1);
+        int currentSubStage = PlayerPrefs.GetInt("CurrentSubStage", 1);
+
+        Debug.Log($"[GameManager] 현재 스테이지: {currentStage}, 서브 스테이지: {currentSubStage}");
+
+        // **웨이브 데이터 로드**
+        if (WaveManager.Instance != null)
+        {
+            WaveManager.Instance.LoadWavesForStage(currentStage, currentSubStage);
+        }
+        else
+        {
+            Debug.LogError("[GameManager] WaveManager 인스턴스를 찾을 수 없습니다!");
+        }
+
+        Debug.Log("[GameManager] 게임 시작! 10초 후 웨이브 시작...");
         StartCoroutine(GameStartCountdown());
     }
 
@@ -51,12 +67,12 @@ public class GameManager : MonoBehaviour
 
         while (countdown > 0)
         {
-            Debug.Log($"웨이브 시작까지 {countdown}초...");
+            Debug.Log($"[GameManager] 웨이브 시작까지 {countdown}초...");
             yield return new WaitForSeconds(1f);
             countdown--;
         }
 
-        Debug.Log("웨이브 시작!");
+        Debug.Log("[GameManager] 웨이브 시작!");
         waveManager.StartWave(); // 10초 후 웨이브 시작
     }
 
@@ -65,7 +81,7 @@ public class GameManager : MonoBehaviour
         if (isGameOver) return;
 
         isGameOver = true;
-        Debug.Log("게임 오버! 화면을 클릭하면 다시 시작됩니다.");
+        Debug.Log("[GameManager] 게임 오버! 화면을 클릭하면 다시 시작됩니다.");
 
         // **게임 멈추기**
         Time.timeScale = 0f; // 게임 전체 정지
@@ -81,7 +97,7 @@ public class GameManager : MonoBehaviour
 
     private void RestartGame()
     {
-        Debug.Log("게임 다시 시작!");
+        Debug.Log("[GameManager] 게임 다시 시작!");
 
         // DOTween 정리
         DG.Tweening.DOTween.KillAll();
@@ -91,6 +107,5 @@ public class GameManager : MonoBehaviour
 
         // **씬 다시 로드**
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-
     }
 }
