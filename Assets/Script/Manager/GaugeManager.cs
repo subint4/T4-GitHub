@@ -6,13 +6,23 @@ using UnityEngine.UI;
 public class GaugeManager : MonoBehaviour
 {
     public Image gaugeFill;
+    public int currentStageNum = 1;
 
-    // 게이지 업데이트 함수
-    public void UpdateGauge(float current, float max)
+    private WaveDateManager waveDateManager = new WaveDateManager();
+    
+    public void Start()
+    {        
+        waveDateManager.LoadWaveData();
+
+        int monsterCount = waveDateManager.GetMonsterCount(currentStageNum);
+
+        UpdateGauge(monsterCount, 100f);
+    }
+    public void UpdateGauge(float remaining, float total)
     {
         if (gaugeFill != null)
         {
-            gaugeFill.fillAmount = current / max; // 게이지 값을 비율로 설정
+            gaugeFill.fillAmount = (total - remaining) / total;
         }
     }
 }
