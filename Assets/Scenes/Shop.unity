@@ -295,7 +295,7 @@ GameObject:
   - component: {fileID: 1192494937}
   - component: {fileID: 1192494936}
   m_Layer: 5
-  m_Name: ShopBackButton
+  m_Name: BackButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -365,7 +365,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1503029351}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: BackButtonManager, Assembly-CSharp
         m_MethodName: GoToMainMenu
         m_Mode: 1
@@ -653,50 +653,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1397593482}
   m_CullTransparentMesh: 1
---- !u!1 &1503029350
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1503029352}
-  - component: {fileID: 1503029351}
-  m_Layer: 0
-  m_Name: BackButtonManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1503029351
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1503029350}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ab1b57727a84164295b1ebaaa1a2ba4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &1503029352
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1503029350}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.3742195, y: 0.23710537, z: 1025.0558}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1989167790
 GameObject:
   m_ObjectHideFlags: 0
@@ -854,4 +810,3 @@ SceneRoots:
   - {fileID: 668286111}
   - {fileID: 1289307815}
   - {fileID: 3547245}
-  - {fileID: 1503029352}

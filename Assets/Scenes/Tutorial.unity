@@ -490,51 +490,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 82551369}
   m_CullTransparentMesh: 1
---- !u!1 &156679991
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 156679993}
-  - component: {fileID: 156679992}
-  m_Layer: 0
-  m_Name: BackButtonManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &156679992
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 156679991}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ab1b57727a84164295b1ebaaa1a2ba4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  popupPanel: {fileID: 0}
---- !u!4 &156679993
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 156679991}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.28278407, y: -0.044968322, z: 0.03973891}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &162772517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1863,7 +1818,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 156679992}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: BackButtonManager, Assembly-CSharp
         m_MethodName: GoToMainMenu
         m_Mode: 1
@@ -3024,4 +2979,3 @@ SceneRoots:
   - {fileID: 845846268}
   - {fileID: 75032026}
   - {fileID: 1162208733}
-  - {fileID: 156679993}
