@@ -43,6 +43,12 @@ public class WaveDataManager
     {
         List<WaveSO> waveList = new List<WaveSO>();
 
+        if (waveIDs == null || waveIDs.Count == 0)
+        {
+            Debug.LogWarning("[WaveDataManager] 빈 웨이브 ID 리스트가 입력되었습니다.");
+            return waveList;
+        }
+
         foreach (var waveID in waveIDs)
         {
             if (waveDataDictionary.TryGetValue(waveID, out var data))
@@ -57,4 +63,5 @@ public class WaveDataManager
 
         return waveList;
     }
+
 }
