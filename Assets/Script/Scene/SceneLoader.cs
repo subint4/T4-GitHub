@@ -9,49 +9,46 @@ using System.Collections.Generic;
 
 public class SceneLoader : MonoBehaviour
 {
-    public static SceneLoader Instance; // 싱글턴 패턴 적용
-
     [SerializeField] private TMP_Text stageText;
-    private Button button;
     private int stageNum;
     private int subStageNum;
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject); // 씬이 변경되도 유지
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
-    }
-
     private void Start()
     {
-        DetectButtons();
-        DetectStageText();
+        DetectButtons(); // 버튼 감지 및 리스너 등록
+        DetectStageText(); // TMP 텍스트 감지
     }
 
+    /// <summary>
+    /// 버튼 감지 및 리스너 등록
+    /// </summary>
     private void DetectButtons()
     {
-        Button[] buttons = FindObjectsOfType<Button>(true); // 비활성화된 버튼도 감지
+        Button[] buttons = FindObjectsOfType<Button>(true); // 활성/비활성 버튼 모두 찾음
 
         foreach (var btn in buttons)
         {
-            btn.gameObject.SetActive(true); // 버튼 강제 활성화
-            btn.onClick.RemoveAllListeners();
-            btn.onClick.AddListener(() => LoadTargetScene(btn));
-            Debug.Log($"[SceneLoader] 버튼 감지 완료: {btn.gameObject.name}");
+            btn.onClick.RemoveAllListeners(); // 기존 리스너 제거
+
+            if (btn.gameObject.name == "StageBackButton")
+            {
+                btn.onClick.AddListener(() => SceneManager.LoadScene("MainMenu"));
+                Debug.Log("[SceneLoader] 뒤로가기 버튼 감지 완료!");
+            }
+            else
+            {
+                btn.onClick.AddListener(() => LoadTargetScene(btn));
+                Debug.Log($"[SceneLoader] 버튼 감지 완료: {btn.gameObject.name}");
+            }
         }
     }
 
+    /// <summary>
+    /// TMP 텍스트 감지하여 Stage 데이터 추출
+    /// </summary>
     private void DetectStageText()
     {
-        stageText = FindObjectOfType<TMP_Text>();
+        stageText = GetComponentInChildren<TMP_Text>() ?? transform.parent?.GetComponentInChildren<TMP_Text>();
 
         if (stageText != null)
         {
@@ -60,11 +57,14 @@ public class SceneLoader : MonoBehaviour
         }
         else
         {
-            Debug.Log("[SceneLoader] 스테이지 텍스트 감지 실패! 버튼 이름을 기반으로 기능을 실행합니다.");
+            Debug.Log("[SceneLoader] 스테이지 텍스트 감지 실패! 버튼 이름을 기반으로 기능 실행");
         }
     }
 
-    public void LoadTargetScene(Button clickedButton)
+    /// <summary>
+    /// 버튼 클릭 시 해당 씬 로드
+    /// </summary>
+    private void LoadTargetScene(Button clickedButton)
     {
         string buttonName = clickedButton.gameObject.name;
         Debug.Log($"[SceneLoader] {buttonName} 버튼 클릭됨!");
@@ -93,27 +93,9 @@ public class SceneLoader : MonoBehaviour
         }
     }
 
-    private void LoadStage(Button clickedButton)
-    {
-        if (stageText != null)
-        {
-            ExtractStageData(stageText.text);
-            if (stageNum > 0 && subStageNum > 0)
-            {
-                ApplySubStageSettings(stageNum, subStageNum);
-                SceneManager.LoadScene("Stage1"); // 스테이지 씬 로드
-            }
-            else
-            {
-                Debug.LogError("[SceneLoader] 올바른 Stage 번호를 찾을 수 없습니다!");
-            }
-        }
-        else
-        {
-            Debug.LogError("[SceneLoader] StageText가 없습니다!");
-        }
-    }
-
+    /// <summary>
+    /// Stage X-Y 형식의 TMP 텍스트에서 StageNum과 SubStageNum을 추출
+    /// </summary>
     private void ExtractStageData(string stageText)
     {
         Match match = Regex.Match(stageText, @"Stage\s*(\d+)-(\d+)");
@@ -132,6 +114,9 @@ public class SceneLoader : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 스테이지 데이터 JSON에서 해당하는 StageNum, SubStageNum 설정 적용
+    /// </summary>
     private void ApplySubStageSettings(int stageNum, int subStageNum)
     {
         string jsonPath = Path.Combine(Application.dataPath, "Resources/JsonData/StageData.json");
@@ -164,24 +149,54 @@ public class SceneLoader : MonoBehaviour
         }
     }
 
-    public void LoadStageMenu() => SceneManager.LoadScene("StageP_1");
-    public void LoadShop() => SceneManager.LoadScene("Shop");
-    public void LoadTutorial() => SceneManager.LoadScene("Tutorial");
-
-    private void OnEnable()
+    /// <summary>
+    /// Stage 버튼을 클릭하면 해당 Stage를 로드
+    /// </summary>
+    private void LoadStage(Button stageButton)
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        if (stageText != null)
+        {
+            ExtractStageData(stageText.text);
+            if (stageNum > 0 && subStageNum > 0)
+            {
+                ApplySubStageSettings(stageNum, subStageNum);
+                SceneManager.LoadScene("Stage1"); // Stage1만 로드
+            }
+            else
+            {
+                Debug.LogError("[SceneLoader] 올바른 Stage 번호를 찾을 수 없습니다!");
+            }
+        }
+        else
+        {
+            Debug.LogError("[SceneLoader] StageText가 없습니다!");
+        }
     }
 
-    private void OnDisable()
+    /// <summary>
+    /// JSON 없이도 작동하는 스테이지 메뉴 이동
+    /// </summary>
+    public void LoadStageMenu()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        Debug.Log("[SceneLoader] 스테이지 메뉴 로드");
+        SceneManager.LoadScene("StageP_1");
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    /// <summary>
+    /// JSON 없이도 작동하는 상점 이동 (Shop 씬이 추가될 경우 사용)
+    /// </summary>
+    public void LoadShop()
     {
-        Debug.Log($"[SceneLoader] 새로운 씬 로드됨: {scene.name}");
-        DetectButtons(); // 새로운 씬에서 버튼 다시 찾기
-        DetectStageText(); // 새로운 씬에서 TMP 다시 찾기
+        Debug.Log("[SceneLoader] 상점 씬 로드");
+        SceneManager.LoadScene("Shop");
+    }
+
+    /// <summary>
+    /// JSON 없이도 작동하는 튜토리얼 씬 이동
+    /// </summary>
+    public void LoadTutorial()
+    {
+        Debug.Log("[SceneLoader] 튜토리얼 씬 로드");
+        SceneManager.LoadScene("Tutorial");
     }
 }
