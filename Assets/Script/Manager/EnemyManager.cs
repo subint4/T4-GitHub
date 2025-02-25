@@ -7,10 +7,6 @@ public class EnemyManager : MonoBehaviour
     private Dictionary<int, GameObject> enemyPrefabDictionary = new Dictionary<int, GameObject>();
     private List<Enemy> activeEnemies = new List<Enemy>();
 
-    public GaugeManager progressBar;
-    public int totalEnemies = 10;
-    private int defeatedEnemies = 0;
-
     private void Awake()
     {
         if (Instance == null)
@@ -76,30 +72,22 @@ public class EnemyManager : MonoBehaviour
             newEnemy.Initialize(DataManager.Instance.EnemyDataManager.GetEnemyData(enemyID), EnemyType.Melee);
             activeEnemies.Add(newEnemy);
             Debug.Log($"[EnemyManager] 적 스폰 완료: ID {enemyID} 위치 {spawnPoint.position}");
+
         }
         else
         {
             Debug.LogError("[EnemyManager] 생성된 적에 Enemy 컴포넌트가 없습니다!");
         }
     }
-
     public void RemoveEnemy(Enemy enemy)
     {
         if (activeEnemies.Contains(enemy))
         {
             activeEnemies.Remove(enemy);
-            defeatedEnemies++;
+            Debug.Log($"[EnemyManager] 적 제거: {enemy.EnemyID}");
 
-            if (progressBar != null)
-            {
-                progressBar.UpdateGauge(defeatedEnemies, totalEnemies);
-            }
-            Debug.Log($"[EnemyManager] 적 처치 진행률: {defeatedEnemies} / {totalEnemies}");
+            // 적이 제거될 때 게이지 업데이트
+            WaveManager.Instance.OnEnemyDefeated();
         }
-    }
-
-    public int GetActiveEnemyCount()
-    {
-        return activeEnemies.Count;
     }
 }

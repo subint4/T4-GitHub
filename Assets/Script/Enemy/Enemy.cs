@@ -249,12 +249,16 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void Die()
+    public void Die()
     {
         if (isDead) return;
         isDead = true;
         enemyAnimatorController.SetWalkingState(false);
         enemyAnimatorController.PlayDeathAnimation();
+
+        EnemyManager.Instance.RemoveEnemy(this);
+        WaveManager.Instance.OnEnemyDefeated();
+
     }
 
     public void OnDeathAnimationEnd()

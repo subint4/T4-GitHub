@@ -42,6 +42,20 @@ public class StageDataManager
 
         Debug.Log("[StageDataManager] 스테이지 데이터 로드 완료.");
     }
+    /// <summary>
+    /// 특정 스테이지와 서브스테이지에 해당하는 StageData를 반환
+    /// </summary>
+    public StageData GetStageData(int stageNum, int subStageNum)
+    {
+        var key = (stageNum, subStageNum);
+        if (stageDataCache.TryGetValue(key, out var stageData))
+        {
+            return stageData;
+        }
+
+        Debug.LogError($"[StageDataManager] Stage {stageNum}-{subStageNum} 데이터를 찾을 수 없습니다!");
+        return null;
+    }
 
     /// <summary>
     /// 특정 스테이지 & 서브스테이지의 WaveIDs 가져오기

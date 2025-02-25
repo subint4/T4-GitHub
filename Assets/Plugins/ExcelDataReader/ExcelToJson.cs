@@ -19,7 +19,6 @@ public static class ExcelToJson
 
         Debug.Log($"Excel 파일 로드 시도: {excelFilePath}");
 
-        //  폴더가 존재하지 않을 때만 생성
         if (!Directory.Exists(OutputFolder))
         {
             Directory.CreateDirectory(OutputFolder);
@@ -123,35 +122,62 @@ public static class ExcelToJson
 
     private static bool IsValidType(string type)
     {
-        return type == "int" || type == "float" || type == "string" || type == "bool" || type == "enum";
+        return type == "int" || type == "float" || type == "string" || type == "bool" || type == "enum" ||
+               type == "array-int" || type == "array-float" || type == "array-string";
     }
 
     private static object ConvertToCorrectType(object value, string expectedType)
     {
         if (value == null) return null;
 
-        if (expectedType == "int" && double.TryParse(value.ToString(), out double num))
+        string stringValue = value.ToString().Trim();
+
+        if (expectedType == "int" && int.TryParse(stringValue, out int intValue))
         {
-            return Convert.ToInt32(num);
+            return intValue;
         }
-        else if (expectedType == "float" && double.TryParse(value.ToString(), out double floatNum))
+        else if (expectedType == "float" && float.TryParse(stringValue, out float floatValue))
         {
-            return floatNum;
+            return floatValue;
         }
-        else if (expectedType == "bool" && bool.TryParse(value.ToString(), out bool boolValue))
+        else if (expectedType == "bool" && bool.TryParse(stringValue, out bool boolValue))
         {
             return boolValue;
         }
-        else if (expectedType == "enum") // Enum 값은 그대로 문자열로 저장
+        else if (expectedType == "enum")
         {
-            return value.ToString().Trim();
+            return stringValue;
+        }
+        else if (expectedType.StartsWith("array-"))
+        {
+            string[] splitValues = stringValue.Split(',');
+            List<object> list = new List<object>();
+
+            foreach (var val in splitValues)
+            {
+                string trimmedVal = val.Trim();
+
+                if (expectedType == "array-int" && int.TryParse(trimmedVal, out int intElement))
+                {
+                    list.Add(intElement);
+                }
+                else if (expectedType == "array-float" && float.TryParse(trimmedVal, out float floatElement))
+                {
+                    list.Add(floatElement);
+                }
+                else if (expectedType == "array-string")
+                {
+                    list.Add(trimmedVal);
+                }
+            }
+
+            return list;
         }
 
-        return value.ToString();
+        return stringValue;
     }
 
-
-    //  JsonToSO에서 사용하는 형식과 맞추기 위해 래퍼 클래스 추가
+    // JSON 데이터 포맷 유지
     [Serializable]
     public class JsonWrapper
     {

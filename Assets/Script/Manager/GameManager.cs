@@ -35,29 +35,31 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        if (waveManager == null || enemyManager == null)
+        if (WaveManager.Instance == null)
         {
-            Debug.LogError("[GameManager] WaveManager 또는 EnemyManager를 찾을 수 없습니다! 씬에 존재하는지 확인하세요.");
+            Debug.LogError("[GameManager] WaveManager 인스턴스를 찾을 수 없습니다!");
             return;
         }
 
-        // **현재 스테이지 정보를 PlayerPrefs에서 가져옴**
         int currentStage = PlayerPrefs.GetInt("CurrentStage", 1);
         int currentSubStage = PlayerPrefs.GetInt("CurrentSubStage", 1);
 
         Debug.Log($"[GameManager] 현재 스테이지: {currentStage}, 서브 스테이지: {currentSubStage}");
 
-        // **웨이브 데이터 로드**
-        if (WaveManager.Instance != null)
+        // StageManager에 스테이지 설정
+        StageData stageData = DataManager.Instance.StageDataManager.GetStageData(currentStage, currentSubStage);
+        if (stageData != null)
         {
-            WaveManager.Instance.LoadWavesForStage(currentStage, currentSubStage);
+            StageManager.Instance.SetStageData(stageData);
         }
         else
         {
-            Debug.LogError("[GameManager] WaveManager 인스턴스를 찾을 수 없습니다!");
+            Debug.LogError("[GameManager] 유효한 스테이지 데이터를 찾을 수 없습니다!");
         }
 
-        Debug.Log("[GameManager] 게임 시작! 10초 후 웨이브 시작...");
+        // 웨이브 로드
+        WaveManager.Instance.LoadWavesForStage();
+
         StartCoroutine(GameStartCountdown());
     }
 
@@ -75,37 +77,13 @@ public class GameManager : MonoBehaviour
         Debug.Log("[GameManager] 웨이브 시작!");
         waveManager.StartWave(); // 10초 후 웨이브 시작
     }
-
     public void GameOver()
     {
         if (isGameOver) return;
 
         isGameOver = true;
-        Debug.Log("[GameManager] 게임 오버! 화면을 클릭하면 다시 시작됩니다.");
-
-        // **게임 멈추기**
-        Time.timeScale = 0f; // 게임 전체 정지
+        Debug.Log("[GameManager] 게임 오버! 패배 처리.");
+        PopupManager.Instance.ShowDefeatPopup(); // 패배 팝업 표시
     }
 
-    private void Update()
-    {
-        if (isGameOver && Input.GetMouseButtonDown(0)) // 클릭 감지
-        {
-            RestartGame();
-        }
-    }
-
-    private void RestartGame()
-    {
-        Debug.Log("[GameManager] 게임 다시 시작!");
-
-        // DOTween 정리
-        DG.Tweening.DOTween.KillAll();
-
-        // **시간 복구**
-        Time.timeScale = 1f;
-
-        // **씬 다시 로드**
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
 }

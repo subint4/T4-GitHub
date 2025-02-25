@@ -6,6 +6,7 @@ public class StageManager : MonoBehaviour
     public static StageManager Instance { get; private set; }
 
     public int currentStageNum { get; private set; }
+    public int currentSubStageNum { get; private set; }
     private StageData currentStageData;
 
     private void Awake()
@@ -30,7 +31,13 @@ public class StageManager : MonoBehaviour
 
         currentStageData = stageData;
         currentStageNum = stageData.StageNum;
+        currentSubStageNum = stageData.SubStageNum;
         Debug.Log($"[StageManager] 새로운 스테이지 데이터 적용됨: {stageData.StageName}");
+    }
+
+    public int GetCurrentSubStageNum()
+    {
+        return currentSubStageNum;
     }
 
     public int GetMaxWaves()
