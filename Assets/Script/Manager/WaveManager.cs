@@ -26,7 +26,6 @@ public class WaveManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
     /// <summary>
     /// 현재 스테이지의 웨이브 데이터 불러오기
     /// </summary>
