@@ -5369,8 +5369,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   muteButton: {fileID: 1039913393}
-  muteSprite: {fileID: 21300000, guid: 43274049b089bea4e8f0f25405c4972a, type: 3}
-  unmuteSprite: {fileID: 21300000, guid: 25a6d1bab7f0dcb4fb9487adcc040639, type: 3}
+  muteSprite: {fileID: 21300000, guid: 25a6d1bab7f0dcb4fb9487adcc040639, type: 3}
+  unmuteSprite: {fileID: 21300000, guid: 43274049b089bea4e8f0f25405c4972a, type: 3}
 --- !u!1 &1078107272
 GameObject:
   m_ObjectHideFlags: 0
