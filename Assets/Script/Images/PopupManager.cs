@@ -2,30 +2,32 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
+using DG.Tweening; // DOTween 사용
 
 public class PopupManager : MonoBehaviour
 {
     public static PopupManager Instance { get; private set; }
 
     [Header("UI Popups")]
-    public GameObject victoryPopup;  // 승리 UI 팝업
-    public GameObject defeatPopup;   // 패배 UI 팝업
+    public GameObject victoryPopup;
+    public GameObject defeatPopup;
 
     [Header("Victory Popup Buttons")]
-    public Button nextStageButton;   // 다음 스테이지 버튼
-    public Button victoryMenuButton; // 승리 후 메인 메뉴 버튼
+    public Button nextStageButton;
+    public Button victoryMenuButton;
 
     [Header("Defeat Popup Buttons")]
-    public Button retryButton;       // 재도전 버튼
-    public Button defeatMenuButton;  // 패배 후 메인 메뉴 버튼
+    public Button retryButton;
+    public Button defeatMenuButton;
 
-    private bool isGameOver = false; // 게임 종료 여부
+    private bool isGameOver = false;
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -53,7 +55,7 @@ public class PopupManager : MonoBehaviour
     }
 
     /// <summary>
-    /// **승리 시 팝업 표시**
+    /// **승리 팝업 표시**
     /// </summary>
     public void ShowVictoryPopup()
     {
@@ -63,7 +65,7 @@ public class PopupManager : MonoBehaviour
         if (victoryPopup != null)
         {
             victoryPopup.SetActive(true);
-            Time.timeScale = 0f; // 게임 정지
+            Time.timeScale = 0f; // 게임 멈춤
             Debug.Log("[PopupManager] 승리 팝업 표시!");
         }
         else
@@ -73,7 +75,7 @@ public class PopupManager : MonoBehaviour
     }
 
     /// <summary>
-    /// **패배 시 팝업 표시**
+    /// **패배 팝업 표시**
     /// </summary>
     public void ShowDefeatPopup()
     {
@@ -83,7 +85,7 @@ public class PopupManager : MonoBehaviour
         if (defeatPopup != null)
         {
             defeatPopup.SetActive(true);
-            Time.timeScale = 0f; // 게임 정지
+            Time.timeScale = 0f; // 게임 멈춤
             Debug.Log("[PopupManager] 패배 팝업 표시!");
         }
         else
@@ -93,32 +95,30 @@ public class PopupManager : MonoBehaviour
     }
 
     /// <summary>
-    /// **다음 스테이지로 이동 (승리 후)**
+    /// **다음 스테이지로 이동**
     /// </summary>
     private void LoadNextStage()
     {
         Time.timeScale = 1f; // 시간 정상화
+        DOTween.KillAll(); // DOTween 애니메이션 제거
 
         int currentStage = PlayerPrefs.GetInt("CurrentStage", 1);
         int currentSubStage = PlayerPrefs.GetInt("CurrentSubStage", 1);
 
-        // 다음 스테이지로 변경
         int nextSubStage = currentSubStage + 1;
         int nextStage = currentStage;
 
-        // 예제: 서브스테이지가 3개라면, 3에서 증가할 경우 다음 메인 스테이지로 이동
-        if (nextSubStage > 3) // 최대 서브 스테이지 수를 설정
+        if (nextSubStage > 3) // 서브 스테이지 개수에 맞게 수정
         {
             nextStage++;
             nextSubStage = 1;
         }
 
-        // 새로운 스테이지 정보 저장
         PlayerPrefs.SetInt("CurrentStage", nextStage);
         PlayerPrefs.SetInt("CurrentSubStage", nextSubStage);
 
         Debug.Log($"[PopupManager] 다음 스테이지 로드: {nextStage}-{nextSubStage}");
-        SceneManager.LoadScene("Stage1"); // 다음 스테이지 씬 이름 (Stage1 기본값)
+        SceneManager.LoadScene($"Stage{nextStage}");
     }
 
     /// <summary>
@@ -126,7 +126,15 @@ public class PopupManager : MonoBehaviour
     /// </summary>
     private void RestartCurrentStage()
     {
-        Time.timeScale = 1f; // 시간 정상화
+        Debug.Log("[PopupManager] 현재 스테이지 다시 시작!");
+
+        Time.timeScale = 1f; // **게임 속도 정상화**
+        DOTween.KillAll(); // **모든 DOTween 애니메이션 정리**
+
+        // **기존 PopupManager 삭제 (씬 재시작 시 중복 방지)**
+        Destroy(gameObject);
+
+        // **씬 다시 로드**
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -135,7 +143,12 @@ public class PopupManager : MonoBehaviour
     /// </summary>
     private void ReturnToMainMenu()
     {
-        Time.timeScale = 1f; // 시간 정상화
+        Time.timeScale = 1f; // **게임 속도 정상화**
+        DOTween.KillAll(); // **모든 DOTween 애니메이션 정리**
+
+        // **PopupManager 삭제 (중복 방지)**
+        Destroy(gameObject);
+
         SceneManager.LoadScene("MainMenu");
     }
 }
