@@ -6,7 +6,7 @@ public class StageManager : MonoBehaviour
     public static StageManager Instance { get; private set; }
 
     public int currentStageNum { get; private set; }
-    public int currentSubStageNum { get; private set; }
+    private int currentSubStageNum;
     private StageData currentStageData;
 
     private void Awake()
@@ -32,7 +32,7 @@ public class StageManager : MonoBehaviour
         currentStageData = stageData;
         currentStageNum = stageData.StageNum;
         currentSubStageNum = stageData.SubStageNum;
-        Debug.Log($"[StageManager] 새로운 스테이지 데이터 적용됨: {stageData.StageName}");
+        Debug.Log($"[StageManager] 새로운 스테이지 데이터 적용됨: {stageData.StageNum}-{stageData.SubStageNum}");
     }
 
     public int GetCurrentSubStageNum()
@@ -45,7 +45,7 @@ public class StageManager : MonoBehaviour
         return currentStageData?.MaxWaves ?? 0;
     }
 
-    public List<int> GetAvailableEnemies()
+public List<int> GetAvailableEnemies()
     {
         return currentStageData?.AvailableEnemies ?? new List<int>();
     }

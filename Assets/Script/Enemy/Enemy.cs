@@ -252,13 +252,26 @@ public class Enemy : MonoBehaviour
     public void Die()
     {
         if (isDead) return;
+
         isDead = true;
         enemyAnimatorController.SetWalkingState(false);
         enemyAnimatorController.PlayDeathAnimation();
+        if (GoldManager.Instance != null)
+        {
+            int rewardMoney = enemyStats.RewardMoney; // **적이 주는 보상 골드**
+            GoldManager.Instance.AddGold(rewardMoney, true);
+            Debug.Log($"[Enemy] {gameObject.name} 처치! 보상: {rewardMoney} 골드 지급");
+        }
+        else
+        {
+            Debug.LogError("[Enemy] GoldManager 인스턴스를 찾을 수 없습니다! 골드 지급 실패");
+        }
 
-        EnemyManager.Instance.RemoveEnemy(this);
-        WaveManager.Instance.OnEnemyDefeated();
+        // WaveManager에 적 처치 알림
+        WaveManager.Instance?.OnEnemyDefeated();
 
+        // 활성 적 리스트에서 제거
+        WaveManager.Instance?.RemoveActiveEnemy(this);
     }
 
     public void OnDeathAnimationEnd()

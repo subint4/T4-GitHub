@@ -129,17 +129,20 @@ public class SceneLoader : MonoBehaviour
         }
 
         int stageNum = int.Parse(match.Groups[1].Value);
+        int subStageNum = int.Parse(match.Groups[2].Value);
 
-        // 1스테이지가 클리어되지 않았으면 2, 3 스테이지 잠금
         if (!IsStageUnlocked(stageNum))
         {
-            Debug.LogWarning($"[SceneLoader] {stageNum} 스테이지는 잠겨 있습니다! 로드 불가.");
+            Debug.LogWarning($"[SceneLoader] {stageNum} 스테이지는 잠겨 있습니다!");
             return;
         }
 
-        ExtractStageData(buttonName);
+        // 선택된 스테이지 정보를 저장하여 GameManager에서 사용할 수 있도록 함
         ApplySubStageSettings(stageNum, subStageNum);
-        SceneManager.LoadScene($"StageP_{stageNum}");
+
+        // Stage1 씬만 로드하고 내부 데이터를 SubStage에 맞게 설정
+        Debug.Log($"[SceneLoader] Stage1 로드, 데이터는 {stageNum}-{subStageNum} 적용");
+        SceneManager.LoadScene("Stage1");
     }
 
 
