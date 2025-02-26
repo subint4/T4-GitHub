@@ -37,7 +37,7 @@ public class WaveDataManager
     }
 
     /// <summary>
-    /// 특정 웨이브 ID 목록을 기반으로 웨이브 데이터를 가져옴
+    /// 특정 스테이지에 필요한 여러 개의 웨이브 데이터를 순서대로 가져옴
     /// </summary>
     public List<WaveSO> GetWaveDataList(List<int> waveIDs)
     {
@@ -63,5 +63,4 @@ public class WaveDataManager
 
         return waveList;
     }
-
 }

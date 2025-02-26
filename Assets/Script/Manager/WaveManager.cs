@@ -10,7 +10,7 @@ public class WaveManager : MonoBehaviour
     private bool isSpawning = false;
     public Transform[] spawnPoints;
     private List<Enemy> activeEnemies = new List<Enemy>();
-    private int totalEnemies = 0;
+    private int totalEnemies = 0;  // 모든 웨이브에서 스폰될 적의 총 수
     private int defeatedEnemies = 0;
     public GaugeManager progressBar;
     private List<WaveSO> currentWaveDataList = new List<WaveSO>();
@@ -26,8 +26,9 @@ public class WaveManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
     /// <summary>
-    /// 현재 스테이지의 웨이브 데이터 불러오기
+    /// 현재 스테이지의 모든 웨이브 데이터를 불러오기
     /// </summary>
     public void LoadWavesForStage()
     {
@@ -51,10 +52,22 @@ public class WaveManager : MonoBehaviour
         {
             Debug.Log($"[WaveManager] {stageNum}-{subStageNum}에 대한 {currentWaveDataList.Count}개의 웨이브 로드 완료!");
         }
+
+        // 전체 웨이브에서 스폰될 총 적 수 계산
+        totalEnemies = 0;
+        foreach (var wave in currentWaveDataList)
+        {
+            foreach (var spawnData in wave.spawnDataList)
+            {
+                totalEnemies += spawnData.count;
+            }
+        }
+
+        Debug.Log($"[WaveManager] 총 적 수: {totalEnemies}");
     }
 
     /// <summary>
-    /// 웨이브 시작
+    /// 현재 스테이지에서 첫 번째 웨이브 시작
     /// </summary>
     public void StartWave()
     {
@@ -64,11 +77,12 @@ public class WaveManager : MonoBehaviour
             return;
         }
 
+        defeatedEnemies = 0;  // 웨이브 시작 시 적 처치 수 초기화
         StartCoroutine(SpawnWave());
     }
 
     /// <summary>
-    /// 웨이브의 적 생성
+    /// 현재 웨이브의 적을 생성
     /// </summary>
     private IEnumerator SpawnWave()
     {
@@ -77,14 +91,10 @@ public class WaveManager : MonoBehaviour
 
         Debug.Log($"[WaveManager] 웨이브 {currentWaveIndex + 1} 시작!");
 
-        totalEnemies = 0;
-        defeatedEnemies = 0;
         activeEnemies.Clear();
 
         foreach (var spawnData in currentWaveData.spawnDataList)
         {
-            totalEnemies += spawnData.count;
-
             for (int i = 0; i < spawnData.count; i++)
             {
                 SpawnEnemy(spawnData.enemyID);
@@ -95,7 +105,7 @@ public class WaveManager : MonoBehaviour
         // 게이지 초기화
         if (progressBar != null)
         {
-            progressBar.UpdateGauge(0, totalEnemies);
+            progressBar.UpdateGauge(defeatedEnemies, totalEnemies);
         }
 
         yield return new WaitForSeconds(currentWaveData.interval);
@@ -108,7 +118,7 @@ public class WaveManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 특정 적을 스폰
+    /// 적을 특정 위치에서 생성
     /// </summary>
     private void SpawnEnemy(int enemyID)
     {
@@ -123,11 +133,14 @@ public class WaveManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 적 처치 처리
+    /// 적이 처치되었을 때 호출
     /// </summary>
     public void OnEnemyDefeated()
     {
         defeatedEnemies++;
+
+        // 적 리스트에서 제거
+        activeEnemies.RemoveAll(enemy => enemy == null || enemy.isDead);
 
         // 게이지 업데이트
         if (progressBar != null)
@@ -138,14 +151,29 @@ public class WaveManager : MonoBehaviour
         Debug.Log($"[WaveManager] 적 처치 진행률: {defeatedEnemies} / {totalEnemies}");
 
         // 모든 적이 처치되었을 때 다음 웨이브 시작
-        if (defeatedEnemies >= totalEnemies)
+        if (defeatedEnemies >= totalEnemies || activeEnemies.Count == 0)
+        {
+            OnAllEnemiesDefeated();
+        }
+    }
+    public void RemoveActiveEnemy(Enemy enemy)
+    {
+        if (activeEnemies.Contains(enemy))
+        {
+            activeEnemies.Remove(enemy);
+            Debug.Log($"[WaveManager] {enemy.name} 제거됨, 남은 적 수: {activeEnemies.Count}");
+        }
+
+        // 모든 적이 제거되었는지 다시 확인
+        if (activeEnemies.Count == 0)
         {
             OnAllEnemiesDefeated();
         }
     }
 
+
     /// <summary>
-    /// 모든 적 처치 시 다음 웨이브 처리
+    /// 현재 웨이브가 끝나면 다음 웨이브 시작
     /// </summary>
     private void OnAllEnemiesDefeated()
     {
@@ -153,8 +181,8 @@ public class WaveManager : MonoBehaviour
 
         if (currentWaveIndex >= currentWaveDataList.Count - 1)
         {
-            Debug.Log("[WaveManager] 모든 웨이브 완료! 승리!");
-            PopupManager.Instance.ShowVictoryPopup(); // 게임 승리 처리
+            Debug.Log("[WaveManager] 모든 웨이브 완료! 스테이지 클리어!");
+            PopupManager.Instance.ShowVictoryPopup(); // 스테이지 클리어
         }
         else
         {
@@ -163,7 +191,7 @@ public class WaveManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 다음 웨이브 시작
+    /// 다음 웨이브를 시작
     /// </summary>
     private void StartNextWave()
     {
@@ -172,10 +200,6 @@ public class WaveManager : MonoBehaviour
         {
             Debug.Log($"[WaveManager] 다음 웨이브 {currentWaveIndex + 1} 시작!");
             StartWave();
-        }
-        else
-        {
-            Debug.Log("[WaveManager] 모든 웨이브 완료!");
         }
     }
 }

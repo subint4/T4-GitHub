@@ -41,12 +41,13 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        // 현재 선택된 Stage 및 SubStage 정보 가져오기
         int currentStage = PlayerPrefs.GetInt("CurrentStage", 1);
         int currentSubStage = PlayerPrefs.GetInt("CurrentSubStage", 1);
 
         Debug.Log($"[GameManager] 현재 스테이지: {currentStage}, 서브 스테이지: {currentSubStage}");
 
-        // StageManager에 스테이지 설정
+        // 스테이지 데이터 가져오기
         StageData stageData = DataManager.Instance.StageDataManager.GetStageData(currentStage, currentSubStage);
         if (stageData != null)
         {
@@ -57,7 +58,7 @@ public class GameManager : MonoBehaviour
             Debug.LogError("[GameManager] 유효한 스테이지 데이터를 찾을 수 없습니다!");
         }
 
-        // 웨이브 로드
+        // 웨이브 데이터 불러오기 (현재 스테이지와 서브 스테이지 기반)
         WaveManager.Instance.LoadWavesForStage();
 
         StartCoroutine(GameStartCountdown());
