@@ -710,7 +710,7 @@ GameObject:
   - component: {fileID: 72707617}
   m_Layer: 0
   m_Name: FifthLineSpawnPoint
-  m_TagString: Untagged
+  m_TagString: SpawnPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1557,7 +1557,7 @@ GameObject:
   - component: {fileID: 260573369}
   m_Layer: 0
   m_Name: SpawnZone
-  m_TagString: Untagged
+  m_TagString: SpawnPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1575,9 +1575,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2080945646}
-  - {fileID: 1401152980}
   - {fileID: 469889828}
+  - {fileID: 1401152980}
+  - {fileID: 2080945646}
   - {fileID: 1420659930}
   - {fileID: 72707617}
   m_Father: {fileID: 0}
@@ -2756,7 +2756,7 @@ GameObject:
   - component: {fileID: 469889828}
   m_Layer: 0
   m_Name: FirstLineSpawnPoint
-  m_TagString: Untagged
+  m_TagString: SpawnPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7881,7 +7881,7 @@ GameObject:
   - component: {fileID: 1401152980}
   m_Layer: 0
   m_Name: SecondLineSpawnPoint
-  m_TagString: Untagged
+  m_TagString: SpawnPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8253,7 +8253,7 @@ GameObject:
   - component: {fileID: 1420659930}
   m_Layer: 0
   m_Name: FuorthLineSpawnPoint
-  m_TagString: Untagged
+  m_TagString: SpawnPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9055,6 +9055,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   victoryPopup: {fileID: 968812487}
   defeatPopup: {fileID: 404577390}
+  blockPanel: {fileID: 0}
   nextStageButton: {fileID: 857703290}
   victoryMenuButton: {fileID: 205352608}
   retryButton: {fileID: 1131815373}
@@ -12127,7 +12128,7 @@ GameObject:
   - component: {fileID: 2080945646}
   m_Layer: 0
   m_Name: ThirdLineSpawnPoint
-  m_TagString: Untagged
+  m_TagString: SpawnPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

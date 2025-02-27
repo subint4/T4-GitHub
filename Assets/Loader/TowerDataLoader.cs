@@ -36,6 +36,7 @@ public class TowerDataLoader : MonoBehaviour
                     continue;
                 }
 
+#if UNITY_EDITOR
                 string assetPath = $"Assets/TowerData/Tower_{unit.Name}.asset";
                 TowerSO tower = AssetDatabase.LoadAssetAtPath<TowerSO>(assetPath);
 
@@ -55,11 +56,14 @@ public class TowerDataLoader : MonoBehaviour
                 {
                     Debug.LogError($"TowerSO 생성 실패: {assetPath}");
                 }
+#endif
             }
 
+#if UNITY_EDITOR
             Debug.Log("TowerSO 업데이트 완료!");
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+#endif
         }
         catch (System.Exception ex)
         {

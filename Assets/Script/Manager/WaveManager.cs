@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class WaveManager : MonoBehaviour
 {
@@ -24,8 +25,31 @@ public class WaveManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
+
+        // **씬이 로드될 때 무조건 웨이브 인덱스를 초기화**
+        currentWaveIndex = 0;
+        defeatedEnemies = 0;
+        totalEnemies = 0;
+        Debug.Log("[WaveManager] 씬 로드 시 웨이브 진행도 초기화 완료!");
     }
+
+    //public void AssignSpawnPoints()
+    //{
+    //    spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint")
+    //        .Select(go => go.transform)
+    //        .ToArray();
+
+    //    if (spawnPoints == null || spawnPoints.Length == 0)
+    //    {
+    //        Debug.LogError("[WaveManager] 스폰 포인트를 찾을 수 없습니다! 씬에서 'SpawnPoint' 태그가 있는 오브젝트를 확인하세요.");
+    //    }
+    //    else
+    //    {
+    //        Debug.Log($"[WaveManager] 스폰 포인트 {spawnPoints.Length}개 할당 완료!");
+    //    }
+    //}
 
     public void LoadWavesForStage()
     {
@@ -38,18 +62,91 @@ public class WaveManager : MonoBehaviour
         int stageNum = StageManager.Instance.currentStageNum;
         int subStageNum = StageManager.Instance.GetCurrentSubStageNum();
 
+        Debug.Log($"[WaveManager] {stageNum}-{subStageNum} 스테이지 데이터 로드 시도 중...");
+
+        List<int> waveIDs = DataManager.Instance.StageDataManager.GetWaveIDsForStage(stageNum, subStageNum);
+        if (waveIDs == null || waveIDs.Count == 0)
+        {
+            Debug.LogError($"[WaveManager] {stageNum}-{subStageNum}에 대한 웨이브 데이터가 없음!");
+            return;
+        }
+
+        currentWaveDataList = DataManager.Instance.WaveDataManager.GetWaveDataList(waveIDs);
+
+        if (currentWaveDataList == null || currentWaveDataList.Count == 0)
+        {
+            Debug.LogError($"[WaveManager] {stageNum}-{subStageNum}의 웨이브 데이터를 가져오지 못했습니다!");
+            return;
+        }
+
+        Debug.Log($"[WaveManager] {stageNum}-{subStageNum} 웨이브 데이터 로드 완료! 총 웨이브 수: {currentWaveDataList.Count}");
+    }
+
+
+    /// <summary>
+    /// 스테이지와 서브 스테이지 번호를 받아 웨이브 데이터를 로드
+    /// </summary>
+    public void LoadWavesForStage(int stageNum, int subStageNum)
+    {
+        if (DataManager.Instance == null || DataManager.Instance.StageDataManager == null || DataManager.Instance.WaveDataManager == null)
+        {
+            Debug.LogError("[WaveManager] 데이터 매니저를 찾을 수 없습니다!");
+            return;
+        }
+
         List<int> waveIDs = DataManager.Instance.StageDataManager.GetWaveIDsForStage(stageNum, subStageNum);
         currentWaveDataList = DataManager.Instance.WaveDataManager.GetWaveDataList(waveIDs);
+
+        Debug.Log($"[WaveManager] {stageNum}-{subStageNum} 웨이브 데이터 로드 완료! 총 웨이브 수: {currentWaveDataList.Count}");
 
         if (currentWaveDataList.Count == 0)
         {
             Debug.LogError($"[WaveManager] {stageNum}-{subStageNum}의 웨이브 데이터가 없습니다!");
         }
+    }
+    private void LoadNextSubStage()
+    {
+        int currentStage = PlayerPrefs.GetInt("CurrentStage", 1);
+        int currentSubStage = PlayerPrefs.GetInt("CurrentSubStage", 1);
+
+        Debug.Log($"[SceneLoader] 현재 서브 스테이지: {currentStage}-{currentSubStage}");
+
+        // 마지막 서브 스테이지 개수를 확인 (예: 5까지 있는 경우)
+        int maxSubStage = 5; // 필요에 따라 조정
+
+        if (currentSubStage >= maxSubStage)
+        {
+            Debug.Log("[SceneLoader] 마지막 서브 스테이지입니다. 다음 메인 스테이지로 이동해야 합니다.");
+            return;
+        }
+
+        currentSubStage++;
+        PlayerPrefs.SetInt("CurrentSubStage", currentSubStage);
+        PlayerPrefs.Save();
+
+        Debug.Log($"[SceneLoader] 다음 서브 스테이지 로드: {currentStage}-{currentSubStage}");
+        ApplySubStageSettings();
+    }
+    private void ApplySubStageSettings()
+    {
+        int stageNum = PlayerPrefs.GetInt("CurrentStage", 1);
+        int subStageNum = PlayerPrefs.GetInt("CurrentSubStage", 1);
+
+        Debug.Log($"[SceneLoader] {stageNum}-{subStageNum} 설정 적용 시도...");
+
+        WaveManager waveManager = FindObjectOfType<WaveManager>();
+        if (waveManager != null)
+        {
+            waveManager.LoadWavesForStage();
+            Debug.Log($"[SceneLoader] {stageNum}-{subStageNum} 웨이브 데이터 로드 완료!");
+        }
         else
         {
-            Debug.Log($"[WaveManager] {stageNum}-{subStageNum}에 대한 {currentWaveDataList.Count}개의 웨이브 로드 완료!");
+            Debug.LogWarning("[SceneLoader] WaveManager를 찾을 수 없음, 웨이브 데이터 적용 생략");
         }
     }
+
+
 
     public void StartWave()
     {
@@ -63,7 +160,6 @@ public class WaveManager : MonoBehaviour
         totalEnemies = 0;
         activeEnemies.Clear();
 
-        // 현재 웨이브에서 소환될 적의 총 개수를 다시 계산
         foreach (var spawnData in currentWaveDataList[currentWaveIndex].spawnDataList)
         {
             totalEnemies += spawnData.count;
@@ -89,8 +185,8 @@ public class WaveManager : MonoBehaviour
             }
         }
 
-        Debug.Log($"[WaveManager] 웨이브 {currentWaveIndex + 1} 적 생성 완료! 활성 적 수: {activeEnemies.Count}");
         isSpawning = false;
+        Debug.Log($"[WaveManager] 웨이브 {currentWaveIndex + 1} 적 생성 완료! 활성 적 수: {activeEnemies.Count}");
     }
 
     private void SpawnEnemy(int enemyID)
@@ -101,22 +197,7 @@ public class WaveManager : MonoBehaviour
             return;
         }
 
-        Transform selectedSpawnPoint;
-
-        if (enemyID % 4 == 0)
-        {
-            List<Transform> validSpawnPoints = new List<Transform>();
-            if (spawnPoints.Length >= 2) validSpawnPoints.Add(spawnPoints[1]);
-            if (spawnPoints.Length >= 4) validSpawnPoints.Add(spawnPoints[3]);
-
-            selectedSpawnPoint = validSpawnPoints.Count > 0
-                ? validSpawnPoints[Random.Range(0, validSpawnPoints.Count)]
-                : spawnPoints[Random.Range(0, spawnPoints.Length)];
-        }
-        else
-        {
-            selectedSpawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
-        }
+        Transform selectedSpawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
 
         GameObject enemyPrefab = EnemyManager.Instance.GetEnemyPrefab(enemyID);
         if (enemyPrefab == null)
@@ -136,7 +217,7 @@ public class WaveManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"[WaveManager] 생성된 적에 Enemy 컴포넌트가 없습니다!");
+            Debug.LogError("[WaveManager] 생성된 적에 Enemy 컴포넌트가 없습니다!");
         }
     }
 
@@ -187,7 +268,7 @@ public class WaveManager : MonoBehaviour
         }
         else
         {
-            Debug.Log($"[WaveManager] 다음 웨이브 {currentWaveIndex + 1} 시작!");
+            Debug.Log($"[WaveManager] 다음 웨이브 {currentWaveIndex + 2} 시작 준비...");
             StartNextWave();
         }
     }
@@ -195,6 +276,7 @@ public class WaveManager : MonoBehaviour
     private void StartNextWave()
     {
         currentWaveIndex++;
+        Debug.Log($"[WaveManager] StartNextWave() 호출됨. 현재 웨이브 인덱스: {currentWaveIndex}, 총 웨이브 수: {currentWaveDataList.Count}");
 
         if (currentWaveIndex < currentWaveDataList.Count)
         {

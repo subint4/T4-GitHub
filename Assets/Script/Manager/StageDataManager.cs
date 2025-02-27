@@ -2,8 +2,11 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
-using UnityEditor.U2D.Aseprite;
 using System;
+
+#if UNITY_EDITOR
+using UnityEditor.U2D.Aseprite;
+#endif
 
 public class StageDataManager
 {

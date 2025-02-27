@@ -11,6 +11,7 @@ TagManager:
   - SpawnableArea
   - BGM
   - Boss
+  - SpawnPoint
   layers:
   - Default
   - TransparentFX
