@@ -15,14 +15,15 @@ MonoBehaviour:
   ID: 5
   Name: 2_water_spirit
   NextLevelID: 6
-  Health: 100
+  Health: 55
   Level: 2
-  AttackPower: 10
+  AttackPower: 8
   AttackSpeed: 1
   DeployCost: 0
-  UpgradeCost: 40
+  UpgradeCost: 50
   TowerType: 1
   SlowEffect: 0.3
   SlowDuration: 2
   PierceCount: 1
   StunDuration: 0
+  AttackAnimationName: 

@@ -15,9 +15,9 @@ MonoBehaviour:
   ID: 5
   Type: 0
   Name: Orc1
-  Health: 10
+  Health: 25
   MovementSpeed: 0.5
   AttackSpeed: 1
   AttackPower: 10
   SpawnCount: 0
-  RewardMoney: 20
+  RewardMoney: 5

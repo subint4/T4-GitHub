@@ -20,9 +20,10 @@ MonoBehaviour:
   AttackPower: 0
   AttackSpeed: 0
   DeployCost: 0
-  UpgradeCost: 80
+  UpgradeCost: 85
   TowerType: 0
   SlowEffect: 0
   SlowDuration: 0
   PierceCount: 1
   StunDuration: 0
+  AttackAnimationName: 

@@ -19,10 +19,11 @@ MonoBehaviour:
   Level: 1
   AttackPower: 5
   AttackSpeed: 1
-  DeployCost: 30
+  DeployCost: 40
   UpgradeCost: 0
   TowerType: 1
   SlowEffect: 0.3
   SlowDuration: 2
   PierceCount: 1
   StunDuration: 0
+  AttackAnimationName: 

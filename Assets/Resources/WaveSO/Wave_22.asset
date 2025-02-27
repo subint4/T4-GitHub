@@ -13,16 +13,17 @@ MonoBehaviour:
   m_Name: Wave_22
   m_EditorClassIdentifier: 
   ID: 22
-  stagenum: 4
+  stagenum: 0
+  substagenum: 0
   wave: 2
-  interval: 2
+  interval: 6
   spawnDataList:
   - ID: 22
-    stagenum: 4
+    stagenum: 0
     wave: 2
-    enemyID: 15
-    count: 3
+    enemyID: 18
+    count: 27
     SpawnGroup: 0
-    SpawnDelay: 2
-    interval: 2
+    SpawnDelay: 8
+    interval: 6
     SpawnLaneID: 0

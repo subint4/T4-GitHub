@@ -15,9 +15,9 @@ MonoBehaviour:
   ID: 16
   Type: 0
   Name: Boss_Reaper
-  Health: 160
+  Health: 1300
   MovementSpeed: 0.25
   AttackSpeed: 1
-  AttackPower: 50
+  AttackPower: 500
   SpawnCount: 0
   RewardMoney: 300

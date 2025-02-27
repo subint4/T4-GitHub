@@ -15,14 +15,15 @@ MonoBehaviour:
   ID: 14
   Name: 2_light_spirit
   NextLevelID: 15
-  Health: 150
+  Health: 75
   Level: 2
-  AttackPower: 35
-  AttackSpeed: 1
+  AttackPower: 19
+  AttackSpeed: 1.5
   DeployCost: 0
   UpgradeCost: 110
   TowerType: 3
   SlowEffect: 0
   SlowDuration: 0
   PierceCount: 1
-  StunDuration: 3
+  StunDuration: 1
+  AttackAnimationName: 
