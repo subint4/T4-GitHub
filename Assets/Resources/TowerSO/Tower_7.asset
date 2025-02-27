@@ -15,14 +15,15 @@ MonoBehaviour:
   ID: 7
   Name: 1_wind_spirit
   NextLevelID: 8
-  Health: 50
+  Health: 60
   Level: 1
-  AttackPower: 5
+  AttackPower: 4
   AttackSpeed: 1
-  DeployCost: 50
+  DeployCost: 60
   UpgradeCost: 0
   TowerType: 2
   SlowEffect: 0
   SlowDuration: 0
   PierceCount: 5
   StunDuration: 0
+  AttackAnimationName: 

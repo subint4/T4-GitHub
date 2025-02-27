@@ -15,10 +15,10 @@ MonoBehaviour:
   ID: 18
   Name: 3_dark_spirit
   NextLevelID: 0
-  Health: 250
+  Health: 90
   Level: 3
-  AttackPower: 60
-  AttackSpeed: 1
+  AttackPower: 45
+  AttackSpeed: 2
   DeployCost: 0
   UpgradeCost: 140
   TowerType: 0
@@ -26,3 +26,4 @@ MonoBehaviour:
   SlowDuration: 0
   PierceCount: 1
   StunDuration: 0
+  AttackAnimationName: 

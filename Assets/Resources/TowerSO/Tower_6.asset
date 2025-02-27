@@ -15,14 +15,15 @@ MonoBehaviour:
   ID: 6
   Name: 3_water_spirit
   NextLevelID: 0
-  Health: 150
+  Health: 60
   Level: 3
-  AttackPower: 20
+  AttackPower: 11
   AttackSpeed: 1
   DeployCost: 0
-  UpgradeCost: 50
+  UpgradeCost: 60
   TowerType: 1
   SlowEffect: 0.3
   SlowDuration: 2
   PierceCount: 1
   StunDuration: 0
+  AttackAnimationName: 

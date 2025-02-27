@@ -15,9 +15,9 @@ MonoBehaviour:
   ID: 3
   Name: 3_fire_spirit
   NextLevelID: 0
-  Health: 150
+  Health: 50
   Level: 3
-  AttackPower: 20
+  AttackPower: 11
   AttackSpeed: 1
   DeployCost: 0
   UpgradeCost: 40
@@ -26,3 +26,4 @@ MonoBehaviour:
   SlowDuration: 0
   PierceCount: 1
   StunDuration: 0
+  AttackAnimationName: 

@@ -15,9 +15,9 @@ MonoBehaviour:
   ID: 7
   Type: 0
   Name: Orc3
-  Health: 20
+  Health: 40
   MovementSpeed: 0.4
   AttackSpeed: 1
   AttackPower: 20
   SpawnCount: 0
-  RewardMoney: 30
+  RewardMoney: 7

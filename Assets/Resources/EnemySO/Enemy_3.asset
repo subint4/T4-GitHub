@@ -15,9 +15,9 @@ MonoBehaviour:
   ID: 3
   Type: 0
   Name: Zombie3
-  Health: 20
+  Health: 35
   MovementSpeed: 0.4
   AttackSpeed: 1
   AttackPower: 20
   SpawnCount: 0
-  RewardMoney: 30
+  RewardMoney: 7

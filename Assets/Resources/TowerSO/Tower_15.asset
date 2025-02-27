@@ -15,14 +15,15 @@ MonoBehaviour:
   ID: 15
   Name: 3_light_spirit
   NextLevelID: 0
-  Health: 200
+  Health: 80
   Level: 3
-  AttackPower: 40
-  AttackSpeed: 1
+  AttackPower: 23
+  AttackSpeed: 1.5
   DeployCost: 0
   UpgradeCost: 120
   TowerType: 3
   SlowEffect: 0
   SlowDuration: 0
   PierceCount: 1
-  StunDuration: 3
+  StunDuration: 1
+  AttackAnimationName: 
