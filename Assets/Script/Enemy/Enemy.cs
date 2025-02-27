@@ -256,23 +256,28 @@ public class Enemy : MonoBehaviour
         isDead = true;
         enemyAnimatorController.SetWalkingState(false);
         enemyAnimatorController.PlayDeathAnimation();
-        if (GoldManager.Instance != null)
-        {
-            int rewardMoney = enemyStats.RewardMoney; // **적이 주는 보상 골드**
-            GoldManager.Instance.AddGold(rewardMoney, true);
-            Debug.Log($"[Enemy] {gameObject.name} 처치! 보상: {rewardMoney} 골드 지급");
-        }
-        else
-        {
-            Debug.LogError("[Enemy] GoldManager 인스턴스를 찾을 수 없습니다! 골드 지급 실패");
-        }
 
         // WaveManager에 적 처치 알림
-        WaveManager.Instance?.OnEnemyDefeated();
+        if (WaveManager.Instance != null)
+        {
+            WaveManager.Instance.OnEnemyDefeated(this); // 적 객체 전달
+        }
 
         // 활성 적 리스트에서 제거
-        WaveManager.Instance?.RemoveActiveEnemy(this);
+        if (WaveManager.Instance != null)
+        {
+            WaveManager.Instance.RemoveActiveEnemy(this);
+        }
+
+        // **골드 지급 기능 추가**
+        if (GoldManager.Instance != null)
+        {
+            GoldManager.Instance.AddGold(enemyStats.RewardMoney, true); // 적의 보상금 지급
+        }
+
+        Destroy(gameObject, 1.5f); // 애니메이션 후 제거
     }
+
 
     public void OnDeathAnimationEnd()
     {

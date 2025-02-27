@@ -56,29 +56,8 @@ public class EnemyManager : MonoBehaviour
         return null;
     }
 
-    public void SpawnEnemy(int enemyID, Transform spawnPoint)
-    {
-        GameObject enemyPrefab = GetEnemyPrefab(enemyID);
-        if (enemyPrefab == null)
-        {
-            return;
-        }
 
-        GameObject newEnemyObj = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
-        Enemy newEnemy = newEnemyObj.GetComponent<Enemy>();
 
-        if (newEnemy != null)
-        {
-            newEnemy.Initialize(DataManager.Instance.EnemyDataManager.GetEnemyData(enemyID), EnemyType.Melee);
-            activeEnemies.Add(newEnemy);
-            Debug.Log($"[EnemyManager] 적 스폰 완료: ID {enemyID} 위치 {spawnPoint.position}");
-
-        }
-        else
-        {
-            Debug.LogError("[EnemyManager] 생성된 적에 Enemy 컴포넌트가 없습니다!");
-        }
-    }
     public void RemoveEnemy(Enemy enemy)
     {
         if (activeEnemies.Contains(enemy))
@@ -87,7 +66,7 @@ public class EnemyManager : MonoBehaviour
             Debug.Log($"[EnemyManager] 적 제거: {enemy.EnemyID}");
 
             // 적이 제거될 때 게이지 업데이트
-            WaveManager.Instance.OnEnemyDefeated();
+            WaveManager.Instance.OnEnemyDefeated(enemy);
         }
     }
 }

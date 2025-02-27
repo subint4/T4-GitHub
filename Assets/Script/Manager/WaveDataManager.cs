@@ -8,6 +8,9 @@ public class WaveDataManager
 
     public void LoadWaveData()
     {
+        // 기존 데이터 초기화 (중복 방지)
+        waveDataDictionary.Clear();
+
         WaveSO[] waveDataList = Resources.LoadAll<WaveSO>("WaveSO");
 
         foreach (var wave in waveDataList)
@@ -20,12 +23,12 @@ public class WaveDataManager
                 }
                 else
                 {
-                    Debug.LogWarning($"[WaveDataManager] 중복된 웨이브 ID 발견: {wave.ID}");
+                    Debug.LogError($"[WaveDataManager] 중복된 웨이브 ID 발견: {wave.ID}, 기존 데이터 유지");
                 }
             }
         }
 
-        Debug.Log("[WaveDataManager] 모든 웨이브 데이터 로드 완료.");
+        Debug.Log($"[WaveDataManager] {waveDataDictionary.Count}개의 웨이브 데이터 로드 완료.");
     }
 
     /// <summary>
@@ -49,6 +52,9 @@ public class WaveDataManager
             return waveList;
         }
 
+        // 웨이브 ID 정렬 (순서 보장)
+        waveIDs.Sort();
+
         foreach (var waveID in waveIDs)
         {
             if (waveDataDictionary.TryGetValue(waveID, out var data))
@@ -57,10 +63,11 @@ public class WaveDataManager
             }
             else
             {
-                Debug.LogWarning($"[WaveDataManager] 웨이브 {waveID} 데이터를 찾을 수 없습니다.");
+                Debug.LogError($"[WaveDataManager] 웨이브 {waveID} 데이터를 찾을 수 없습니다.");
             }
         }
 
+        Debug.Log($"[WaveDataManager] {waveList.Count}개의 웨이브 데이터 반환됨.");
         return waveList;
     }
 }

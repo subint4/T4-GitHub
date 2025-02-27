@@ -5,6 +5,7 @@ using TMPro;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Collections;
 
 public class SceneLoader : MonoBehaviour
 {
@@ -45,6 +46,12 @@ public class SceneLoader : MonoBehaviour
         DetectButtons(); // 씬이 변경될 때 버튼을 다시 감지
     }
 
+    private IEnumerator WaitForUIAndDetectButtons()
+    {
+        yield return new WaitForSeconds(0.5f); // UI가 로드될 시간을 보장
+        DetectButtons();
+    }
+
 
     /// <summary>
     /// 모든 버튼을 찾아 클릭 이벤트 등록
@@ -73,18 +80,20 @@ public class SceneLoader : MonoBehaviour
                 {
                     button.interactable = false; // 버튼 비활성화
                     Debug.Log($"[SceneLoader] {buttonName} 버튼 비활성화됨.");
-                    continue;
+                    continue; // 이벤트 등록 방지
                 }
 
                 button.interactable = true;
             }
 
             // 버튼 클릭 이벤트 추가
-            button.onClick.AddListener(() => LoadTargetScene(buttonName));
+            button.onClick.AddListener(() =>
+            {
+                Debug.Log($"[SceneLoader] {buttonName} 클릭 이벤트 실행됨!");
+                LoadTargetScene(buttonName);
+            });
         }
     }
-
-
 
     private void LoadTargetScene(string buttonName)
     {
@@ -113,7 +122,11 @@ public class SceneLoader : MonoBehaviour
             case "BackButton":
                 LoadMainMenu();
                 break;
+            case "MainMenuButton":
+                LoadMainMenu();
+                break;
             default:
+                Debug.Log($"[SceneLoader] {buttonName}는 스테이지 버튼입니다. LoadStage() 호출");
                 LoadStage(buttonName);
                 break;
         }
