@@ -32,14 +32,13 @@ public class WaveManager : MonoBehaviour
 
     public void LoadWavesForStage()
     {
-        //if (StageManager.Instance == null)
-        //{
-        //    Debug.LogError("[WaveManager] StageManager 인스턴스를 찾을 수 없습니다!");
-        //    return;
-        //}
+        if (StageManager.Instance == null)
+        {
+            Debug.LogError("[WaveManager] StageManager 인스턴스를 찾을 수 없습니다!");
+            return;
+        }
 
-        // StageDataManager가 데이터 로드를 완료했는지 확인
-        DataManager.Instance.StageDataManager.LoadStageData();
+        DataManager.Instance.WaveDataManager.LoadWaveData();
 
         int stageNum = StageManager.Instance.currentStageNum;
         int subStageNum = StageManager.Instance.GetCurrentSubStageNum();
@@ -47,6 +46,8 @@ public class WaveManager : MonoBehaviour
         Debug.Log($"[WaveManager] {stageNum}-{subStageNum} 스테이지 데이터 로드 시도 중...");
 
         List<int> waveIDs = DataManager.Instance.StageDataManager.GetWaveIDsForStage(stageNum, subStageNum);
+        Debug.Log($"[WaveManager] 로드된 웨이브 ID 목록: {string.Join(", ", waveIDs)}");
+
         if (waveIDs == null || waveIDs.Count == 0)
         {
             Debug.LogError($"[WaveManager] {stageNum}-{subStageNum}에 대한 웨이브 데이터가 없음!");
@@ -54,14 +55,22 @@ public class WaveManager : MonoBehaviour
         }
 
         currentWaveDataList = DataManager.Instance.WaveDataManager.GetWaveDataList(waveIDs);
+
         if (currentWaveDataList == null || currentWaveDataList.Count == 0)
         {
             Debug.LogError($"[WaveManager] {stageNum}-{subStageNum}의 웨이브 데이터를 가져오지 못했습니다!");
             return;
         }
 
-        Debug.Log($"[WaveManager] {stageNum}-{subStageNum} 웨이브 데이터 로드 완료! 총 웨이브 수: {currentWaveDataList.Count}");
+        // 웨이브 데이터가 올바르게 로드되었는지 확인
+        foreach (var wave in currentWaveDataList)
+        {
+            Debug.Log($"[WaveManager] 웨이브 ID {wave.ID}, 적 수: {wave.spawnDataList.Count}");
+        }
+
+        Debug.Log($"[WaveManager] 웨이브 데이터 로드 완료! 총 웨이브 수: {currentWaveDataList.Count}");
     }
+
 
 
     public void StartWave()
@@ -76,15 +85,38 @@ public class WaveManager : MonoBehaviour
         totalEnemies = 0;
         activeEnemies.Clear();
 
-        foreach (var spawnData in currentWaveDataList[currentWaveIndex].spawnDataList)
+        // 현재 웨이브 데이터가 비어 있는지 확인
+        WaveSO currentWaveData = currentWaveDataList[currentWaveIndex];
+
+        if (currentWaveData == null)
+        {
+            Debug.LogError("[WaveManager] 현재 웨이브 데이터가 NULL입니다!");
+            return;
+        }
+
+        if (currentWaveData.spawnDataList == null || currentWaveData.spawnDataList.Count == 0)
+        {
+            Debug.LogError($"[WaveManager] 웨이브 {currentWaveIndex + 1}에 대한 적 스폰 데이터가 없습니다!");
+            return;
+        }
+
+        foreach (var spawnData in currentWaveData.spawnDataList)
         {
             Debug.Log($"[WaveManager] 적 ID: {spawnData.enemyID}, 수량: {spawnData.count}");
             totalEnemies += spawnData.count;
         }
 
         Debug.Log($"[WaveManager] 웨이브 {currentWaveIndex + 1} 시작! 총 적 수: {totalEnemies}");
+
+        if (totalEnemies == 0)
+        {
+            Debug.LogError("[WaveManager] 총 적 수가 0입니다! 웨이브 데이터가 정상적으로 설정되었는지 확인하세요.");
+            return;
+        }
+
         StartCoroutine(SpawnWave());
     }
+
 
     private IEnumerator SpawnWave()
     {
