@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 
 public class SceneLoader : MonoBehaviour
 {
-    private static SceneLoader instance;
+    public static SceneLoader instance { get; private set; }
     private int stageNum;
     private int subStageNum;
     private bool isLoadingStage = false; // 중복 방지 플래그
@@ -35,20 +35,31 @@ public class SceneLoader : MonoBehaviour
     {
         Debug.Log($"[SceneLoader] 씬 로드됨: {scene.name}");
 
-        StartCoroutine(WaitForUIAndDetectButtons());
-
+        // MainMenu에서는 버튼 감지 실행
         if (scene.name == "MainMenu")
         {
-            Debug.Log("[SceneLoader] 메인 메뉴에서 버튼 다시 감지");
-            DetectButtons(); // MainMenu에서는 즉시 버튼 감지
+            Debug.Log("[SceneLoader] MainMenu에서 버튼 감지 실행");
+            StartCoroutine(WaitForUIAndDetectButtons());
+            return;
         }
 
-        // Stage 씬에서는 서브 스테이지 설정 적용
+        // "StageP" 씬에서는 작동하지만, "Stage" 씬에서는 작동하지 않음
+        if (scene.name.StartsWith("StageP"))
+        {
+            Debug.Log("[SceneLoader] StageP에서 서브 스테이지 설정 적용");
+            ApplySubStageSettings();
+            StartCoroutine(WaitForUIAndDetectButtons()); // 버튼 다시 감지
+            return;
+        }
+
+        // "Stage" 씬에서는 SceneLoader가 개입하지 않음
         if (scene.name.StartsWith("Stage"))
         {
-            ApplySubStageSettings();
+            Debug.Log("[SceneLoader] 일반 Stage 씬에서는 SceneLoader가 개입하지 않음.");
+            return;
         }
     }
+
 
     private IEnumerator WaitForUIAndDetectButtons()
     {
