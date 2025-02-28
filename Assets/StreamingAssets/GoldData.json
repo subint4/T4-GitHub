@@ -1,0 +1,54 @@
+{
+  "DataType": "GoldData",
+  "Metadata": {
+    "id": "int",
+    "stagenum": "int",
+    "startgold": "int",
+    "sec": "int",
+    "gaingold": "int"
+  },
+  "Data": [
+    {
+      "id": 1,
+      "stagenum": 1,
+      "startgold": 2000,
+      "sec": 3,
+      "gaingold": 20
+    },
+    {
+      "id": 2,
+      "stagenum": 2,
+      "startgold": 2000,
+      "sec": 3,
+      "gaingold": 20
+    },
+    {
+      "id": 3,
+      "stagenum": 3,
+      "startgold": 2000,
+      "sec": 3,
+      "gaingold": 20
+    },
+    {
+      "id": 4,
+      "stagenum": 4,
+      "startgold": 2000,
+      "sec": 3,
+      "gaingold": 20
+    },
+    {
+      "id": 5,
+      "stagenum": 5,
+      "startgold": 2000,
+      "sec": 3,
+      "gaingold": 20
+    },
+    {
+      "id": 6,
+      "stagenum": 6,
+      "startgold": 2000,
+      "sec": 3,
+      "gaingold": 20
+    }
+  ]
+}

@@ -54,6 +54,8 @@ public class GameManager : MonoBehaviour
         WaveManager.Instance.LoadWavesForStage();
 
         StartCoroutine(GameStartCountdown());
+        StartCoroutine(DelayedStart());
+
     }
 
 
@@ -70,6 +72,21 @@ public class GameManager : MonoBehaviour
 
         Debug.Log("[GameManager] 웨이브 시작!");
         waveManager.StartWave(); // 10초 후 웨이브 시작
+    }
+    private IEnumerator DelayedStart()
+    {
+        yield return new WaitForSeconds(0.2f); // 0.2초 대기
+
+        WaveManager waveManager = FindObjectOfType<WaveManager>();
+        if (waveManager != null)
+        {
+            waveManager.LoadWavesForStage();
+            Debug.Log("[GameManager] 웨이브 데이터 로드 완료!");
+        }
+        else
+        {
+            Debug.LogError("[GameManager] WaveManager를 찾을 수 없습니다!");
+        }
     }
     public void GameOver()
     {

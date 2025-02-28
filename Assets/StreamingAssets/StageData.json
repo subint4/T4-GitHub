@@ -1,0 +1,54 @@
+{
+  "DataType": "StageData",
+  "Metadata": {
+    "ID": "int",
+    "stagenum": "int",
+    "SubStagenum": "int",
+    "MaxWave": "int",
+    "WaveIDs": "string"
+  },
+  "Data": [
+    {
+      "ID": 1,
+      "stagenum": 1,
+      "SubStagenum": 1,
+      "MaxWave": 4,
+      "WaveIDs": "1,2,3,4,5"
+    },
+    {
+      "ID": 2,
+      "stagenum": 1,
+      "SubStagenum": 2,
+      "MaxWave": 4,
+      "WaveIDs": "6,7,8,9,10"
+    },
+    {
+      "ID": 3,
+      "stagenum": 1,
+      "SubStagenum": 3,
+      "MaxWave": 4,
+      "WaveIDs": "11,12,13,14,15"
+    },
+    {
+      "ID": 4,
+      "stagenum": 1,
+      "SubStagenum": 4,
+      "MaxWave": 4,
+      "WaveIDs": "16,17,18,19,20"
+    },
+    {
+      "ID": 5,
+      "stagenum": 1,
+      "SubStagenum": 5,
+      "MaxWave": 4,
+      "WaveIDs": "21,22,23,24,25"
+    },
+    {
+      "ID": 6,
+      "stagenum": 1,
+      "SubStagenum": 6,
+      "MaxWave": 4,
+      "WaveIDs": "26,27,28,29,30"
+    }
+  ]
+}

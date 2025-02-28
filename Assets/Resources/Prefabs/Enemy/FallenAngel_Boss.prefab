@@ -62,7 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EnemyID: 24
-  enemyStats: {fileID: 11400000, guid: 6d4543444155da94981410dcbb055ce0, type: 2}
+  enemyStats: {fileID: 11400000, guid: f497417962ac53d48b60a5a992664f9b, type: 2}
   isDead: 0
   MovementSpeed: 0.5
   currentTarget: {fileID: 0}

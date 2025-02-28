@@ -3,6 +3,7 @@
   "Metadata": {
     "id": "int",
     "stagenum": "int",
+    "SubStagenum": "int",
     "startgold": "int",
     "sec": "int",
     "gaingold": "int"
@@ -11,41 +12,47 @@
     {
       "id": 1,
       "stagenum": 1,
+      "SubStagenum": 1,
       "startgold": 40,
       "sec": 5,
       "gaingold": 5
     },
     {
       "id": 2,
-      "stagenum": 2,
+      "stagenum": 1,
+      "SubStagenum": 2,
       "startgold": 40,
       "sec": 5,
       "gaingold": 5
     },
     {
       "id": 3,
-      "stagenum": 3,
+      "stagenum": 1,
+      "SubStagenum": 3,
       "startgold": 40,
       "sec": 5,
       "gaingold": 5
     },
     {
       "id": 4,
-      "stagenum": 4,
+      "stagenum": 1,
+      "SubStagenum": 4,
       "startgold": 40,
       "sec": 5,
       "gaingold": 5
     },
     {
       "id": 5,
-      "stagenum": 5,
+      "stagenum": 1,
+      "SubStagenum": 5,
       "startgold": 40,
       "sec": 5,
       "gaingold": 5
     },
     {
       "id": 6,
-      "stagenum": 6,
+      "stagenum": 1,
+      "SubStagenum": 6,
       "startgold": 40,
       "sec": 5,
       "gaingold": 5

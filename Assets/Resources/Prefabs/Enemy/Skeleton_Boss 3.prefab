@@ -61,8 +61,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c90e63840947131459fd3fa8b81f71b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyID: 15
-  enemyStats: {fileID: 11400000, guid: 6d4543444155da94981410dcbb055ce0, type: 2}
+  EnemyID: 12
+  enemyStats: {fileID: 11400000, guid: d2aaf89909d60c341aebfb6118a4eecb, type: 2}
   isDead: 0
   MovementSpeed: 0.5
   currentTarget: {fileID: 0}

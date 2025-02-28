@@ -1,12 +1,9 @@
-﻿using System;
+﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
-using System.IO;
 using Newtonsoft.Json;
-using DG.Tweening;
-using UnityEngine.UI;
+using System;
 
 public class GoldManager : MonoBehaviour
 {
@@ -16,13 +13,16 @@ public class GoldManager : MonoBehaviour
     [SerializeField] private GameObject goldEffectPrefab;
     [SerializeField] private Transform goldUIPosition;
 
+    private Dictionary<(int, int), GoldData> goldDataDictionary = new Dictionary<(int, int), GoldData>();
+
     private int currentGold;
     private int gainGold;
     private float gainInterval;
-    private Dictionary<int, GoldData> goldDataDictionary = new Dictionary<int, GoldData>();
-    private int currentStage = 1;
 
-    public event Action<int> OnGoldChanged;
+    private int currentStage;
+    private int currentSubStage;
+
+    public event System.Action<int> OnGoldChanged;
 
     private void Awake()
     {
@@ -35,50 +35,76 @@ public class GoldManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
         LoadGoldData();
     }
 
     private void Start()
     {
-        Debug.Log("GoldManager Start() 실행됨");
+        Debug.Log("[GoldManager] 골드 매니저 시작됨");
 
-        Debug.Log($"현재 goldText: {goldText?.name}");
-        Debug.Log($"현재 goldUIPosition: {goldUIPosition?.name}");
-        SetStage(currentStage);
+        int stageNum = StageManager.Instance?.currentStageNum ?? 1;
+        int subStageNum = StageManager.Instance?.GetCurrentSubStageNum() ?? 1;
+        SetStage(stageNum, subStageNum);
+
         StartCoroutine(AutoGainGold());
         UpdateGoldUI();
     }
 
     private void LoadGoldData()
     {
-        string path = Path.Combine(Application.dataPath, "Resources/JsonData/GoldData.json");
-        if (File.Exists(path))
+        string jsonContent = JsonLoader.LoadJsonFromResources("JsonData/GoldData");
+        if (!string.IsNullOrEmpty(jsonContent))
         {
-            string json = File.ReadAllText(path);
-            var goldDataContainer = JsonConvert.DeserializeObject<GoldDataContainer>(json);
-            foreach (var data in goldDataContainer.Data)
-            {
-                goldDataDictionary[data.stagenum] = data;
-            }
-            Debug.Log("Gold 데이터 로드 완료.");
+            ProcessGoldData(jsonContent);
         }
         else
         {
-            Debug.LogError("GoldData.json 파일을 찾을 수 없습니다!");
+            Debug.LogError("[GoldManager] GoldData.json 파일을 찾을 수 없습니다!");
         }
     }
 
-    public void SetStage(int stage)
+    private void ProcessGoldData(string jsonContent)
+    {
+        GoldDataContainer goldDataContainer = JsonConvert.DeserializeObject<GoldDataContainer>(jsonContent);
+        if (goldDataContainer == null || goldDataContainer.Data == null)
+        {
+            Debug.LogError("[GoldManager] JSON 데이터를 불러오지 못했습니다.");
+            return;
+        }
+
+        foreach (var data in goldDataContainer.Data)
+        {
+            var key = (data.stagenum, data.SubStagenum);
+            if (!goldDataDictionary.ContainsKey(key))
+            {
+                goldDataDictionary[key] = data;
+            }
+            else
+            {
+                Debug.LogWarning($"[GoldManager] 중복된 골드 데이터 발견: {data.stagenum}-{data.SubStagenum}");
+            }
+        }
+
+        Debug.Log($"[GoldManager] {goldDataDictionary.Count}개의 골드 데이터 로드 완료.");
+    }
+
+    public void SetStage(int stage, int subStage)
     {
         currentStage = stage;
-        if (goldDataDictionary.TryGetValue(stage, out GoldData data))
+        currentSubStage = subStage;
+
+        var key = (stage, subStage);
+        if (goldDataDictionary.TryGetValue(key, out GoldData data))
         {
             currentGold = data.startgold;
             gainGold = data.gaingold;
             gainInterval = data.sec;
+            Debug.Log($"[GoldManager] {stage}-{subStage} 골드 데이터 설정 완료.");
         }
         else
         {
+            Debug.LogWarning($"[GoldManager] {stage}-{subStage}에 대한 골드 데이터를 찾을 수 없습니다. 기본값 사용");
             currentGold = 500;
             gainGold = 10;
             gainInterval = 5;
@@ -134,6 +160,7 @@ public class GoldManager : MonoBehaviour
             goldText.text = currentGold.ToString();
         }
     }
+
     private void PlayGoldAnimation(int amount)
     {
         if (goldEffectPrefab == null || goldUIPosition == null)
@@ -142,36 +169,37 @@ public class GoldManager : MonoBehaviour
             return;
         }
 
-        // 새로운 골드 이펙트 생성
         GameObject goldEffect = Instantiate(goldEffectPrefab, goldUIPosition.position, Quaternion.identity, goldUIPosition.parent);
         CanvasGroup canvasGroup = goldEffect.GetComponent<CanvasGroup>();
 
-        TMP_Text goldTextEffect = goldEffect.transform.Find("GoldTextEffect").GetComponent<TMP_Text>();
-        Image goldIconEffect = goldEffect.transform.Find("GoldIcon").GetComponent<Image>();
-
+        TMP_Text goldTextEffect = goldEffect.transform.Find("GoldTextEffect")?.GetComponent<TMP_Text>();
         if (goldTextEffect != null)
-        {            
-            goldTextEffect.enableVertexGradient = false;
-            goldTextEffect.color = new Color(1f, 0.84f, 0f);
-            goldTextEffect.fontMaterial.SetColor("_FaceColor", new Color(1f, 0.84f, 0f));
-            goldTextEffect.text = $"+{amount}";
-        }
-
-        if (goldIconEffect != null)
         {
-            Destroy(goldIconEffect.gameObject);
+            goldTextEffect.text = $"+{amount}";
+            goldTextEffect.color = new Color(1f, 0.84f, 0f);
         }
 
         Vector3 startPosition = goldText.transform.position + new Vector3(-0.9f, -0.5f, 0);
         Vector3 endPosition = startPosition + new Vector3(0, -0.3f, 0);
         goldEffect.transform.position = startPosition;
 
-        Sequence sequence = DOTween.Sequence();
-        sequence.Append(goldEffect.transform.DOMoveY(endPosition.y, 0.5f).SetEase(Ease.OutQuad))
-                .Join(canvasGroup.DOFade(1, 0.2f)) // 페이드인 효과
-                .AppendInterval(1.0f) // 유지 시간
-                .Append(canvasGroup.DOFade(0, 0.5f)) // 페이드아웃
-                .OnComplete(() => Destroy(goldEffect)); // 애니메이션 종료 후 삭제
+        StartCoroutine(FadeOutGoldEffect(goldEffect, canvasGroup, endPosition));
+    }
+
+    private IEnumerator FadeOutGoldEffect(GameObject effect, CanvasGroup canvasGroup, Vector3 endPosition)
+    {
+        float duration = 1f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            effect.transform.position = Vector3.Lerp(effect.transform.position, endPosition, elapsedTime / duration);
+            canvasGroup.alpha = Mathf.Lerp(1, 0, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        Destroy(effect);
     }
 }
 
@@ -186,6 +214,7 @@ public class GoldData
 {
     public int id;
     public int stagenum;
+    public int SubStagenum; // JSON과 필드명을 정확히 맞춤
     public int startgold;
     public int sec;
     public int gaingold;
