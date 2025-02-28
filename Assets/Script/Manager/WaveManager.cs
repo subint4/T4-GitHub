@@ -38,8 +38,7 @@ public class WaveManager : MonoBehaviour
             return;
         }
 
-        // StageDataManager가 데이터 로드를 완료했는지 확인
-        StageDataManager.Instance.LoadStageData();
+        StageDataManager.Instance.LoadStageData(); // 스테이지 데이터 강제 로드
 
         int stageNum = StageManager.Instance.currentStageNum;
         int subStageNum = StageManager.Instance.GetCurrentSubStageNum();
@@ -47,6 +46,8 @@ public class WaveManager : MonoBehaviour
         Debug.Log($"[WaveManager] {stageNum}-{subStageNum} 스테이지 데이터 로드 시도 중...");
 
         List<int> waveIDs = StageDataManager.Instance.GetWaveIDsForStage(stageNum, subStageNum);
+        Debug.Log($"[WaveManager] 로드된 웨이브 ID 목록: {string.Join(", ", waveIDs)}");
+
         if (waveIDs == null || waveIDs.Count == 0)
         {
             Debug.LogError($"[WaveManager] {stageNum}-{subStageNum}에 대한 웨이브 데이터가 없음!");
@@ -54,13 +55,13 @@ public class WaveManager : MonoBehaviour
         }
 
         currentWaveDataList = WaveDataManager.Instance.GetWaveDataList(waveIDs);
+
+        Debug.Log($"[WaveManager] 웨이브 데이터 로드 완료! 총 웨이브 수: {currentWaveDataList.Count}");
+
         if (currentWaveDataList == null || currentWaveDataList.Count == 0)
         {
             Debug.LogError($"[WaveManager] {stageNum}-{subStageNum}의 웨이브 데이터를 가져오지 못했습니다!");
-            return;
         }
-
-        Debug.Log($"[WaveManager] {stageNum}-{subStageNum} 웨이브 데이터 로드 완료! 총 웨이브 수: {currentWaveDataList.Count}");
     }
 
 

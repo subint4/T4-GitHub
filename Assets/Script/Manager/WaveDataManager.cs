@@ -16,15 +16,24 @@ public class WaveDataManager
     /// </summary>
     public void LoadWaveData()
     {
+        if (isDataLoaded)
+        {
+            Debug.Log("[WaveDataManager] 웨이브 데이터가 이미 로드되었습니다.");
+            return;
+        }
+
         string jsonContent = JsonLoader.LoadJsonFromResources("JsonData/WaveData");
         if (!string.IsNullOrEmpty(jsonContent))
         {
             ProcessWaveData(jsonContent);
+            isDataLoaded = true;
         }
         else
         {
             Debug.LogError("[WaveDataManager] WaveData.json 파일을 찾을 수 없습니다!");
         }
+
+        Debug.Log($"[WaveDataManager] 로드된 웨이브 데이터 키값: {string.Join(", ", waveDataCache.Keys)}");
     }
 
 
@@ -39,25 +48,27 @@ public class WaveDataManager
 
         foreach (var wave in waveDataContainer.Data)
         {
-            if (!waveDataCache.ContainsKey(wave.ID))
+            int key = wave.ID; // 또는 wave.WaveID로 변경해야 할 수도 있음
+            if (!waveDataCache.ContainsKey(key))
             {
-                waveDataCache[wave.ID] = wave;
-                Debug.Log($"[WaveDataManager] 웨이브 ID {wave.ID} 캐싱 완료.");
+                waveDataCache[key] = wave;
             }
             else
             {
-                Debug.LogWarning($"[WaveDataManager] 중복된 웨이브 ID 발견: {wave.ID}");
+                Debug.LogWarning($"[WaveDataManager] 중복된 웨이브 ID 발견: {key}");
             }
         }
 
         Debug.Log($"[WaveDataManager] {waveDataCache.Count}개의 웨이브 데이터 로드 완료.");
     }
 
+
     public List<WaveSO> GetWaveDataList(List<int> waveIDs)
     {
         List<WaveSO> waveDataList = new List<WaveSO>();
 
-        Debug.Log($"[WaveDataManager] 현재 캐시된 웨이브 데이터: {string.Join(", ", waveDataCache.Keys)}");
+        Debug.Log($"[WaveDataManager] 현재 캐시된 웨이브 데이터 키값: {string.Join(", ", waveDataCache.Keys)}");
+        Debug.Log($"[WaveDataManager] 요청된 Wave IDs: {string.Join(", ", waveIDs)}");
 
         foreach (var waveID in waveIDs)
         {
@@ -74,6 +85,7 @@ public class WaveDataManager
 
         return waveDataList;
     }
+
 
 }
 

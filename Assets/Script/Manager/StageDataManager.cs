@@ -78,6 +78,9 @@ public class StageDataManager
     public List<int> GetWaveIDsForStage(int stageNum, int subStageNum)
     {
         var key = (stageNum, subStageNum);
+
+        Debug.Log($"[StageDataManager] 현재 캐시된 Stage 데이터: {string.Join(", ", stageDataCache.Keys)}");
+
         if (stageDataCache.TryGetValue(key, out var stageData))
         {
             Debug.Log($"[StageDataManager] Stage {stageNum}-{subStageNum}의 WaveIDs 찾음: {stageData.WaveIDs}");
