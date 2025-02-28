@@ -14,24 +14,46 @@ public class WaveDataManager
     /// </summary>
     public void LoadWaveData()
     {
-        if (isDataLoaded)
+        Debug.Log("[WaveDataManager] LoadWaveData() 호출됨");
+
+        waveDataCache.Clear(); // 기존 데이터 초기화
+        isDataLoaded = false;
+
+        WaveSO[] allWaveData = Resources.LoadAll<WaveSO>("WaveSO");
+        Debug.Log($"[WaveDataManager] 불러온 웨이브 데이터 개수: {allWaveData.Length}");
+
+        if (allWaveData.Length == 0)
         {
-            Debug.Log("[WaveDataManager] 웨이브 데이터가 이미 로드되었습니다.");
+            Debug.LogError("[WaveDataManager] Resources/WaveSO 폴더에서 웨이브 데이터를 찾을 수 없습니다!");
             return;
         }
 
-        string jsonContent = JsonLoader.LoadJsonFromResources("JsonData/WaveData");
-        if (!string.IsNullOrEmpty(jsonContent))
+        foreach (var wave in allWaveData)
         {
-            ProcessWaveData(jsonContent);
-            isDataLoaded = true;
-        }
-        else
-        {
-            Debug.LogError("[WaveDataManager] WaveData.json 파일을 찾을 수 없습니다!");
+            if (wave == null)
+            {
+                Debug.LogError("[WaveDataManager] NULL 데이터를 발견했습니다!");
+                continue;
+            }
+
+            if (!waveDataCache.ContainsKey(wave.ID))
+            {
+                waveDataCache[wave.ID] = wave;
+                Debug.Log($"[WaveDataManager] 웨이브 SO 등록: ID {wave.ID}, 적 수: {wave.spawnDataList.Count}");
+
+                foreach (var spawnData in wave.spawnDataList)
+                {
+                    Debug.Log($"[WaveDataManager] 적 ID: {spawnData.enemyID}, 수량: {spawnData.count}");
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"[WaveDataManager] 중복된 웨이브 ID 발견: {wave.ID}");
+            }
         }
 
-        Debug.Log($"[WaveDataManager] 로드된 웨이브 데이터 키값: {string.Join(", ", waveDataCache.Keys)}");
+        isDataLoaded = true;
+        Debug.Log($"[WaveDataManager] {waveDataCache.Count}개의 웨이브 데이터 로드 완료.");
     }
 
 
@@ -60,7 +82,6 @@ public class WaveDataManager
         Debug.Log($"[WaveDataManager] {waveDataCache.Count}개의 웨이브 데이터 로드 완료.");
     }
 
-
     public List<WaveSO> GetWaveDataList(List<int> waveIDs)
     {
         List<WaveSO> waveDataList = new List<WaveSO>();
@@ -72,7 +93,13 @@ public class WaveDataManager
         {
             if (waveDataCache.TryGetValue(waveID, out var waveData))
             {
-                Debug.Log($"[WaveDataManager] 웨이브 ID {waveID} 로드 성공!");
+                Debug.Log($"[WaveDataManager] 웨이브 ID {waveID} 로드 성공! 적 수: {waveData.spawnDataList.Count}");
+
+                foreach (var spawnData in waveData.spawnDataList)
+                {
+                    Debug.Log($"[WaveDataManager] 적 ID: {spawnData.enemyID}, 수량: {spawnData.count}");
+                }
+
                 waveDataList.Add(waveData);
             }
             else
@@ -83,7 +110,6 @@ public class WaveDataManager
 
         return waveDataList;
     }
-
 
 }
 
