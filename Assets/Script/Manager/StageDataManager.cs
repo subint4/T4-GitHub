@@ -7,8 +7,6 @@ using System;
 
 public class StageDataManager
 {
-    public static StageDataManager Instance { get; private set; } = new StageDataManager();
-
     private Dictionary<(int, int), StageData> stageDataCache = new Dictionary<(int, int), StageData>();
     private bool isDataLoaded = false;
 

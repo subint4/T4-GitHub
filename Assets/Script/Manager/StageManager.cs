@@ -83,11 +83,11 @@ public class StageManager : MonoBehaviour
 
     private IEnumerator LoadStageDataWithRetry()
     {
-        yield return new WaitUntil(() => StageDataManager.Instance != null);
+        yield return new WaitUntil(() => DataManager.Instance.StageDataManager != null);
 
-        StageDataManager.Instance.LoadStageData();
+        DataManager.Instance.StageDataManager.LoadStageData();
 
-        StageData stageData = StageDataManager.Instance.GetStageData(currentStageNum, currentSubStageNum);
+        StageData stageData = DataManager.Instance.StageDataManager.GetStageData(currentStageNum, currentSubStageNum);
         if (stageData != null)
         {
             SetStageData(stageData);

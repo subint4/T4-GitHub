@@ -6,8 +6,6 @@ using System;
 
 public class WaveDataManager
 {
-    public static WaveDataManager Instance { get; private set; } = new WaveDataManager();
-
     private Dictionary<int, WaveSO> waveDataCache = new Dictionary<int, WaveSO>(); // SO ±â¹Ý Ä³½Ì
     private bool isDataLoaded = false;
 
