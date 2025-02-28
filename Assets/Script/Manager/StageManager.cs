@@ -111,6 +111,20 @@ public class StageManager : MonoBehaviour
         currentSubStageNum = stageData.SubStageNum;
         SaveStageToPrefs();
         Debug.Log($"[StageManager] 새로운 스테이지 데이터 적용됨: {stageData.StageNum}-{stageData.SubStageNum}");
+
+        UpdateStageUI();
+    }
+
+    private void UpdateStageUI()
+    {
+        if (stageText != null)
+        {
+            stageText.text = $"{currentStageNum}-{currentSubStageNum}";
+        }
+        else
+        {
+            Debug.LogWarning("[StageManager] Stage UI 텍스트가 할당되지 않았습니다.");
+        }
     }
 
     public int GetCurrentSubStageNum()

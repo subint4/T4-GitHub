@@ -46,11 +46,11 @@ public class AllSoundManager : MonoBehaviour
     {
         if (isMuted)
         {
-            buttonImage.sprite = muteSprite; // 음소거 아이콘으로 변경
+            buttonImage.sprite = unmuteSprite; // 소리 아이콘으로 변경
         }
         else
         {
-            buttonImage.sprite = unmuteSprite; // 소리 아이콘으로 변경
+            buttonImage.sprite = muteSprite; // 음소거 아이콘으로 변경
         }
     }
 }
