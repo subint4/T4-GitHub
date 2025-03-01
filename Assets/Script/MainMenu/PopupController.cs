@@ -3,23 +3,23 @@ using UnityEngine.UI;
 
 public class PopupController : MonoBehaviour
 {
-    public GameObject popupPenel;
+    public GameObject popupPanel;
     public Button closeButton;
     void Start()
     {
-        popupPenel.SetActive(false);
+        popupPanel.SetActive(false);
         closeButton.onClick.AddListener(ClosePopup);
     }
         
     public void OpenPopup()
     {
         Debug.Log("OpenPopup() ½ÇÇàµÊ!");
-        popupPenel.SetActive(true);
+        popupPanel.SetActive(true);
     }
 
     public void ClosePopup()
     {
         Debug.Log("ClosePopup() ½ÇÇàµÊ!");
-        popupPenel.SetActive(false);
+        popupPanel.SetActive(false);
     }
 }
