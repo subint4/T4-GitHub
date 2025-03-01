@@ -216,6 +216,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1913678912}
+        m_TargetAssemblyTypeName: PopupBlindnessController, Assembly-CSharp
+        m_MethodName: ClosePopup
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 702315059}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &10476771
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -626,7 +638,9 @@ RectTransform:
   - {fileID: 82551370}
   - {fileID: 1447395083}
   - {fileID: 1244335946}
+  - {fileID: 702315060}
   - {fileID: 952274938}
+  - {fileID: 1913678911}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -724,6 +738,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1913678912}
+        m_TargetAssemblyTypeName: PopupBlindnessController, Assembly-CSharp
+        m_MethodName: OpenPopup
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 702315059}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1682,6 +1708,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1913678912}
+        m_TargetAssemblyTypeName: PopupBlindnessController, Assembly-CSharp
+        m_MethodName: ClosePopup
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 702315059}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &186705068
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1810,6 +1848,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1913678912}
+        m_TargetAssemblyTypeName: PopupBlindnessController, Assembly-CSharp
+        m_MethodName: OpenPopup
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 702315059}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2074,6 +2124,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1913678912}
+        m_TargetAssemblyTypeName: PopupBlindnessController, Assembly-CSharp
+        m_MethodName: ClosePopup
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 702315059}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2616,6 +2678,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1913678912}
+        m_TargetAssemblyTypeName: PopupBlindnessController, Assembly-CSharp
+        m_MethodName: ClosePopup
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 702315059}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &331183181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2848,6 +2922,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1913678912}
+        m_TargetAssemblyTypeName: PopupBlindnessController, Assembly-CSharp
+        m_MethodName: ClosePopup
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 702315059}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -3122,6 +3208,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1913678912}
+        m_TargetAssemblyTypeName: PopupBlindnessController, Assembly-CSharp
+        m_MethodName: OpenPopup
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 702315059}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -3657,6 +3755,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1913678912}
+        m_TargetAssemblyTypeName: PopupBlindnessController, Assembly-CSharp
+        m_MethodName: ClosePopup
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 702315059}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &611526354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3912,6 +4022,81 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 701971147}
   m_CullTransparentMesh: 1
+--- !u!1 &702315059
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 702315060}
+  - component: {fileID: 702315062}
+  - component: {fileID: 702315061}
+  m_Layer: 5
+  m_Name: BlindBackground
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &702315060
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 702315059}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 75032026}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1920, y: 1080}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &702315061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 702315059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.15686275}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &702315062
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 702315059}
+  m_CullTransparentMesh: 1
 --- !u!1 &703908067
 GameObject:
   m_ObjectHideFlags: 0
@@ -4001,6 +4186,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1913678912}
+        m_TargetAssemblyTypeName: PopupBlindnessController, Assembly-CSharp
+        m_MethodName: ClosePopup
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 702315059}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -4134,6 +4331,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1913678912}
+        m_TargetAssemblyTypeName: PopupBlindnessController, Assembly-CSharp
+        m_MethodName: OpenPopup
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 702315059}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -4359,6 +4568,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1913678912}
+        m_TargetAssemblyTypeName: PopupBlindnessController, Assembly-CSharp
+        m_MethodName: OpenPopup
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 702315059}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -5517,6 +5738,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 952274938}
+  - component: {fileID: 952274940}
   m_Layer: 0
   m_Name: Panels
   m_TagString: Untagged
@@ -5524,14 +5746,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+<<<<<<< Updated upstream
 --- !u!4 &952274938
 Transform:
+=======
+--- !u!224 &952274938
+RectTransform:
+>>>>>>> Stashed changes
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 952274937}
-  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -5548,6 +5774,19 @@ Transform:
   - {fileID: 388774192}
   m_Father: {fileID: 75032026}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &952274940
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 952274937}
+  m_CullTransparentMesh: 1
 --- !u!1 &991251810
 GameObject:
   m_ObjectHideFlags: 0
@@ -5861,6 +6100,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1913678912}
+        m_TargetAssemblyTypeName: PopupBlindnessController, Assembly-CSharp
+        m_MethodName: ClosePopup
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 702315059}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1063640471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5911,6 +6162,7 @@ GameObject:
   - component: {fileID: 1101826746}
   - component: {fileID: 1101826745}
   - component: {fileID: 1101826744}
+  - component: {fileID: 1101826747}
   m_Layer: 5
   m_Name: BackButton
   m_TagString: Untagged
@@ -5981,8 +6233,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: BackButtonManager, Assembly-CSharp
+      - m_Target: {fileID: 1101826747}
+        m_TargetAssemblyTypeName: BackButtonController, Assembly-CSharp
         m_MethodName: GoToMainMenu
         m_Mode: 1
         m_Arguments:
@@ -6031,6 +6283,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1101826742}
   m_CullTransparentMesh: 1
+--- !u!114 &1101826747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1101826742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b63025f891c28eb41852379e4416ab2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1154403244
 GameObject:
   m_ObjectHideFlags: 0
@@ -6841,6 +7105,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1913678912}
+        m_TargetAssemblyTypeName: PopupBlindnessController, Assembly-CSharp
+        m_MethodName: ClosePopup
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 702315059}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1333220362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6968,6 +7244,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1913678912}
+        m_TargetAssemblyTypeName: PopupBlindnessController, Assembly-CSharp
+        m_MethodName: ClosePopup
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 702315059}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -7235,6 +7523,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1913678912}
+        m_TargetAssemblyTypeName: PopupBlindnessController, Assembly-CSharp
+        m_MethodName: OpenPopup
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 702315059}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -7683,6 +7983,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1913678912}
+        m_TargetAssemblyTypeName: PopupBlindnessController, Assembly-CSharp
+        m_MethodName: ClosePopup
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 702315059}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -8678,6 +8990,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1913678912}
+        m_TargetAssemblyTypeName: PopupBlindnessController, Assembly-CSharp
+        m_MethodName: OpenPopup
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 702315059}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1850748351
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8805,6 +9129,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1913678912}
+        m_TargetAssemblyTypeName: PopupBlindnessController, Assembly-CSharp
+        m_MethodName: ClosePopup
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 702315059}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -8942,6 +9278,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1913678912}
+        m_TargetAssemblyTypeName: PopupBlindnessController, Assembly-CSharp
+        m_MethodName: ClosePopup
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 702315059}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1857225688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8980,6 +9328,55 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1857225685}
   m_CullTransparentMesh: 1
+--- !u!1 &1913678910
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1913678911}
+  - component: {fileID: 1913678912}
+  m_Layer: 5
+  m_Name: BlindController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1913678911
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1913678910}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 75032026}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1913678912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1913678910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 166fa93422ac09a468601d274abf525a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blindBackground: {fileID: 702315059}
 --- !u!1 &1932458024
 GameObject:
   m_ObjectHideFlags: 0
@@ -9154,6 +9551,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1913678912}
+        m_TargetAssemblyTypeName: PopupBlindnessController, Assembly-CSharp
+        m_MethodName: OpenPopup
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 702315059}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1966873254
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9281,6 +9690,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1913678912}
+        m_TargetAssemblyTypeName: PopupBlindnessController, Assembly-CSharp
+        m_MethodName: ClosePopup
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 702315059}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -9550,6 +9971,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1913678912}
+        m_TargetAssemblyTypeName: PopupBlindnessController, Assembly-CSharp
+        m_MethodName: OpenPopup
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 702315059}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
