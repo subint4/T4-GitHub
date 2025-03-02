@@ -1,5 +1,4 @@
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
 
 public class ElementalPopupController : MonoBehaviour
@@ -15,7 +14,6 @@ public class ElementalPopupController : MonoBehaviour
     private void Start()
     {
         tutorialPanel.SetActive(false);
-
         foreach (var panel in panels)
         {
             panel.SetActive(false);
@@ -30,6 +28,7 @@ public class ElementalPopupController : MonoBehaviour
         cloaseButton.onClick.AddListener(ClosePopup);
         leftButton.onClick.AddListener(ShowPreviousPanel);
         rightButton.onClick.AddListener(ShowNextPanel);
+               
     }
 
     public void OpenPopup()
