@@ -1,0 +1,29 @@
+{
+  "DataType": "Sheet1",
+  "Metadata": {
+    "PlayerID": "string",
+    "Diamonds": "int",
+    "Hearts": "int",
+    "Shars": "int"
+  },
+  "Data": [
+    {
+      "PlayerID": "1",
+      "Diamonds": 100,
+      "Hearts": 30,
+      "Shars": 0
+    },
+    {
+      "PlayerID": "2",
+      "Diamonds": 100,
+      "Hearts": 30,
+      "Shars": 0
+    },
+    {
+      "PlayerID": "3",
+      "Diamonds": 100,
+      "Hearts": 30,
+      "Shars": 0
+    }
+  ]
+}

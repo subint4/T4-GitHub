@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 14f768d55aae56946a6e55df82039141
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - playerDataSO: {instanceID: 0}
+  - diamondText: {instanceID: 0}
+  - heartText: {instanceID: 0}
+  - starText: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
