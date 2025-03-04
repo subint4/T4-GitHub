@@ -253,7 +253,7 @@ public class SceneLoader : MonoBehaviour
     }
 
 
-    public void LoadShop() => SceneManager.LoadScene("Shop");
+    public void LoadShop() => SceneManager.LoadScene("Shop_pack");
     public void LoadTutorial() => SceneManager.LoadScene("Tutorial");
     public void LoadMainMenu()
     {
