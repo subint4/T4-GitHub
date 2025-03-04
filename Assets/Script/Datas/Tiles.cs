@@ -38,12 +38,15 @@ public class Tiles : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (isOccupied)
+        // **아이템이 선택된 경우 먼저 체크**
+        if (!string.IsNullOrEmpty(DamageItemManager.Instance.GetSelectedItemName()))
         {
-            Debug.LogWarning($"[Tiles] 타워 배치 불가: {transform.position} (isOccupied: {isOccupied})");
+            Debug.Log($"[Tiles] 아이템 사용 시도 - 타일 {tileIndex}에서 {DamageItemManager.Instance.GetSelectedItemName()} 실행");
+            DamageItemManager.Instance.UseItemOnTile(transform.position);
             return;
         }
 
+        // **아이템이 선택되지 않은 경우 타워 배치**
         if (TowerManager.Instance == null)
         {
             Debug.LogError("[Tiles] TowerManager가 존재하지 않습니다!");
@@ -54,6 +57,12 @@ public class Tiles : MonoBehaviour, IPointerClickHandler
         if (selectedTowerID == -1)
         {
             Debug.LogWarning("[Tiles] 선택된 타워가 없습니다!");
+            return;
+        }
+
+        if (isOccupied)
+        {
+            Debug.LogWarning($"[Tiles] 타워 배치 불가: {transform.position} (isOccupied: {isOccupied})");
             return;
         }
 

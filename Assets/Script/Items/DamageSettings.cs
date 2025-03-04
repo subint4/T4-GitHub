@@ -2,19 +2,20 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-
 [Serializable]
 public class DamageItemData
 {
+    public int ID;
     public string ItemName;
-    public float damageAmount;
-    public float stunDuration;
+    public int MaxCount;
+    public float Damage;
+    public float StunDuration;
 }
 
 [Serializable]
 public class DamageItemSettings
 {
-    public List<DamageItemData> items;
+    public List<DamageItemData> Data; // 'Data' « µÂ∏¶ ∏¬√Á¡‹
 
     public static DamageItemSettings LoadSettings()
     {
@@ -30,3 +31,4 @@ public class DamageItemSettings
         return JsonConvert.DeserializeObject<DamageItemSettings>(jsonFile.text);
     }
 }
+

@@ -35,6 +35,9 @@ public class SceneLoader : MonoBehaviour
     {
         Debug.Log($"[SceneLoader] 씬 로드됨: {scene.name}");
 
+        // **씬 로드 후 항상 `isLoadingStage = false;`로 초기화**
+        isLoadingStage = false;
+
         if (scene.name == "MainMenu")
         {
             Debug.Log("[SceneLoader] MainMenu에서 버튼 감지 실행");
@@ -56,6 +59,7 @@ public class SceneLoader : MonoBehaviour
             return;
         }
     }
+
 
     private IEnumerator WaitForUIAndDetectButtons()
     {
@@ -148,6 +152,9 @@ public class SceneLoader : MonoBehaviour
             case "MainMenuButton":
                 LoadMainMenu();
                 break;
+            case "BackButton":
+                LoadMainMenu();
+                break;
             default:
                 string stageNumberStr = buttonName.Replace("Stage", "").Trim();
                 if (int.TryParse(stageNumberStr, out int stage))
@@ -165,39 +172,111 @@ public class SceneLoader : MonoBehaviour
 
     private void LoadStage(int stageNum, int subStageNum)
     {
-        if (isLoadingStage) return;
+        if (isLoadingStage) return; // 스테이지가 로드 중이면 중복 실행 방지
         isLoadingStage = true;
 
+        Debug.Log($"[SceneLoader] {stageNum}-{subStageNum} 스테이지 로드 준비 중...");
+
+        // **기존 데이터 초기화**
+        ResetGameState();
+
+        // 스테이지 정보 저장
         PlayerPrefs.SetInt("CurrentStage", stageNum);
         PlayerPrefs.SetInt("CurrentSubStage", subStageNum);
         PlayerPrefs.Save();
 
+        // 씬 로드
         SceneManager.LoadScene($"Stage{stageNum}");
+    }
+
+    private void ResetGameState()
+    {
+        Debug.Log("[SceneLoader] 게임 상태 초기화 실행!");
+
+        // **타워 및 적 삭제**
+        foreach (var tower in FindObjectsOfType<Tower>())
+        {
+            Destroy(tower.gameObject);
+        }
+
+        foreach (var enemy in FindObjectsOfType<Enemy>())
+        {
+            Destroy(enemy.gameObject);
+        }
+
+        // **WaveManager 초기화**
+        WaveManager waveManager = FindObjectOfType<WaveManager>();
+        if (waveManager != null)
+        {
+            waveManager.ResetWaves();
+            Debug.Log("[SceneLoader] WaveManager 초기화 완료!");
+        }
+        else
+        {
+            Debug.LogWarning("[SceneLoader] WaveManager를 찾을 수 없음");
+        }
+
+
+        Debug.Log("[SceneLoader] 모든 오브젝트 초기화 완료.");
     }
 
     private void LoadNextStage()
     {
+        if (isLoadingStage) return; // 중복 실행 방지
+        isLoadingStage = true;
+
         int currentStage = PlayerPrefs.GetInt("CurrentStage", 1);
         if (currentStage >= 3) return;
         currentStage++;
+
         PlayerPrefs.SetInt("CurrentStage", currentStage);
         PlayerPrefs.SetInt("CurrentSubStage", 1);
         PlayerPrefs.Save();
+
         SceneManager.LoadScene($"StageP_{currentStage}");
     }
 
     private void LoadPreviousStage()
     {
+        if (isLoadingStage) return; // 중복 실행 방지
+        isLoadingStage = true;
+
         int currentStage = PlayerPrefs.GetInt("CurrentStage", 1);
         if (currentStage <= 1) return;
         currentStage--;
+
         PlayerPrefs.SetInt("CurrentStage", currentStage);
         PlayerPrefs.SetInt("CurrentSubStage", 1);
         PlayerPrefs.Save();
+
         SceneManager.LoadScene($"StageP_{currentStage}");
     }
 
+
     public void LoadShop() => SceneManager.LoadScene("Shop");
     public void LoadTutorial() => SceneManager.LoadScene("Tutorial");
-    public void LoadMainMenu() => SceneManager.LoadScene("MainMenu");
+    public void LoadMainMenu()
+    {
+        Debug.Log("[SceneLoader] 메인 메뉴 로드 중...");
+
+        // **WaveManager 초기화**
+        WaveManager waveManager = FindObjectOfType<WaveManager>();
+        if (waveManager != null)
+        {
+            waveManager.ResetWaves();
+            Debug.Log("[SceneLoader] WaveManager 초기화 완료!");
+        }
+
+        // **PlayerPrefs 초기화**
+        PlayerPrefs.SetInt("CurrentStage", 1);
+        PlayerPrefs.SetInt("CurrentSubStage", 1);
+        PlayerPrefs.Save();
+
+        // **isLoadingStage 초기화**
+        isLoadingStage = false;
+
+        // 씬 로드
+        SceneManager.LoadScene("MainMenu");
+    }
 }
+

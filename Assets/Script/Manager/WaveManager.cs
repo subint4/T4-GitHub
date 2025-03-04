@@ -1,5 +1,4 @@
 using UnityEngine;
-using TMPro;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,17 +60,7 @@ public class WaveManager : MonoBehaviour
             Debug.LogError($"[WaveManager] {stageNum}-{subStageNum}의 웨이브 데이터를 가져오지 못했습니다!");
             return;
         }
-
-        // 웨이브 데이터가 올바르게 로드되었는지 확인
-        foreach (var wave in currentWaveDataList)
-        {
-            Debug.Log($"[WaveManager] 웨이브 ID {wave.ID}, 적 수: {wave.spawnDataList.Count}");
-        }
-
-        Debug.Log($"[WaveManager] 웨이브 데이터 로드 완료! 총 웨이브 수: {currentWaveDataList.Count}");
     }
-
-
 
     public void StartWave()
     {
@@ -85,36 +74,35 @@ public class WaveManager : MonoBehaviour
         totalEnemies = 0;
         activeEnemies.Clear();
 
-        // 현재 웨이브 데이터가 비어 있는지 확인
         WaveSO currentWaveData = currentWaveDataList[currentWaveIndex];
 
-        if (currentWaveData == null)
+        if (currentWaveData == null || currentWaveData.spawnDataList == null || currentWaveData.spawnDataList.Count == 0)
         {
-            Debug.LogError("[WaveManager] 현재 웨이브 데이터가 NULL입니다!");
-            return;
-        }
-
-        if (currentWaveData.spawnDataList == null || currentWaveData.spawnDataList.Count == 0)
-        {
-            Debug.LogError($"[WaveManager] 웨이브 {currentWaveIndex + 1}에 대한 적 스폰 데이터가 없습니다!");
+            Debug.LogError("[WaveManager] 웨이브 데이터가 비어 있음!");
             return;
         }
 
         foreach (var spawnData in currentWaveData.spawnDataList)
         {
-            Debug.Log($"[WaveManager] 적 ID: {spawnData.enemyID}, 수량: {spawnData.count}");
             totalEnemies += spawnData.count;
         }
 
         Debug.Log($"[WaveManager] 웨이브 {currentWaveIndex + 1} 시작! 총 적 수: {totalEnemies}");
 
-        if (totalEnemies == 0)
-        {
-            Debug.LogError("[WaveManager] 총 적 수가 0입니다! 웨이브 데이터가 정상적으로 설정되었는지 확인하세요.");
-            return;
-        }
-
         StartCoroutine(SpawnWave());
+    }
+
+    public void ResetWaves()
+    {
+        Debug.Log("[WaveManager] 웨이브 초기화 실행!");
+        StopAllCoroutines();
+
+        currentWaveIndex = 0;
+        defeatedEnemies = 0;
+        totalEnemies = 0;
+        activeEnemies.Clear();
+
+        Debug.Log("[WaveManager] 웨이브 데이터 초기화 완료.");
     }
 
 
@@ -168,4 +156,44 @@ public class WaveManager : MonoBehaviour
             Debug.LogError("[WaveManager] 생성된 적에 Enemy 컴포넌트가 없습니다!");
         }
     }
+
+    public void Clear()
+    {
+        defeatedEnemies++;
+        Debug.Log($"[WaveManager] 적 처치됨 {defeatedEnemies}/{totalEnemies}");
+
+        if (defeatedEnemies >= totalEnemies)
+        {
+            Debug.Log("[WaveManager] 모든 적 처치 완료! 다음 웨이브 확인 중...");
+            CheckNextWave();
+        }
+    }
+
+    private void CheckNextWave()
+    {
+        if (currentWaveIndex + 1 < currentWaveDataList.Count)
+        {
+            Debug.Log("[WaveManager] 다음 웨이브 시작 준비 중...");
+            currentWaveIndex++;
+            StartWave();
+        }
+        else
+        {
+            Debug.Log("[WaveManager] 모든 웨이브 종료! 스테이지 완료 처리.");
+            OnAllWavesCompleted();
+        }
+    }
+
+    private void OnAllWavesCompleted()
+    {
+        Debug.Log("[WaveManager] 모든 웨이브가 종료되었습니다! 게임 승리 처리.");
+
+        PopupManager popupManager = FindObjectOfType<PopupManager>();
+        if (popupManager != null)
+        {
+            popupManager.ShowVictoryPopup();
+        }
+        // 추가적인 게임 클리어 로직 가능 (보상 지급, 씬 변경 등)
+    }
 }
+

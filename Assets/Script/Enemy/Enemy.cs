@@ -257,11 +257,11 @@ public class Enemy : MonoBehaviour
         enemyAnimatorController.SetWalkingState(false);
         enemyAnimatorController.PlayDeathAnimation();
 
-        //// WaveManager에 적 처치 알림
-        //if (WaveManager.Instance != null)
-        //{
-        //    WaveManager.Instance.OnEnemyDefeated(this); // 적 객체 전달
-        //}
+        // WaveManager에 적 처치 알림
+        if (WaveManager.Instance != null)
+        {
+            WaveManager.Instance.Clear(); // 적 객체 전달
+        }
 
         //// 활성 적 리스트에서 제거
         //if (WaveManager.Instance != null)

@@ -65,8 +65,7 @@ public class EnemyManager : MonoBehaviour
             activeEnemies.Remove(enemy);
             Debug.Log($"[EnemyManager] 적 제거: {enemy.EnemyID}");
 
-            //// 적이 제거될 때 게이지 업데이트
-            //WaveManager.Instance.OnEnemyDefeated(enemy);
+            WaveManager.Instance.Clear();
         }
     }
 }

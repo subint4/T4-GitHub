@@ -1,23 +1,37 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using System.Collections.Generic;
 
 public class DamageItemManager : MonoBehaviour
 {
+    public static DamageItemManager Instance { get; private set; }
+
     public Button BombButton;
     public Button RocketButton;
     public Button StunButton;
 
     private DamageItemSettings settings;
-    private float selectedTilePositionX = float.MinValue; // 선택된 타일의 X 좌표 저장
     private string selectedItemName = ""; // 선택된 아이템 이름 저장
-    private LayerMask tileLayerMask; // `SpawnableArea` 감지용 레이어 마스크
+
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
+    }
 
     private void Start()
     {
         settings = DamageItemSettings.LoadSettings(); // JSON에서 데이터 로드
-        tileLayerMask = LayerMask.GetMask("SpawnableArea"); // SpawnableArea 감지 활성화
+
+        if (settings == null || settings.Data == null || settings.Data.Count == 0)
+        {
+            Debug.LogError("[DamageItemManager] JSON 데이터가 로드되지 않았거나 비어 있습니다!");
+            return;
+        }
+
+        Debug.Log($"[DamageItemManager] JSON에서 {settings.Data.Count}개의 아이템이 로드됨.");
 
         // 버튼 클릭 시 아이템 선택 (즉시 공격 X)
         if (BombButton != null)
@@ -36,47 +50,28 @@ public class DamageItemManager : MonoBehaviour
         Debug.Log($"[DamageItemManager] {itemName} 아이템 선택됨! 타일을 클릭하세요.");
     }
 
-    private void Update()
+    public string GetSelectedItemName()
     {
-        // 마우스 클릭 또는 터치 입력 감지 (UI 클릭 제외)
-        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
-        {
-            SetTargetTile();
-        }
+        return selectedItemName;
     }
 
-    public void SetTargetTile()
+    public void UseItemOnTile(Vector3 tilePosition)
     {
+        Debug.Log($"[DamageItemManager] UseItemOnTile 호출됨 - 대상 타일 위치: {tilePosition}, 선택된 아이템: {selectedItemName}");
+
         if (string.IsNullOrEmpty(selectedItemName))
         {
-            Debug.LogWarning("[DamageItemManager] 먼저 아이템을 선택해야 합니다!");
+            Debug.LogError("[DamageItemManager] 아이템이 선택되지 않았습니다!");
             return;
         }
 
-        // 클릭한 위치에서 `SpawnableArea` 레이어 타일 찾기
-        RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, Mathf.Infinity, tileLayerMask);
-        if (hit.collider != null)
+        if (settings == null || settings.Data == null)
         {
-            selectedTilePositionX = hit.collider.transform.position.x; // 타일의 X 좌표 저장
-            Debug.Log($"[DamageItemManager] 타일 선택됨. 기준 X 좌표: {selectedTilePositionX}");
-            UseItem(); // 타일 선택 후 아이템 실행
-        }
-        else
-        {
-            Debug.LogError("[DamageItemManager] 클릭한 위치에 유효한 타일이 없습니다!");
-        }
-    }
-
-    private void UseItem()
-    {
-        if (selectedTilePositionX == float.MinValue || string.IsNullOrEmpty(selectedItemName))
-        {
-            Debug.LogError("[DamageItemManager] 아이템 또는 타일이 선택되지 않았습니다!");
+            Debug.LogError("[DamageItemManager] JSON 데이터가 로드되지 않았습니다! `settings`를 확인하세요.");
             return;
         }
 
-        // JSON에서 해당 아이템 데이터를 찾기
-        DamageItemData itemData = settings.items.Find(item => item.ItemName == selectedItemName);
+        DamageItemData itemData = settings.Data.Find(item => item.ItemName == selectedItemName);
 
         if (itemData == null)
         {
@@ -84,7 +79,7 @@ public class DamageItemManager : MonoBehaviour
             return;
         }
 
-        Debug.Log($"[DamageItemManager] {selectedItemName} 사용 시작! 대상 X 좌표: {selectedTilePositionX}");
+        Debug.Log($"[DamageItemManager] {selectedItemName} 사용 시작! 대상 타일: {tilePosition}");
 
         GameObject[] allEnemies = GameObject.FindGameObjectsWithTag("Enemy");
 
@@ -96,30 +91,29 @@ public class DamageItemManager : MonoBehaviour
 
         bool targetHit = false;
 
-        // 선택한 타일의 X좌표와 적의 X좌표 비교
         foreach (GameObject target in allEnemies)
         {
             Enemy enemyComponent = target.GetComponent<Enemy>();
             if (enemyComponent != null)
             {
                 float enemyX = enemyComponent.transform.position.x;
+                float enemyY = enemyComponent.transform.position.y;
 
-                if (Mathf.Abs(enemyX - selectedTilePositionX) < 0.5f) // 오차 범위 0.5 적용
+                if (Mathf.Abs(enemyX - tilePosition.x) < 0.5f && Mathf.Abs(enemyY - tilePosition.y) < 0.5f)
                 {
                     targetHit = true;
-                    enemyComponent.TakeDamage(itemData.damageAmount);
-                    enemyComponent.ApplyStun(itemData.stunDuration);
-                    Debug.Log($"[DamageItemManager] {target.name}에게 {itemData.damageAmount} 피해 및 {itemData.stunDuration}초 스턴 적용!");
+                    enemyComponent.TakeDamage(itemData.Damage);
+                    enemyComponent.ApplyStun(itemData.StunDuration);
+                    Debug.Log($"[DamageItemManager] {target.name}에게 {itemData.Damage} 피해 및 {itemData.StunDuration}초 스턴 적용!");
                 }
             }
         }
 
         if (!targetHit)
         {
-            Debug.LogWarning($"[DamageItemManager] {selectedItemName} 아이템이 해당 X좌표({selectedTilePositionX})에서 아무 적도 맞추지 못함.");
+            Debug.LogWarning($"[DamageItemManager] {selectedItemName} 아이템이 타일({tilePosition})에서 아무 적도 맞추지 못함.");
         }
 
         selectedItemName = "";
-        selectedTilePositionX = float.MinValue;
     }
 }
