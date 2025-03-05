@@ -9,8 +9,6 @@ using UnityEngine.EventSystems;
 public class SceneLoader : MonoBehaviour
 {
     public static SceneLoader instance { get; private set; }
-    private int stageNum;
-    private int subStageNum;
     private bool isLoadingStage = false;
 
     private void Awake()
@@ -35,12 +33,36 @@ public class SceneLoader : MonoBehaviour
     {
         Debug.Log($"[SceneLoader] 씬 로드됨: {scene.name}");
 
-        // **씬 로드 후 항상 `isLoadingStage = false;`로 초기화**
         isLoadingStage = false;
 
-        if (scene.name == "MainMenu")
+        // Stage로 이동 시 GameManager 자동 생성
+        if (IsStageScene(scene.name))
+        {
+            if (GameManager.Instance == null)
+            {
+                Debug.Log("[SceneLoader] GameManager가 없어서 새로 생성됨.");
+                GameObject gameManagerPrefab = Resources.Load<GameObject>("Prefabs/GameManager");
+                if (gameManagerPrefab != null)
+                {
+                    Instantiate(gameManagerPrefab);
+                }
+                else
+                {
+                    Debug.LogError("[SceneLoader] GameManager 프리팹을 찾을 수 없습니다!");
+                }
+            }
+        }
+        else if (scene.name == "MainMenu")
         {
             Debug.Log("[SceneLoader] MainMenu에서 버튼 감지 실행");
+
+            // MainMenu에서는 GameManager 삭제
+            if (GameManager.Instance != null)
+            {
+                Destroy(GameManager.Instance.gameObject);
+                Debug.Log("[SceneLoader] GameManager 삭제 완료.");
+            }
+
             StartCoroutine(WaitForUIAndDetectButtons());
             return;
         }
@@ -52,14 +74,7 @@ public class SceneLoader : MonoBehaviour
             StartCoroutine(WaitForUIAndDetectButtons());
             return;
         }
-
-        if (scene.name.StartsWith("Stage"))
-        {
-            Debug.Log("[SceneLoader] 일반 Stage 씬에서는 SceneLoader가 개입하지 않음.");
-            return;
-        }
     }
-
 
     private IEnumerator WaitForUIAndDetectButtons()
     {
@@ -69,8 +84,8 @@ public class SceneLoader : MonoBehaviour
 
     private void ApplySubStageSettings()
     {
-        stageNum = PlayerPrefs.GetInt("CurrentStage", 1);
-        subStageNum = PlayerPrefs.GetInt("CurrentSubStage", 1);
+        int stageNum = PlayerPrefs.GetInt("CurrentStage", 1);
+        int subStageNum = PlayerPrefs.GetInt("CurrentSubStage", 1);
 
         Debug.Log($"[SceneLoader] {stageNum}-{subStageNum} 설정 적용 완료!");
 
@@ -114,7 +129,7 @@ public class SceneLoader : MonoBehaviour
                     button.onClick.AddListener(() => LoadPreviousStage());
                     break;
                 case "HomeButton":
-                    button.onClick.AddListener(() => PopupManager.Instance.ShowHomePopup());
+                    button.onClick.AddListener(() => LoadMainMenu());
                     break;
                 default:
                     button.onClick.AddListener(() => LoadTargetScene(buttonName));
@@ -172,13 +187,16 @@ public class SceneLoader : MonoBehaviour
 
     private void LoadStage(int stageNum, int subStageNum)
     {
-        if (isLoadingStage) return; // 스테이지가 로드 중이면 중복 실행 방지
+        if (isLoadingStage) return; // 중복 실행 방지
         isLoadingStage = true;
 
         Debug.Log($"[SceneLoader] {stageNum}-{subStageNum} 스테이지 로드 준비 중...");
 
-        // **기존 데이터 초기화**
-        ResetGameState();
+        // GameManager 데이터 유지 & 상태 초기화
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.ResetGameManager();
+        }
 
         // 스테이지 정보 저장
         PlayerPrefs.SetInt("CurrentStage", stageNum);
@@ -189,42 +207,8 @@ public class SceneLoader : MonoBehaviour
         SceneManager.LoadScene($"Stage{stageNum}");
     }
 
-    private void ResetGameState()
-    {
-        Debug.Log("[SceneLoader] 게임 상태 초기화 실행!");
-
-        // **타워 및 적 삭제**
-        foreach (var tower in FindObjectsOfType<Tower>())
-        {
-            Destroy(tower.gameObject);
-        }
-
-        foreach (var enemy in FindObjectsOfType<Enemy>())
-        {
-            Destroy(enemy.gameObject);
-        }
-
-        // **WaveManager 초기화**
-        WaveManager waveManager = FindObjectOfType<WaveManager>();
-        if (waveManager != null)
-        {
-            waveManager.ResetWaves();
-            Debug.Log("[SceneLoader] WaveManager 초기화 완료!");
-        }
-        else
-        {
-            Debug.LogWarning("[SceneLoader] WaveManager를 찾을 수 없음");
-        }
-
-
-        Debug.Log("[SceneLoader] 모든 오브젝트 초기화 완료.");
-    }
-
     private void LoadNextStage()
     {
-        if (isLoadingStage) return; // 중복 실행 방지
-        isLoadingStage = true;
-
         int currentStage = PlayerPrefs.GetInt("CurrentStage", 1);
         if (currentStage >= 3) return;
         currentStage++;
@@ -238,9 +222,6 @@ public class SceneLoader : MonoBehaviour
 
     private void LoadPreviousStage()
     {
-        if (isLoadingStage) return; // 중복 실행 방지
-        isLoadingStage = true;
-
         int currentStage = PlayerPrefs.GetInt("CurrentStage", 1);
         if (currentStage <= 1) return;
         currentStage--;
@@ -252,31 +233,25 @@ public class SceneLoader : MonoBehaviour
         SceneManager.LoadScene($"StageP_{currentStage}");
     }
 
-
-    public void LoadShop() => SceneManager.LoadScene("Shop_pack");
+    public void LoadShop() => SceneManager.LoadScene("Shop");
     public void LoadTutorial() => SceneManager.LoadScene("Tutorial");
+
     public void LoadMainMenu()
     {
         Debug.Log("[SceneLoader] 메인 메뉴 로드 중...");
 
-        // **WaveManager 초기화**
-        WaveManager waveManager = FindObjectOfType<WaveManager>();
-        if (waveManager != null)
+        // GameManager 삭제
+        if (GameManager.Instance != null)
         {
-            waveManager.ResetWaves();
-            Debug.Log("[SceneLoader] WaveManager 초기화 완료!");
+            Destroy(GameManager.Instance.gameObject);
+            Debug.Log("[SceneLoader] GameManager 삭제 완료.");
         }
 
-        // **PlayerPrefs 초기화**
-        PlayerPrefs.SetInt("CurrentStage", 1);
-        PlayerPrefs.SetInt("CurrentSubStage", 1);
-        PlayerPrefs.Save();
-
-        // **isLoadingStage 초기화**
-        isLoadingStage = false;
-
-        // 씬 로드
         SceneManager.LoadScene("MainMenu");
     }
-}
 
+    private bool IsStageScene(string sceneName)
+    {
+        return sceneName.StartsWith("Stage");
+    }
+}

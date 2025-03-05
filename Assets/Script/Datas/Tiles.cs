@@ -38,15 +38,19 @@ public class Tiles : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        // **아이템이 선택된 경우 먼저 체크**
-        if (!string.IsNullOrEmpty(DamageItemManager.Instance.GetSelectedItemName()))
+        // **DamageItemManager가 존재하는지 확인 후 아이템 사용 로직 실행**
+        if (DamageItemManager.Instance != null)
         {
-            Debug.Log($"[Tiles] 아이템 사용 시도 - 타일 {tileIndex}에서 {DamageItemManager.Instance.GetSelectedItemName()} 실행");
-            DamageItemManager.Instance.UseItemOnTile(transform.position);
-            return;
+            string selectedItem = DamageItemManager.Instance.GetSelectedItemName();
+            if (!string.IsNullOrEmpty(selectedItem))
+            {
+                Debug.Log($"[Tiles] 아이템 사용 시도 - 타일 {tileIndex}에서 {selectedItem} 실행");
+                DamageItemManager.Instance.UseItemOnTile(transform.position);
+                return;
+            }
         }
 
-        // **아이템이 선택되지 않은 경우 타워 배치**
+        // **타워 배치 로직 실행**
         if (TowerManager.Instance == null)
         {
             Debug.LogError("[Tiles] TowerManager가 존재하지 않습니다!");

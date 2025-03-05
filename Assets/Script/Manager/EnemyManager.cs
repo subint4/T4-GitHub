@@ -65,7 +65,7 @@ public class EnemyManager : MonoBehaviour
             activeEnemies.Remove(enemy);
             Debug.Log($"[EnemyManager] Àû Á¦°Å: {enemy.EnemyID}");
 
-            WaveManager.Instance.Clear();
+            WaveManager.Instance.Clear(enemy);
         }
     }
 }

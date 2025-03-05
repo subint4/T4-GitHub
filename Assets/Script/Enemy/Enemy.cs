@@ -185,9 +185,23 @@ public class Enemy : MonoBehaviour
         if (collision.CompareTag("EndLine"))
         {
             Debug.Log($"[Enemy] {gameObject.name}: EndLine에 도달! 게임 종료.");
-            GameManager.Instance.GameOver();
+
+            // **GameManager를 직접 찾음**
+            GameManager gameManager = GameManager.Instance ?? FindObjectOfType<GameManager>();
+
+            // **GameManager가 존재하는 경우만 GameOver 호출**
+            if (gameManager != null)
+            {
+                gameManager.GameOver();
+            }
+            else
+            {
+                Debug.LogError("[Enemy] GameManager 인스턴스를 찾을 수 없습니다!");
+            }
         }
     }
+
+
 
     public void ApplySlow(float slowFactor, float duration)
     {
@@ -217,26 +231,52 @@ public class Enemy : MonoBehaviour
         MovementSpeed = 0f;
         attackSpeed = 0f;
         isAttacking = false;
-        enemyAnimatorController.SetWalkingState(false);
 
-        StopCoroutine(AttackLoop());
-        enemyAnimatorController.SetAttackState(false);
+        if (enemyAnimatorController != null)
+        {
+            enemyAnimatorController.SetWalkingState(false);
+            enemyAnimatorController.SetAttackState(false);
+        }
 
-        Invoke(nameof(EndStun), duration);
+        StopAllCoroutines(); // **모든 코루틴 중단 (특히 AttackLoop)**
+
+        Debug.Log($"[Enemy] {gameObject.name}: 스턴 적용 - {duration}초 동안 행동 불가");
+
+        // **스턴 해제 예약**
+        StartCoroutine(StunDuration(duration));
+    }
+
+    private IEnumerator StunDuration(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+
+        EndStun();
     }
 
     private void EndStun()
     {
+        if (isDead) return; // **이미 죽었다면 스턴 해제 불필요**
+
         isStunned = false;
         MovementSpeed = originalSpeed;
         attackSpeed = enemyStats.AttackSpeed;
-        enemyAnimatorController.SetWalkingState(true);
 
-        if (currentTarget != null)
+        if (enemyAnimatorController != null)
         {
+            enemyAnimatorController.SetWalkingState(true);
+            enemyAnimatorController.SetAttackState(false);
+        }
+
+        Debug.Log($"[Enemy] {gameObject.name}: 스턴 해제됨");
+
+        // **현재 타겟이 존재할 경우 AttackLoop 다시 실행**
+        if (currentTarget != null && !isAttacking)
+        {
+            Debug.Log($"[Enemy] {gameObject.name}: 스턴 해제 후 공격 재개");
             StartCoroutine(AttackLoop());
         }
     }
+
 
     public void TakeDamage(float damage)
     {
@@ -260,15 +300,8 @@ public class Enemy : MonoBehaviour
         // WaveManager에 적 처치 알림
         if (WaveManager.Instance != null)
         {
-            WaveManager.Instance.Clear(); // 적 객체 전달
+            WaveManager.Instance.Clear(this); // 적 객체 전달
         }
-
-        //// 활성 적 리스트에서 제거
-        //if (WaveManager.Instance != null)
-        //{
-        //    WaveManager.Instance.RemoveActiveEnemy(this);
-        //}
-
         // **골드 지급 기능 추가**
         if (GoldManager.Instance != null)
         {

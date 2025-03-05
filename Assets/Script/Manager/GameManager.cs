@@ -10,55 +10,72 @@ public class GameManager : MonoBehaviour
 
     private bool isGameOver = false;
 
+    // GameManager를 유지할 특정 씬 목록
+    private readonly string[] allowedScenes = { "Stage1", "Stage2", "Stage3" };
+
     private void Awake()
     {
-        // `DontDestroyOnLoad()` 제거: 씬이 전환될 때 `GameManager`를 새로 생성
-        if (Instance == null)
+        string currentScene = SceneManager.GetActiveScene().name;
+
+        // 특정 씬이 아니면 GameManager를 삭제 (메인메뉴에서는 유지)
+        if (!IsAllowedScene(currentScene))
         {
-            Instance = this;
-            // 씬 전환 시 새로 생성되기 때문에 DontDestroyOnLoad()를 호출하지 않음
-        }
-        else
-        {
-            // 다른 씬에 남아 있는 GameManager 인스턴스가 있다면 파괴
+            Debug.LogWarning($"[GameManager] {currentScene}에서는 GameManager가 필요하지 않으므로 삭제됨.");
             Destroy(gameObject);
             return;
         }
 
-        // 자동으로 WaveManager와 EnemyManager 찾기
-        if (waveManager == null)
+        // 싱글턴 패턴 유지 (중복 생성 방지)
+        if (Instance == null)
         {
-            waveManager = FindObjectOfType<WaveManager>();
+            Instance = this;
         }
-        if (enemyManager == null)
+        else
         {
-            enemyManager = FindObjectOfType<EnemyManager>();
+            Destroy(gameObject);
+            return;
         }
 
-        // 씬이 로드될 때마다 GameManager 인스턴스를 확인하여, 중복된 인스턴스는 삭제하도록 설정
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log($"[GameManager] 씬 로드됨: {scene.name}");
+        string sceneName = scene.name;
+        Debug.Log($"[GameManager] 씬 로드됨: {sceneName}");
 
-        // 씬 로드 후에 GameManager가 싱글톤 인스턴스로만 존재하도록 함
-        if (Instance != this)
+        // 특정 씬이 아닐 경우 자동 삭제
+        if (!IsAllowedScene(sceneName))
         {
+            Debug.LogWarning($"[GameManager] {sceneName}에서는 GameManager가 필요하지 않으므로 삭제됨.");
             Destroy(gameObject);
+            return;
+        }
+
+        // 새로운 씬에서 WaveManager, EnemyManager 자동 할당
+        waveManager = FindObjectOfType<WaveManager>();
+        enemyManager = FindObjectOfType<EnemyManager>();
+
+        // 씬 변경 후 웨이브 재로딩
+        if (waveManager != null)
+        {
+            waveManager.LoadWavesForStage();
         }
     }
 
     private void Start()
     {
-        if (WaveManager.Instance == null)
+        if (waveManager == null)
+        {
+            waveManager = FindObjectOfType<WaveManager>();
+        }
+        if (waveManager == null)
         {
             Debug.LogError("[GameManager] WaveManager 인스턴스를 찾을 수 없습니다!");
             return;
         }
 
-        // PlayerPrefs에서 저장된 진행도 초기화
+        // 진행 상태 초기화
         PlayerPrefs.SetInt("WaveProgress", 0);
         PlayerPrefs.Save();
 
@@ -67,8 +84,7 @@ public class GameManager : MonoBehaviour
 
         Debug.Log($"[GameManager] 현재 스테이지: {currentStage}, 서브 스테이지: {currentSubStage}");
 
-        // 웨이브 데이터 리로드
-        WaveManager.Instance.LoadWavesForStage();
+        waveManager.LoadWavesForStage();
 
         StartCoroutine(GameStartCountdown());
         StartCoroutine(DelayedStart());
@@ -86,14 +102,14 @@ public class GameManager : MonoBehaviour
         }
 
         Debug.Log("[GameManager] 웨이브 시작!");
-        waveManager.StartWave(); // 10초 후 웨이브 시작
+        waveManager.StartWave();
     }
 
     private IEnumerator DelayedStart()
     {
-        yield return new WaitForSeconds(0.2f); // 0.2초 대기
+        yield return new WaitForSeconds(0.2f);
 
-        WaveManager waveManager = FindObjectOfType<WaveManager>();
+        waveManager = FindObjectOfType<WaveManager>();
         if (waveManager != null)
         {
             waveManager.LoadWavesForStage();
@@ -111,6 +127,43 @@ public class GameManager : MonoBehaviour
 
         isGameOver = true;
         Debug.Log("[GameManager] 게임 오버! 패배 처리.");
-        PopupManager.Instance.ShowDefeatPopup(); // 패배 팝업 표시
+        PopupManager popupManager = FindObjectOfType<PopupManager>();
+        if (popupManager != null)
+        {
+            popupManager.ShowDefeatPopup();
+        }
+    }
+
+    public void ResetGameManager()
+    {
+        Debug.Log("[GameManager] 게임 매니저 초기화 실행!");
+
+        StopAllCoroutines();
+        isGameOver = false;
+
+        // WaveManager 및 EnemyManager 초기화
+        if (waveManager != null)
+        {
+            waveManager.ResetWaves();
+        }
+        if (enemyManager == null)
+        {
+            enemyManager = FindObjectOfType<EnemyManager>();
+        }
+
+        Debug.Log("[GameManager] 게임 매니저 초기화 완료.");
+    }
+
+    // 특정 씬인지 확인하는 함수
+    private bool IsAllowedScene(string sceneName)
+    {
+        foreach (string allowedScene in allowedScenes)
+        {
+            if (sceneName == allowedScene)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

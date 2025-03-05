@@ -11,8 +11,8 @@ public class WaveManager : MonoBehaviour
     private bool isSpawning = false;
     public Transform[] spawnPoints;
     private List<Enemy> activeEnemies = new List<Enemy>();
-    private int totalEnemies = 0;
-    private int defeatedEnemies = 0;
+    public int totalEnemies = 0;
+    public int defeatedEnemies = 0;
     public GaugeManager progressBar;
     private List<WaveSO> currentWaveDataList = new List<WaveSO>();
 
@@ -157,10 +157,27 @@ public class WaveManager : MonoBehaviour
         }
     }
 
-    public void Clear()
+    public void Clear(Enemy enemy)
     {
+        if (activeEnemies.Contains(enemy))
+        {
+            activeEnemies.Remove(enemy);
+            Debug.Log($"[WaveManager] {enemy.name} 제거됨. 남은 활성 적 수: {activeEnemies.Count}");
+        }
+
         defeatedEnemies++;
         Debug.Log($"[WaveManager] 적 처치됨 {defeatedEnemies}/{totalEnemies}");
+
+        // `GaugeManager` 직접 참조하여 업데이트
+        GaugeManager gaugeManager = FindObjectOfType<GaugeManager>();
+        if (gaugeManager != null)
+        {
+            gaugeManager.UpdateGauge(defeatedEnemies, totalEnemies);
+        }
+        else
+        {
+            Debug.LogWarning("[WaveManager] GaugeManager를 찾을 수 없음. 게이지 업데이트 생략.");
+        }
 
         if (defeatedEnemies >= totalEnemies)
         {
@@ -168,6 +185,9 @@ public class WaveManager : MonoBehaviour
             CheckNextWave();
         }
     }
+
+
+
 
     private void CheckNextWave()
     {
