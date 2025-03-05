@@ -3,7 +3,9 @@ using UnityEngine.UI;
 
 public class GaugeManager : MonoBehaviour
 {
-    public Image gaugeFill; // **게이지 바 (파란색으로 채울 부분)**
+    public Image gaugeBackground; // **항상 보이는 배경 (흰색)**
+    public Image gaugeFill;       // **차오르는 게이지 (파란색)**
+
     private int totalEnemies = 0;
     private int defeatedEnemies = 0;
 
@@ -21,21 +23,24 @@ public class GaugeManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 게이지 초기화 (총 적 수 설정)
+    /// **게이지 초기화 (배경 유지, 게이지 초기화)**
     /// </summary>
     private void InitializeGauge()
     {
-        if (gaugeFill != null)
+        if (gaugeBackground == null || gaugeFill == null)
         {
-            gaugeFill.fillAmount = 0f; // 처음에는 게이지를 0으로 설정
-        }
-        else
-        {
-            Debug.LogError("[GaugeManager] gaugeFill이 설정되지 않았습니다!");
+            Debug.LogError("[GaugeManager] UI 요소가 설정되지 않았습니다!");
             return;
         }
 
-        // 현재 스테이지에서 적 수 가져오기
+        // **배경은 항상 흰색 유지**
+        gaugeBackground.color = Color.white;
+
+        // **게이지 바는 파란색으로 설정하지만 fillAmount는 0 (처음엔 비어있음)**
+        gaugeFill.color = Color.blue;
+        gaugeFill.fillAmount = 0f;
+
+        // **현재 스테이지에서 적 수 가져오기**
         if (WaveManager.Instance != null)
         {
             totalEnemies = WaveManager.Instance.totalEnemies;
@@ -46,11 +51,11 @@ public class GaugeManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 게이지 업데이트 (처치 수 반영)
+    /// **게이지 업데이트 (처치 수 반영)**
     /// </summary>
     public void UpdateGauge(int defeated, int total)
     {
-        if (gaugeFill == null)
+        if (gaugeBackground == null || gaugeFill == null)
         {
             Debug.LogError("[GaugeManager] UI 요소가 설정되지 않았습니다!");
             return;
@@ -64,17 +69,14 @@ public class GaugeManager : MonoBehaviour
 
         float progress = (float)defeated / total;
 
-        // `fillAmount`를 사용하여 왼쪽부터 차오르게 설정 (0~1)
+        // **게이지 바가 왼쪽에서 오른쪽으로 차오름**
         gaugeFill.fillAmount = progress;
-
-        // 색상 변경 (흰색 → 파란색)
-        UpdateGaugeColor(progress);
 
         Debug.Log($"[GaugeManager] 게이지 업데이트: {defeated} / {total}");
     }
 
     /// <summary>
-    /// 적 처치 시 호출 (WaveManager에서 호출)
+    /// **적 처치 시 호출 (WaveManager에서 호출)**
     /// </summary>
     public void OnEnemyDefeated()
     {
@@ -85,20 +87,5 @@ public class GaugeManager : MonoBehaviour
         }
 
         UpdateGauge(WaveManager.Instance.defeatedEnemies, WaveManager.Instance.totalEnemies);
-    }
-
-    /// <summary>
-    /// 게이지 색상 변경 (흰색 → 파란색)
-    /// </summary>
-    private void UpdateGaugeColor(float progress)
-    {
-        if (gaugeFill == null)
-        {
-            Debug.LogWarning("[GaugeManager] 게이지 Fill 이미지가 설정되지 않았습니다!");
-            return;
-        }
-
-        // **흰색에서 파란색으로 점진적으로 변함**
-        gaugeFill.color = Color.Lerp(Color.white, Color.blue, progress);
     }
 }

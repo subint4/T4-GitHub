@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 4792030277385435822}
   - component: {fileID: 1640325486994226926}
   - component: {fileID: 3979439742465654751}
+  - component: {fileID: 300313414537316266}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -74,6 +75,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  totalEnemies: 0
+  defeatedEnemies: 0
   progressBar: {fileID: 0}
 --- !u!114 &8499294929338991552
 MonoBehaviour:
@@ -161,6 +164,20 @@ MonoBehaviour:
   defeatMenuButton: {fileID: 0}
   homeConfirmButton: {fileID: 0}
   homeCancelButton: {fileID: 0}
+--- !u!114 &300313414537316266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 828587090451982273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 437ea37019208d04093ea359e10be053, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gaugeBackground: {fileID: 0}
+  gaugeFill: {fileID: 0}
 --- !u!1 &1454555432681744912
 GameObject:
   m_ObjectHideFlags: 0
