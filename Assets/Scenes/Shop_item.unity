@@ -202,7 +202,7 @@ GameObject:
   - component: {fileID: 36435750}
   - component: {fileID: 36435749}
   m_Layer: 0
-  m_Name: btn_box (2)
+  m_Name: btn_box (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -217,7 +217,7 @@ Transform:
   m_GameObject: {fileID: 36435747}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -275, y: -160, z: -9335.893}
+  m_LocalPosition: {x: -275, y: -160, z: -5}
   m_LocalScale: {x: 65, y: 55, z: 103.73214}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -769,7 +769,7 @@ Transform:
   m_GameObject: {fileID: 383784938}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -275, y: 130, z: -9335.893}
+  m_LocalPosition: {x: -275, y: 130, z: -5}
   m_LocalScale: {x: 65, y: 55, z: 103.73214}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1033,7 +1033,7 @@ GameObject:
   - component: {fileID: 622171543}
   - component: {fileID: 622171542}
   m_Layer: 0
-  m_Name: btn_box (5)
+  m_Name: btn_box (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1048,7 +1048,7 @@ Transform:
   m_GameObject: {fileID: 622171540}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 181, y: 130, z: -9335.893}
+  m_LocalPosition: {x: 181, y: 130, z: -5}
   m_LocalScale: {x: 65, y: 55, z: 103.73214}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1387,7 +1387,7 @@ GameObject:
   - component: {fileID: 675611682}
   - component: {fileID: 675611681}
   m_Layer: 0
-  m_Name: btn_box (6)
+  m_Name: btn_box (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1402,7 +1402,7 @@ Transform:
   m_GameObject: {fileID: 675611679}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 181, y: -160, z: -9335.893}
+  m_LocalPosition: {x: 181, y: -160, z: -5}
   m_LocalScale: {x: 65, y: 55, z: 103.73214}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2333,9 +2333,9 @@ RectTransform:
   - {fileID: 2123174775}
   - {fileID: 1366335237}
   - {fileID: 383784939}
-  - {fileID: 36435748}
-  - {fileID: 1325425290}
   - {fileID: 622171541}
+  - {fileID: 1325425290}
+  - {fileID: 36435748}
   - {fileID: 675611680}
   - {fileID: 1454602929}
   - {fileID: 1832956220}
@@ -2507,7 +2507,7 @@ Transform:
   m_GameObject: {fileID: 1325425289}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 640, y: 130, z: -9335.893}
+  m_LocalPosition: {x: 640, y: 130, z: -5}
   m_LocalScale: {x: 65, y: 55, z: 103.73214}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3012,7 +3012,7 @@ Transform:
   m_GameObject: {fileID: 1438436176}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 186.60481, y: -406.09497, z: -8640.001}
+  m_LocalPosition: {x: 186.60481, y: -406.09497, z: -1}
   m_LocalScale: {x: 239.60641, y: 96, z: 96}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3082,7 +3082,7 @@ GameObject:
   - component: {fileID: 1454602931}
   - component: {fileID: 1454602930}
   m_Layer: 0
-  m_Name: btn_box (4)
+  m_Name: btn_box (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3097,7 +3097,7 @@ Transform:
   m_GameObject: {fileID: 1454602928}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 636, y: -131.39, z: -9335.893}
+  m_LocalPosition: {x: 636, y: -131.39, z: -5}
   m_LocalScale: {x: 65, y: 53.53, z: 103.73214}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3831,7 +3831,7 @@ Transform:
   m_GameObject: {fileID: 1978370099}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 190, y: -15, z: -9335.893}
+  m_LocalPosition: {x: 190, y: -15, z: -1}
   m_LocalScale: {x: 101.38807, y: 74.18746, z: 103.73214}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3915,7 +3915,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1989167790}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
