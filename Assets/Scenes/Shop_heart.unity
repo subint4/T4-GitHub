@@ -559,7 +559,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Shopitem
+          m_StringArgument: Shop_item
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &331474933
@@ -2221,7 +2221,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Shopdia
+          m_StringArgument: Shop_dia
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &981546153
@@ -3540,7 +3540,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Shopheart
+          m_StringArgument: Shop_heart
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &1762594149
