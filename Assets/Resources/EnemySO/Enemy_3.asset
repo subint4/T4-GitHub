@@ -20,4 +20,4 @@ MonoBehaviour:
   AttackSpeed: 1
   AttackPower: 20
   SpawnCount: 0
-  RewardMoney: 7
+  RewardMoney: 35
