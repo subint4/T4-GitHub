@@ -15,7 +15,7 @@
       "SubStagenum": 1,
       "startgold": 40,
       "sec": 5,
-      "gaingold": 5
+      "gaingold": 10
     },
     {
       "id": 2,
@@ -23,7 +23,7 @@
       "SubStagenum": 2,
       "startgold": 40,
       "sec": 5,
-      "gaingold": 5
+      "gaingold": 10
     },
     {
       "id": 3,
@@ -31,7 +31,7 @@
       "SubStagenum": 3,
       "startgold": 40,
       "sec": 5,
-      "gaingold": 5
+      "gaingold": 10
     },
     {
       "id": 4,
@@ -39,7 +39,7 @@
       "SubStagenum": 4,
       "startgold": 40,
       "sec": 5,
-      "gaingold": 5
+      "gaingold": 10
     },
     {
       "id": 5,
@@ -47,7 +47,7 @@
       "SubStagenum": 5,
       "startgold": 40,
       "sec": 5,
-      "gaingold": 5
+      "gaingold": 10
     },
     {
       "id": 6,
@@ -55,7 +55,7 @@
       "SubStagenum": 6,
       "startgold": 40,
       "sec": 5,
-      "gaingold": 5
+      "gaingold": 10
     }
   ]
 }
