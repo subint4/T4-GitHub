@@ -233,7 +233,7 @@ public class SceneLoader : MonoBehaviour
         SceneManager.LoadScene($"StageP_{currentStage}");
     }
 
-    public void LoadShop() => SceneManager.LoadScene("Shop");
+    public void LoadShop() => SceneManager.LoadScene("Shop_pack");
     public void LoadTutorial() => SceneManager.LoadScene("Tutorial");
 
     public void LoadMainMenu()
