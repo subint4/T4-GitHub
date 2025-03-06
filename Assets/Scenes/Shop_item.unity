@@ -972,7 +972,7 @@ GameObject:
   - component: {fileID: 331474933}
   - component: {fileID: 331474932}
   m_Layer: 5
-  m_Name: btn_item_off
+  m_Name: btn_item_on
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1021,19 +1021,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 331474933}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 866391418}
-        m_TargetAssemblyTypeName: ScenesShopChange, Assembly-CSharp
-        m_MethodName: LoadSceneShopitem
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: Shop_item
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &331474933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1596,7 +1584,7 @@ GameObject:
   - component: {fileID: 629299934}
   - component: {fileID: 629299933}
   m_Layer: 5
-  m_Name: btn_pack_on
+  m_Name: btn_pack_off
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1664,7 +1652,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 629299934}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 866391418}
+        m_TargetAssemblyTypeName: ScenesShopChange, Assembly-CSharp
+        m_MethodName: LoadSceneShop
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Shop_pack
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &629299934
 MonoBehaviour:
   m_ObjectHideFlags: 0
