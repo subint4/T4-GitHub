@@ -15,7 +15,7 @@ MonoBehaviour:
   ID: 12
   Type: 0
   Name: Boss_Skeleton
-  Health: 2800
+  Health: 2000
   MovementSpeed: 0.25
   AttackSpeed: 1
   AttackPower: 500
