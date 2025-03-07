@@ -25,6 +25,7 @@ public class Enemy : MonoBehaviour
     private List<GameObject> bossTargets = new List<GameObject>(); // 보스는 다중 타겟 가능
     private Coroutine stunCoroutine; // 현재 실행 중인 스턴 코루틴 저장
     private bool isStunImmune = false; // 스턴 면역 여부
+    public Sprite defaultSprite;
 
 
     private void Start()
@@ -41,6 +42,20 @@ public class Enemy : MonoBehaviour
             enemyAnimatorController.gameObject.SetActive(true);
         }
 
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer == null)
+        {
+            spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
+        }
+
+        if (spriteRenderer.sprite == null && defaultSprite != null)
+        {
+            spriteRenderer.sprite = defaultSprite;  // 기본 스프라이트 할당
+        }
+        else if (spriteRenderer.sprite == null && defaultSprite == null)
+        {
+            Debug.LogWarning("Sprite가 설정되지 않았습니다: " + gameObject.name);
+        }
         enemyAnimatorController.SetWalkingState(true);
         StartCoroutine(AttackLoop());
     }
@@ -400,6 +415,11 @@ public class Enemy : MonoBehaviour
         enemyAnimatorController.SetWalkingState(false);
         enemyAnimatorController.PlayDeathAnimation();
 
+
+        if (DieEffectManager.Instance != null)
+        {
+            DieEffectManager.Instance.PlayBlinkEffect(transform);  // 깜박거림 실행
+        }
         // WaveManager에 적 처치 알림
         if (WaveManager.Instance != null)
         {
