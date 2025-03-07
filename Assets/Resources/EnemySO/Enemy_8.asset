@@ -15,7 +15,7 @@ MonoBehaviour:
   ID: 8
   Type: 0
   Name: Boss_Orc
-  Health: 500
+  Health: 1750
   MovementSpeed: 0.25
   AttackSpeed: 1
   AttackPower: 500

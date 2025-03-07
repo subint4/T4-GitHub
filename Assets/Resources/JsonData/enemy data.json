@@ -44,7 +44,7 @@
     {
       "ID": 4,
       "Name": "Boss_Zombie",
-      "Health": 300.0,
+      "Health": 1050.0,
       "MovementSpeed": 0.25,
       "AttackSpeed": 1.0,
       "AttackPower": 500.0,
@@ -84,7 +84,7 @@
     {
       "ID": 8,
       "Name": "Boss_Orc",
-      "Health": 500.0,
+      "Health": 1750.0,
       "MovementSpeed": 0.25,
       "AttackSpeed": 1.0,
       "AttackPower": 500.0,
@@ -124,7 +124,7 @@
     {
       "ID": 12,
       "Name": "Boss_Skeleton",
-      "Health": 800.0,
+      "Health": 2800.0,
       "MovementSpeed": 0.25,
       "AttackSpeed": 1.0,
       "AttackPower": 500.0,
@@ -164,7 +164,7 @@
     {
       "ID": 16,
       "Name": "Boss_Reaper",
-      "Health": 1000.0,
+      "Health": 3500.0,
       "MovementSpeed": 0.25,
       "AttackSpeed": 1.0,
       "AttackPower": 500.0,
@@ -204,7 +204,7 @@
     {
       "ID": 20,
       "Name": "Boss_Minotaur",
-      "Health": 1300.0,
+      "Health": 4550.0,
       "MovementSpeed": 0.25,
       "AttackSpeed": 1.0,
       "AttackPower": 500.0,
@@ -244,7 +244,7 @@
     {
       "ID": 24,
       "Name": "Boss_FallenAngel",
-      "Health": 1500.0,
+      "Health": 5250.0,
       "MovementSpeed": 0.25,
       "AttackSpeed": 1.0,
       "AttackPower": 500.0,

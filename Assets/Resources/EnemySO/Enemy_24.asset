@@ -15,7 +15,7 @@ MonoBehaviour:
   ID: 24
   Type: 0
   Name: Boss_FallenAngel
-  Health: 1500
+  Health: 5250
   MovementSpeed: 0.25
   AttackSpeed: 1
   AttackPower: 500
