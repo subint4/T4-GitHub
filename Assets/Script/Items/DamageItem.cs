@@ -82,8 +82,9 @@ public class DamageItemManager : MonoBehaviour
         Debug.Log($"[DamageItemManager] {selectedItemName} 사용 시작! 대상 타일: {tilePosition}");
 
         GameObject[] allEnemies = GameObject.FindGameObjectsWithTag("Enemy");
+        GameObject[] allBosses = GameObject.FindGameObjectsWithTag("Boss");
 
-        if (allEnemies.Length == 0)
+        if (allEnemies.Length == 0 && allBosses.Length == 0)
         {
             Debug.Log($"[DamageItemManager] {selectedItemName}: 현재 씬에 공격할 대상이 없습니다.");
             return;
@@ -91,20 +92,74 @@ public class DamageItemManager : MonoBehaviour
 
         bool targetHit = false;
 
-        foreach (GameObject target in allEnemies)
+        if (selectedItemName == "Bomb")
         {
-            Enemy enemyComponent = target.GetComponent<Enemy>();
-            if (enemyComponent != null)
-            {
-                float enemyX = enemyComponent.transform.position.x;
-                float enemyY = enemyComponent.transform.position.y;
+            // **EffectManager에서 이펙트 실행**
+            EffectManager.Instance.PlayEffect(tilePosition, "Bomb");
 
-                if (Mathf.Abs(enemyX - tilePosition.x) < 0.5f && Mathf.Abs(enemyY - tilePosition.y) < 0.5f)
+            foreach (GameObject target in allEnemies)
+            {
+                Enemy enemyComponent = target.GetComponent<Enemy>();
+                if (enemyComponent != null)
                 {
-                    targetHit = true;
                     enemyComponent.TakeDamage(itemData.Damage);
-                    enemyComponent.ApplyStun(itemData.StunDuration);
-                    Debug.Log($"[DamageItemManager] {target.name}에게 {itemData.Damage} 피해 및 {itemData.StunDuration}초 스턴 적용!");
+                    targetHit = true;
+                    Debug.Log($"[DamageItemManager] {target.name}에게 {itemData.Damage} 폭탄 피해!");
+                }
+            }
+
+            foreach (GameObject boss in allBosses)
+            {
+                Enemy bossComponent = boss.GetComponent<Enemy>();
+                if (bossComponent != null)
+                {
+                    bossComponent.TakeDamage(itemData.Damage);
+                    targetHit = true;
+                    Debug.Log($"[DamageItemManager] {boss.name}에게 {itemData.Damage} 폭탄 피해!");
+                }
+            }
+        }
+        else if (selectedItemName == "Rocket")
+        {
+            EffectManager.Instance.PlayEffect(tilePosition, "Rocket");
+
+            foreach (GameObject target in allEnemies)
+            {
+                Enemy enemyComponent = target.GetComponent<Enemy>();
+                if (enemyComponent != null && Mathf.Abs(enemyComponent.transform.position.y - tilePosition.y) < 0.5f)
+                {
+                    enemyComponent.TakeDamage(itemData.Damage);
+                    targetHit = true;
+                    Debug.Log($"[DamageItemManager] {target.name}에게 {itemData.Damage} 로켓 피해!");
+                }
+            }
+
+            foreach (GameObject boss in allBosses)
+            {
+                Enemy bossComponent = boss.GetComponent<Enemy>();
+                if (bossComponent != null && Mathf.Abs(bossComponent.transform.position.y - tilePosition.y) < 0.5f)
+                {
+                    bossComponent.TakeDamage(itemData.Damage);
+                    targetHit = true;
+                    Debug.Log($"[DamageItemManager] {boss.name}에게 {itemData.Damage} 로켓 피해!");
+                }
+            }
+        }
+        else if (selectedItemName == "Stun")
+        {
+            EffectManager.Instance.PlayEffect(tilePosition, "Stun");
+
+            foreach (GameObject boss in allBosses)
+            {
+                Enemy bossComponent = boss.GetComponent<Enemy>();
+                if (bossComponent != null &&
+                    Mathf.Abs(bossComponent.transform.position.x - tilePosition.x) < 0.5f &&
+                    Mathf.Abs(bossComponent.transform.position.y - tilePosition.y) < 0.5f)
+                {
+                    bossComponent.TakeDamage(itemData.Damage);
+                    bossComponent.ApplyStun(itemData.StunDuration);
+                    targetHit = true;
+                    Debug.Log($"[DamageItemManager] {boss.name}에게 {itemData.Damage} 피해 및 {itemData.StunDuration}초 스턴 적용!");
                 }
             }
         }
@@ -114,6 +169,6 @@ public class DamageItemManager : MonoBehaviour
             Debug.LogWarning($"[DamageItemManager] {selectedItemName} 아이템이 타일({tilePosition})에서 아무 적도 맞추지 못함.");
         }
 
-        selectedItemName = "";
+        selectedItemName = ""; // 아이템 사용 후 선택 해제
     }
 }

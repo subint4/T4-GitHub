@@ -23,6 +23,10 @@ public class Enemy : MonoBehaviour
     public Transform firePoint;
     public float attackRange = 1.5f;
     private List<GameObject> bossTargets = new List<GameObject>(); // 보스는 다중 타겟 가능
+    private Coroutine stunCoroutine; // 현재 실행 중인 스턴 코루틴 저장
+    private bool isStunImmune = false; // 스턴 면역 여부
+
+
     private void Start()
     {
         enemyAnimatorController = GetComponent<EnemyAnimatorController>() ?? GetComponentInChildren<EnemyAnimatorController>();
@@ -78,7 +82,7 @@ public class Enemy : MonoBehaviour
 
     private void FindTarget()
     {
-        float detectionRange = 10f;
+        float detectionRange = 3f;
         float maxYOffset = 0.5f; // 일반 적 탐지 Y축 허용 범위
         Collider2D[] towers = Physics2D.OverlapCircleAll(transform.position, detectionRange);
         float closestDistanceX = float.MaxValue;
@@ -132,24 +136,37 @@ public class Enemy : MonoBehaviour
                 continue;
             }
 
-            if (CompareTag("Boss") && bossTargets.Count > 0)
+            if (!isAttacking) // 공격 중이 아닐 때만 실행
             {
-                foreach (GameObject target in bossTargets)
+                if (CompareTag("Boss") && bossTargets.Count > 0)
                 {
-                    if (target != null)
+                    foreach (GameObject target in bossTargets)
                     {
-                        AttackTarget(target);
+                        if (target != null && IsTargetInRange(target)) // 거리 검사 추가
+                        {
+                            StartMeleeAttack(target);
+                        }
                     }
                 }
-            }
-            else if (currentTarget != null)
-            {
-                AttackTarget(currentTarget.gameObject);
+                else if (currentTarget != null && IsTargetInRange(currentTarget.gameObject)) // 거리 검사 추가
+                {
+                    StartMeleeAttack(currentTarget.gameObject);
+                }
+                else
+                {
+                    FindTarget(); // 새로운 타겟을 찾도록 추가
+                }
             }
 
-            yield return new WaitForSeconds(attackSpeed);
+            yield return new WaitForSeconds(0.1f); // 다음 루프까지 대기
         }
     }
+    private bool IsTargetInRange(GameObject target)
+    {
+        float distanceToTarget = Vector2.Distance(transform.position, target.transform.position);
+        return distanceToTarget <= attackRange; // 공격 범위 내에 있는지 확인
+    }
+
 
     private void AttackTarget(GameObject target)
     {
@@ -169,32 +186,50 @@ public class Enemy : MonoBehaviour
 
     private void StartMeleeAttack(GameObject target)
     {
-        if (isAttacking) return;
+        if (isAttacking) return; // 이미 공격 중이면 실행하지 않음
 
         isAttacking = true;
         MovementSpeed = 0;
         enemyAnimatorController.SetWalkingState(false);
         enemyAnimatorController.SetAttackState(true);
 
-        StartCoroutine(MeleeAttackRoutine());
+        StartCoroutine(MeleeAttackRoutine(target));
     }
-    private IEnumerator MeleeAttackRoutine()
+
+
+    private IEnumerator MeleeAttackRoutine(GameObject target)
     {
         yield return new WaitForSeconds(enemyStats.AttackSpeed);
 
         if (CompareTag("Boss") && bossTargets.Count > 0)
         {
-            foreach (GameObject target in bossTargets)
+            Debug.Log($"[Boss] {bossTargets.Count}개의 타겟을 공격합니다.");
+            foreach (GameObject bossTarget in bossTargets)
             {
-                AttackTarget(target);
+                if (bossTarget != null)
+                {
+                    AttackTarget(bossTarget);
+                }
             }
+        }
+        else if (target != null)
+        {
+            Debug.Log($"[Enemy] 일반 적이 {target.name}을 공격합니다.");
+            AttackTarget(target);
         }
         else if (currentTarget != null)
         {
+            Debug.Log($"[Enemy] currentTarget {currentTarget.name}을(를) 공격합니다.");
             AttackTarget(currentTarget.gameObject);
         }
+        else
+        {
+            Debug.LogWarning("[Enemy] 공격할 대상이 없습니다.");
+        }
 
-        isAttacking = false;
+        yield return new WaitForSeconds(0.2f); // 공격 간격 추가
+
+        isAttacking = false; // 공격 종료 후 다시 공격 가능하도록 설정
         enemyAnimatorController.SetWalkingState(true);
         enemyAnimatorController.SetAttackState(false);
     }
@@ -288,13 +323,17 @@ public class Enemy : MonoBehaviour
         isSlowed = false;
     }
 
+
     public void ApplyStun(float duration)
     {
-        if (isDead || isStunned) return;
+        if (isDead) return; // 이미 죽은 상태라면 스턴 적용하지 않음
+        if (CompareTag("Boss")) return; // 보스는 스턴에 면역
+        if (isStunned || isStunImmune) return; // 이미 스턴 중이거나 스턴 면역 상태라면 적용 안 함
+
+        Debug.Log($"[Enemy] {gameObject.name}: 스턴 적용 - {duration}초 동안 행동 불가");
 
         isStunned = true;
         MovementSpeed = 0f;
-        attackSpeed = 0f;
         isAttacking = false;
 
         if (enemyAnimatorController != null)
@@ -303,46 +342,45 @@ public class Enemy : MonoBehaviour
             enemyAnimatorController.SetAttackState(false);
         }
 
-        StopAllCoroutines(); // **모든 코루틴 중단 (특히 AttackLoop)**
+        // 기존 스턴이 걸려있는 경우, 새로운 스턴 적용 안 함
+        if (stunCoroutine != null)
+        {
+            StopCoroutine(stunCoroutine);
+        }
 
-        Debug.Log($"[Enemy] {gameObject.name}: 스턴 적용 - {duration}초 동안 행동 불가");
-
-        // **스턴 해제 예약**
-        StartCoroutine(StunDuration(duration));
+        // 새로운 스턴 코루틴 시작
+        stunCoroutine = StartCoroutine(StunDuration(duration));
     }
 
     private IEnumerator StunDuration(float duration)
     {
         yield return new WaitForSeconds(duration);
 
-        EndStun();
-    }
-
-    private void EndStun()
-    {
-        if (isDead) return; // **이미 죽었다면 스턴 해제 불필요**
-
         isStunned = false;
-        MovementSpeed = originalSpeed;
-        attackSpeed = enemyStats.AttackSpeed;
+        MovementSpeed = enemyStats.MovementSpeed; // 원래 이동 속도로 복구
+        isAttacking = false;
 
         if (enemyAnimatorController != null)
         {
             enemyAnimatorController.SetWalkingState(true);
-            enemyAnimatorController.SetAttackState(false);
         }
 
         Debug.Log($"[Enemy] {gameObject.name}: 스턴 해제됨");
 
-        // **현재 타겟이 존재할 경우 AttackLoop 다시 실행**
-        if (currentTarget != null && !isAttacking)
-        {
-            Debug.Log($"[Enemy] {gameObject.name}: 스턴 해제 후 공격 재개");
-            StartCoroutine(AttackLoop());
-        }
+        // **스턴 해제 후 5초간 스턴 면역 적용**
+        StartCoroutine(StunImmunityCooldown(2f));
     }
 
+    private IEnumerator StunImmunityCooldown(float immunityDuration)
+    {
+        isStunImmune = true;
+        Debug.Log($"[Enemy] {gameObject.name}: 스턴 면역 시작 ({immunityDuration}초)");
 
+        yield return new WaitForSeconds(immunityDuration);
+
+        isStunImmune = false;
+        Debug.Log($"[Enemy] {gameObject.name}: 스턴 면역 종료");
+    }
     public void TakeDamage(float damage)
     {
         if (isDead) return;
