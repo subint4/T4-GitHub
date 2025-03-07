@@ -56,37 +56,29 @@ public class GoldManager : MonoBehaviour
         UpdateGoldUI();
     }
 
+
     private void LoadGoldData()
     {
-        string filePath = Path.Combine(Application.dataPath, "Resources/JsonData/GoldData.json");
+        TextAsset jsonFile = Resources.Load<TextAsset>("JsonData/GoldData");
 
-        if (!File.Exists(filePath))
+        if (jsonFile == null)
         {
-            Debug.LogError($"[GoldManager] JSON 파일을 찾을 수 없음: {filePath}");
+            Debug.LogError("[GoldManager] GoldData.json 파일을 찾을 수 없습니다!");
             return;
         }
 
-        string jsonContent = File.ReadAllText(filePath);
-        GoldDataContainer goldDataContainer = JsonConvert.DeserializeObject<GoldDataContainer>(jsonContent);
+        GoldDataContainer goldDataContainer = JsonConvert.DeserializeObject<GoldDataContainer>(jsonFile.text);
 
         if (goldDataContainer == null || goldDataContainer.Data == null)
         {
-            Debug.LogError("[GoldManager] JSON 데이터를 불러오는 중 오류 발생!");
+            Debug.LogError("[GoldManager] JSON 데이터를 불러오지 못했습니다.");
             return;
         }
 
-        goldDataDictionary.Clear();
         foreach (var data in goldDataContainer.Data)
         {
             var key = (data.stagenum, data.SubStagenum);
-            if (!goldDataDictionary.ContainsKey(key))
-            {
-                goldDataDictionary[key] = data;
-            }
-            else
-            {
-                Debug.LogWarning($"[GoldManager] 중복된 골드 데이터 발견: {data.stagenum}-{data.SubStagenum}");
-            }
+            goldDataDictionary[key] = data;
         }
 
         Debug.Log($"[GoldManager] {goldDataDictionary.Count}개의 골드 데이터 로드 완료.");

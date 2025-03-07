@@ -7,20 +7,22 @@ using UnityEngine.UIElements;
 public class WaveDataManager
 {
     private List<WaveData> allWaveDataList = new List<WaveData>(); // 모든 웨이브 데이터 저장
+    private List<WaveData> currentWaveDataList = new List<WaveData>(); // 현재 웨이브 데이터 리스트
+    private List<WaveData> waveDataList = new List<WaveData>(); // 웨이브 데이터를 저장하는 리스트
+
 
 
     public void LoadWaveDataFromJSON()
     {
-        string filePath = Path.Combine(Application.dataPath, "Resources/JsonData/WaveData.json");
+        TextAsset jsonFile = Resources.Load<TextAsset>("JsonData/WaveData");
 
-        if (!File.Exists(filePath))
+        if (jsonFile == null)
         {
-            Debug.LogError($"[WaveDataManager] JSON 파일을 찾을 수 없음: {filePath}");
+            Debug.LogError("[WaveDataManager] JSON 파일을 찾을 수 없음: Resources/JsonData/WaveData.json");
             return;
         }
 
-        string jsonContent = File.ReadAllText(filePath);
-        WaveDataContainer waveDataContainer = JsonConvert.DeserializeObject<WaveDataContainer>(jsonContent);
+        WaveDataContainer waveDataContainer = JsonConvert.DeserializeObject<WaveDataContainer>(jsonFile.text);
 
         if (waveDataContainer == null || waveDataContainer.Data == null)
         {
@@ -28,8 +30,10 @@ public class WaveDataManager
             return;
         }
 
-        allWaveDataList = waveDataContainer.Data; // JSON에서 전체 데이터 로드
-        Debug.Log($"[WaveDataManager] 총 {allWaveDataList.Count}개의 웨이브 데이터 로드 완료.");
+        waveDataList.Clear();
+        waveDataList.AddRange(waveDataContainer.Data);
+
+        Debug.Log($"[WaveDataManager] 총 {waveDataList.Count}개의 웨이브 데이터 로드 완료.");
     }
 
     public List<WaveData> GetAllWaveData()
@@ -41,21 +45,24 @@ public class WaveDataManager
     {
         return allWaveDataList.FindAll(wave=>wave.wave==waveIndex+1);
     }
-    public List<WaveData> GetWaveDataList(List<int>waveIDs)
+
+    public List<WaveData> GetWaveDataList(List<int> waveIDs)
     {
-        if (waveIDs == null || waveIDs.Count == 0)
+        List<WaveData> selectedWaves = new List<WaveData>();
+
+        foreach (var wave in waveDataList)
         {
-            Debug.LogError("[WaveDataManager] 요청된 웨이브 ID 리스트가 비어 있습니다!");
-            return new List<WaveData>();
+            if (waveIDs.Contains(wave.ID))
+            {
+                selectedWaves.Add(wave);
+            }
         }
 
-        List<WaveData> waveDataList = allWaveDataList.FindAll(wave => waveIDs.Contains(wave.ID));
-
-        Debug.Log($"[WaveDataManager] 총 {waveDataList.Count}개의 웨이브 데이터 반환됨.");
-        return waveDataList;
+        Debug.Log($"[WaveDataManager] 요청된 웨이브 데이터 개수: {selectedWaves.Count}");
+        return selectedWaves;
     }
-
 }
+
 
 [System.Serializable]
 public class WaveData

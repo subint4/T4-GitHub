@@ -74,6 +74,10 @@ public class WaveManager : MonoBehaviour
         }
         Debug.Log($"[WaveManager] {stageNum}-{subStageNum} 스테이지의 총 적 수: {totalEnemiesPerStage}");
     }
+    public List<WaveData> GetWaveDataList()
+    {
+        return currentWaveDataList;
+    }
 
 
     private void LoadCurrentWave()

@@ -11,7 +11,8 @@ public class SceneLoader : MonoBehaviour
     public static SceneLoader instance { get; private set; }
     private bool isLoadingStage = false;
 
-    private void Awake()
+
+private void Awake()
     {
         if (instance == null)
         {
@@ -106,12 +107,22 @@ public class SceneLoader : MonoBehaviour
         Button[] buttons = FindObjectsOfType<Button>(true);
         Debug.Log($"[SceneLoader] {buttons.Length}개의 버튼 감지 완료.");
 
+        // 현재 씬 이름 가져오기
+        string currentScene = SceneManager.GetActiveScene().name;
+
+        // StageP2, StageP3에서는 버튼을 비활성화
+        if (currentScene == "StageP2" || currentScene == "StageP3")
+        {
+            Debug.LogWarning($"[SceneLoader] {currentScene}에서는 버튼 클릭을 비활성화합니다.");
+            return; // 여기서 함수 종료 → 버튼 클릭 불가능
+        }
+
         foreach (var button in buttons)
         {
             string buttonName = button.gameObject.name;
             Debug.Log($"[SceneLoader] 감지된 버튼: {buttonName}");
 
-            button.onClick.RemoveAllListeners();
+            button.onClick.RemoveAllListeners(); // 기존 이벤트 제거
 
             if (!button.interactable)
             {
@@ -138,21 +149,33 @@ public class SceneLoader : MonoBehaviour
         }
     }
 
+
     private void LoadTargetScene(string buttonName)
     {
         Debug.Log($"[SceneLoader] {buttonName} 버튼 클릭됨!");
 
+        // 현재 씬이 StageP2 또는 StageP3일 경우, 특정 버튼 제한
+        string currentScene = SceneManager.GetActiveScene().name;
+        if (currentScene == "StageP2" || currentScene == "StageP3")
+        {
+            Debug.LogWarning($"[SceneLoader] {currentScene}에서 스테이지 이동 제한됨!");
+            return;
+        }
+
+        // 버튼 이름에서 Stage 번호와 SubStage 번호를 정확히 추출
         Match match = Regex.Match(buttonName, @"Stage(\d+)-(\d+)");
         if (match.Success)
         {
             if (int.TryParse(match.Groups[1].Value, out int stageNum) &&
                 int.TryParse(match.Groups[2].Value, out int subStageNum))
             {
+                Debug.Log($"[SceneLoader] 버튼에서 추출된 스테이지: {stageNum}-{subStageNum}");
                 LoadStage(stageNum, subStageNum);
                 return;
             }
         }
 
+        // 기본 버튼 로직 처리
         switch (buttonName)
         {
             case "PlayButton":
@@ -171,6 +194,7 @@ public class SceneLoader : MonoBehaviour
                 LoadMainMenu();
                 break;
             default:
+                // 버튼 이름이 "StageX" 형식이라면 해당 Stage로 이동
                 string stageNumberStr = buttonName.Replace("Stage", "").Trim();
                 if (int.TryParse(stageNumberStr, out int stage))
                 {

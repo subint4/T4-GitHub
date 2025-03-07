@@ -7,20 +7,20 @@ using System;
 public class StageDataManager
 {
     private List<StageData> stageDataList = new List<StageData>(); // 전체 스테이지 데이터를 저장하는 리스트
+    private Dictionary<(int, int), StageData> stageDataDictionary = new Dictionary<(int, int), StageData>(); // 스테이지 데이터를 저장하는 딕셔너리
     private bool isDataLoaded = false;
 
     public void LoadStageData()
     {
-        string filePath = Path.Combine(Application.dataPath, "Resources/JsonData/StageData.json");
+        TextAsset jsonFile = Resources.Load<TextAsset>("JsonData/StageData");
 
-        if (!File.Exists(filePath))
+        if (jsonFile == null)
         {
-            Debug.LogError($"[StageDataManager] JSON 파일을 찾을 수 없음: {filePath}");
+            Debug.LogError("[StageDataManager] JSON 파일을 찾을 수 없음: Resources/JsonData/StageData.json");
             return;
         }
 
-        string jsonContent = File.ReadAllText(filePath);
-        StageDataContainer stageDataContainer = JsonConvert.DeserializeObject<StageDataContainer>(jsonContent);
+        StageDataContainer stageDataContainer = JsonConvert.DeserializeObject<StageDataContainer>(jsonFile.text);
 
         if (stageDataContainer == null || stageDataContainer.Data == null)
         {
@@ -28,11 +28,14 @@ public class StageDataManager
             return;
         }
 
-        stageDataList.Clear();
-        stageDataList.AddRange(stageDataContainer.Data);
+        stageDataDictionary.Clear();
+        foreach (var data in stageDataContainer.Data)
+        {
+            var key = (data.StageNum, data.SubStageNum);
+            stageDataDictionary[key] = data;
+        }
 
-        isDataLoaded = true;
-        Debug.Log($"[StageDataManager] 총 {stageDataList.Count}개의 스테이지 데이터 로드 완료.");
+        Debug.Log($"[StageDataManager] 총 {stageDataDictionary.Count}개의 스테이지 데이터 로드 완료.");
     }
 
     /// <summary>
@@ -55,14 +58,14 @@ public class StageDataManager
     /// </summary>
     public StageData GetStageData(int stageNum, int subStageNum)
     {
-        StageData stageData = stageDataList.Find(stage => stage.StageNum == stageNum && stage.SubStageNum == subStageNum);
-
-        if (stageData == null)
+        var key = (stageNum, subStageNum);
+        if (stageDataDictionary.TryGetValue(key, out var stageData))
         {
-            Debug.LogError($"[StageDataManager] Stage {stageNum}-{subStageNum} 데이터를 찾을 수 없습니다!");
+            return stageData;
         }
 
-        return stageData;
+        Debug.LogError($"[StageDataManager] Stage {stageNum}-{subStageNum} 데이터를 찾을 수 없습니다!");
+        return null;
     }
 
     /// <summary>
@@ -70,16 +73,16 @@ public class StageDataManager
     /// </summary>
     public List<int> GetWaveIDsForStage(int stageNum, int subStageNum)
     {
-        StageData stageData = GetStageData(stageNum, subStageNum);
-
-        if (stageData == null || string.IsNullOrEmpty(stageData.WaveIDs))
+        var key = (stageNum, subStageNum);
+        if (stageDataDictionary.TryGetValue(key, out var stageData))
         {
-            Debug.LogError($"[StageDataManager] Stage {stageNum}-{subStageNum}의 WaveIDs를 찾을 수 없습니다!");
-            return new List<int>();
+            return ParseWaveIDs(stageData.WaveIDs);
         }
 
-        return ParseWaveIDs(stageData.WaveIDs);
+        Debug.LogError($"[StageDataManager] Stage {stageNum}-{subStageNum}의 WaveIDs를 찾을 수 없습니다!");
+        return new List<int>();
     }
+
 
     /// <summary>
     /// WaveID 문자열을 정수 리스트로 변환
@@ -87,10 +90,9 @@ public class StageDataManager
     private List<int> ParseWaveIDs(string waveIDs)
     {
         List<int> result = new List<int>();
-
         if (string.IsNullOrEmpty(waveIDs))
         {
-            Debug.LogWarning("[StageDataManager] WaveIDs가 비어 있음!");
+            Debug.LogWarning("[StageDataManager] WaveIDs가 비어있음!");
             return result;
         }
 
@@ -108,7 +110,6 @@ public class StageDataManager
         }
         return result;
     }
-
     /// <summary>
     /// 특정 스테이지에서 가장 큰 서브 스테이지 번호를 반환
     /// </summary>
