@@ -110,13 +110,6 @@ private void Awake()
         // 현재 씬 이름 가져오기
         string currentScene = SceneManager.GetActiveScene().name;
 
-        // StageP2, StageP3에서는 버튼을 비활성화
-        if (currentScene == "StageP2" || currentScene == "StageP3")
-        {
-            Debug.LogWarning($"[SceneLoader] {currentScene}에서는 버튼 클릭을 비활성화합니다.");
-            return; // 여기서 함수 종료 → 버튼 클릭 불가능
-        }
-
         foreach (var button in buttons)
         {
             string buttonName = button.gameObject.name;
@@ -124,6 +117,25 @@ private void Awake()
 
             button.onClick.RemoveAllListeners(); // 기존 이벤트 제거
 
+            // StageP2, StageP3에서는 "스테이지 버튼"만 비활성화, 하지만 "NextStageButton"과 "PreviousStageButton"은 제외
+            if ((currentScene == "StageP_2" || currentScene == "StageP_3") &&
+                buttonName.Contains("Stage") &&
+                buttonName != "NextStageButton" && buttonName != "PreviousStageButton")
+            {
+                Debug.LogWarning($"[SceneLoader] {buttonName} 버튼을 비활성화합니다.");
+                button.interactable = false; // 버튼 클릭 비활성화
+                button.onClick.AddListener(() => EventSystem.current.SetSelectedGameObject(null));
+                continue; // 다음 버튼으로 이동
+            }
+
+            // 리스타트 버튼 추가
+            if (buttonName == "RestartButton")
+            {
+                button.onClick.AddListener(() => RestartStage());
+                continue;
+            }
+
+            // 다른 버튼들은 정상 작동
             if (!button.interactable)
             {
                 Debug.Log($"[SceneLoader] {buttonName} 버튼은 비활성화 상태이므로 클릭 이벤트 등록하지 않음.");
@@ -147,7 +159,11 @@ private void Awake()
                     break;
             }
         }
+
+        // UI 강제 업데이트
+        Canvas.ForceUpdateCanvases();
     }
+
 
 
     private void LoadTargetScene(string buttonName)
@@ -277,5 +293,25 @@ private void Awake()
     private bool IsStageScene(string sceneName)
     {
         return sceneName.StartsWith("Stage");
+    }// 현재 스테이지를 재시작하는 기능
+    public void RestartStage()
+    {
+        if (isLoadingStage) return; // 중복 실행 방지
+        isLoadingStage = true;
+
+        int currentStage = PlayerPrefs.GetInt("CurrentStage", 1);
+        int currentSubStage = PlayerPrefs.GetInt("CurrentSubStage", 1);
+
+        Debug.Log($"[SceneLoader] {currentStage}-{currentSubStage} 스테이지 재시작 중...");
+
+        // GameManager 리셋
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.ResetGameManager();
+        }
+
+        // 현재 스테이지 다시 로드
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+
 }

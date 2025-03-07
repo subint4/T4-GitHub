@@ -18,6 +18,8 @@ GameObject:
   - component: {fileID: 1640325486994226926}
   - component: {fileID: 3979439742465654751}
   - component: {fileID: 300313414537316266}
+  - component: {fileID: 6204532344271740425}
+  - component: {fileID: 8033853268965746928}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -75,9 +77,10 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  totalEnemies: 0
+  totalEnemiesPerStage: 0
+  currentWaveTotalEnemies: 0
   defeatedEnemies: 0
-  progressBar: {fileID: 0}
+  currentWaveDefeatedEnemies: 0
 --- !u!114 &8499294929338991552
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,6 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 013bbb2b5e79c7f4da5e4f9eb684b63d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentSubStageNum: 1
   stageText: {fileID: 0}
 --- !u!114 &3979439742465654751
 MonoBehaviour:
@@ -176,8 +180,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 437ea37019208d04093ea359e10be053, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gaugeBackground: {fileID: 0}
   gaugeFill: {fileID: 0}
+--- !u!114 &6204532344271740425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 828587090451982273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96936f6327a0fa7429831c68c31857ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effectPrefab: {fileID: 5528575029617955503, guid: b19ea5f5adf278245a0319e2a4f19386, type: 3}
+--- !u!114 &8033853268965746928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 828587090451982273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b46091cc53049c74394f448a9f3fc6c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BombButton: {fileID: 0}
+  RocketButton: {fileID: 0}
+  StunButton: {fileID: 0}
 --- !u!1 &1454555432681744912
 GameObject:
   m_ObjectHideFlags: 0
