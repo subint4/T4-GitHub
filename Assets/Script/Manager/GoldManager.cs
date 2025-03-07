@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Newtonsoft.Json;
+using System.IO;
 using System;
 
 public class GoldManager : MonoBehaviour
@@ -29,23 +30,27 @@ public class GoldManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            LoadGoldData(); // JSON에서 골드 데이터 로드
         }
         else
         {
             Destroy(gameObject);
             return;
         }
-
-        LoadGoldData();
     }
 
     private void Start()
     {
         Debug.Log("[GoldManager] 골드 매니저 시작됨");
 
-        int stageNum = StageManager.Instance?.currentStageNum ?? 1;
-        int subStageNum = StageManager.Instance?.GetCurrentSubStageNum() ?? 1;
-        SetStage(stageNum, subStageNum);
+        // **StageManager의 이벤트 구독**
+        if (StageManager.Instance != null)
+        {
+            StageManager.Instance.OnStageChanged += SetStage;
+        }
+
+        // 초기 스테이지 값 설정
+        SetStage(StageManager.Instance?.currentStageNum ?? 1, StageManager.Instance?.GetCurrentSubStageNum() ?? 1);
 
         StartCoroutine(AutoGainGold());
         UpdateGoldUI();
@@ -53,26 +58,24 @@ public class GoldManager : MonoBehaviour
 
     private void LoadGoldData()
     {
-        string jsonContent = JsonLoader.LoadJsonFromResources("JsonData/GoldData");
-        if (!string.IsNullOrEmpty(jsonContent))
-        {
-            ProcessGoldData(jsonContent);
-        }
-        else
-        {
-            Debug.LogError("[GoldManager] GoldData.json 파일을 찾을 수 없습니다!");
-        }
-    }
+        string filePath = Path.Combine(Application.dataPath, "Resources/JsonData/GoldData.json");
 
-    private void ProcessGoldData(string jsonContent)
-    {
-        GoldDataContainer goldDataContainer = JsonConvert.DeserializeObject<GoldDataContainer>(jsonContent);
-        if (goldDataContainer == null || goldDataContainer.Data == null)
+        if (!File.Exists(filePath))
         {
-            Debug.LogError("[GoldManager] JSON 데이터를 불러오지 못했습니다.");
+            Debug.LogError($"[GoldManager] JSON 파일을 찾을 수 없음: {filePath}");
             return;
         }
 
+        string jsonContent = File.ReadAllText(filePath);
+        GoldDataContainer goldDataContainer = JsonConvert.DeserializeObject<GoldDataContainer>(jsonContent);
+
+        if (goldDataContainer == null || goldDataContainer.Data == null)
+        {
+            Debug.LogError("[GoldManager] JSON 데이터를 불러오는 중 오류 발생!");
+            return;
+        }
+
+        goldDataDictionary.Clear();
         foreach (var data in goldDataContainer.Data)
         {
             var key = (data.stagenum, data.SubStagenum);
@@ -94,13 +97,16 @@ public class GoldManager : MonoBehaviour
         currentStage = stage;
         currentSubStage = subStage;
 
+        // **StageDataManager에서 스테이지 정보만 가져옴**
+        StageData stageData = DataManager.Instance.StageDataManager.GetStageData(stage, subStage);
+
         var key = (stage, subStage);
         if (goldDataDictionary.TryGetValue(key, out GoldData data))
         {
             currentGold = data.startgold;
             gainGold = data.gaingold;
             gainInterval = data.sec;
-            Debug.Log($"[GoldManager] {stage}-{subStage} 골드 데이터 설정 완료.");
+            Debug.Log($"[GoldManager] {stage}-{subStage} 골드 데이터 설정 완료: StartGold={currentGold}, GainGold={gainGold}, GainInterval={gainInterval}");
         }
         else
         {
@@ -109,6 +115,7 @@ public class GoldManager : MonoBehaviour
             gainGold = 10;
             gainInterval = 5;
         }
+
         UpdateGoldUI();
     }
 
@@ -152,8 +159,6 @@ public class GoldManager : MonoBehaviour
 
     private void UpdateGoldUI()
     {
-        Debug.Log($"골드 UI 업데이트됨: {currentGold}");
-
         OnGoldChanged?.Invoke(currentGold);
         if (goldText != null)
         {
@@ -203,6 +208,7 @@ public class GoldManager : MonoBehaviour
     }
 }
 
+// JSON 데이터를 저장할 클래스들
 [Serializable]
 public class GoldDataContainer
 {
@@ -214,7 +220,7 @@ public class GoldData
 {
     public int id;
     public int stagenum;
-    public int SubStagenum; // JSON과 필드명을 정확히 맞춤
+    public int SubStagenum;
     public int startgold;
     public int sec;
     public int gaingold;

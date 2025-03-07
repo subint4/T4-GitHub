@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -21,7 +22,7 @@ public class Enemy : MonoBehaviour
     public GameObject projectilePrefab;
     public Transform firePoint;
     public float attackRange = 1.5f;
-
+    private List<GameObject> bossTargets = new List<GameObject>(); // 보스는 다중 타겟 가능
     private void Start()
     {
         enemyAnimatorController = GetComponent<EnemyAnimatorController>() ?? GetComponentInChildren<EnemyAnimatorController>();
@@ -78,10 +79,12 @@ public class Enemy : MonoBehaviour
     private void FindTarget()
     {
         float detectionRange = 10f;
-        float maxYOffset = 0.5f;
+        float maxYOffset = 0.5f; // 일반 적 탐지 Y축 허용 범위
         Collider2D[] towers = Physics2D.OverlapCircleAll(transform.position, detectionRange);
         float closestDistanceX = float.MaxValue;
         Tower closestTower = null;
+
+        bossTargets.Clear(); // 보스 타겟 리스트 초기화
 
         foreach (var tower in towers)
         {
@@ -89,41 +92,82 @@ public class Enemy : MonoBehaviour
             {
                 float xDifference = Mathf.Abs(tower.transform.position.x - transform.position.x);
                 float yDifference = Mathf.Abs(tower.transform.position.y - transform.position.y);
+                Tower towerComponent = tower.GetComponent<Tower>(); // Tower 컴포넌트 가져오기
 
-                if (xDifference < detectionRange && yDifference <= maxYOffset && xDifference < closestDistanceX)
+                if (towerComponent == null)
+                    continue;
+
+                if (tower.CompareTag("Boss"))
                 {
-                    closestDistanceX = xDifference;
-                    closestTower = tower.GetComponent<Tower>();
+                    // 보스는 Y축 관계없이 모든 감지된 타워 저장
+                    bossTargets.Add(tower.gameObject);
+                }
+                else
+                {
+                    // 일반 타워는 X축 기준 가장 가까운 대상만 선택 (Y축 오차 허용)
+                    if (xDifference < detectionRange && yDifference <= maxYOffset && xDifference < closestDistanceX)
+                    {
+                        closestDistanceX = xDifference;
+                        closestTower = towerComponent; // Tower 타입으로 저장
+                    }
                 }
             }
         }
 
+        if (bossTargets.Count > 0)
+        {
+            Debug.Log($"[Enemy] 보스가 {bossTargets.Count}개의 타워를 감지함.");
+        }
+
+        // 일반 타워 타겟 설정
         currentTarget = closestTower;
     }
-
     private IEnumerator AttackLoop()
     {
         while (!isDead)
         {
-            if (currentTarget != null && !currentTarget.isDead && !isStunned)
+            if (isStunned)
             {
-                float distanceToTarget = Vector2.Distance(transform.position, currentTarget.transform.position);
-
-                if (enemyStats.Type == EnemyType.Melee && distanceToTarget < 1.0f)
-                {
-                    StartMeleeAttack();
-                }
-                else if (enemyStats.Type == EnemyType.Ranged && distanceToTarget <= attackRange)
-                {
-                    StartRangedAttack();
-                }
+                yield return new WaitForSeconds(0.1f);
+                continue;
             }
 
-            yield return new WaitForSeconds(0.1f);
+            if (CompareTag("Boss") && bossTargets.Count > 0)
+            {
+                foreach (GameObject target in bossTargets)
+                {
+                    if (target != null)
+                    {
+                        AttackTarget(target);
+                    }
+                }
+            }
+            else if (currentTarget != null)
+            {
+                AttackTarget(currentTarget.gameObject);
+            }
+
+            yield return new WaitForSeconds(attackSpeed);
         }
     }
 
-    private void StartMeleeAttack()
+    private void AttackTarget(GameObject target)
+    {
+        if (target == null) return;
+
+        float distanceToTarget = Vector2.Distance(transform.position, target.transform.position);
+
+        if (enemyStats.Type == EnemyType.Melee && distanceToTarget < 1.0f)
+        {
+            StartMeleeAttack(target);
+        }
+        else if (enemyStats.Type == EnemyType.Ranged && distanceToTarget <= attackRange)
+        {
+            StartRangedAttack(target);
+        }
+    }
+
+    private void StartMeleeAttack(GameObject target)
     {
         if (isAttacking) return;
 
@@ -131,31 +175,38 @@ public class Enemy : MonoBehaviour
         MovementSpeed = 0;
         enemyAnimatorController.SetWalkingState(false);
         enemyAnimatorController.SetAttackState(true);
+
         StartCoroutine(MeleeAttackRoutine());
     }
-
     private IEnumerator MeleeAttackRoutine()
     {
         yield return new WaitForSeconds(enemyStats.AttackSpeed);
 
-        if (currentTarget != null)
+        if (CompareTag("Boss") && bossTargets.Count > 0)
         {
-            currentTarget.TakeDamage(enemyStats.AttackPower);
+            foreach (GameObject target in bossTargets)
+            {
+                AttackTarget(target);
+            }
+        }
+        else if (currentTarget != null)
+        {
+            AttackTarget(currentTarget.gameObject);
         }
 
         isAttacking = false;
-        MovementSpeed = enemyStats.MovementSpeed;
         enemyAnimatorController.SetWalkingState(true);
         enemyAnimatorController.SetAttackState(false);
     }
 
-    private void StartRangedAttack()
+
+    private void StartRangedAttack(GameObject target)
     {
         if (isAttacking) return;
 
         isAttacking = true;
-        enemyAnimatorController.SetWalkingState(false);
         enemyAnimatorController.SetAttackState(true);
+
         StartCoroutine(RangedAttackRoutine());
     }
 
@@ -163,22 +214,36 @@ public class Enemy : MonoBehaviour
     {
         yield return new WaitForSeconds(enemyStats.AttackSpeed);
 
-        if (currentTarget != null && projectilePrefab != null && firePoint != null)
+        if (CompareTag("Boss"))
         {
-            Vector3 shootDirection = -transform.right;
-            GameObject projectileObj = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
-            Projectile projectileScript = projectileObj.GetComponent<Projectile>();
-
-            if (projectileScript != null)
-            {
-                projectileScript.Initialize(this,shootDirection); // Projectile이 적의 공격력을 자동으로 설정
-            }
+            Debug.Log("[Enemy] 보스는 원거리 공격을 하지 않습니다.");
+        }
+        else if (currentTarget != null)
+        {
+            FireProjectile(currentTarget.gameObject);
         }
 
         isAttacking = false;
         enemyAnimatorController.SetWalkingState(true);
         enemyAnimatorController.SetAttackState(false);
     }
+
+    private void FireProjectile(GameObject target)
+    {
+        if (target == null || projectilePrefab == null || firePoint == null) return;
+
+        Vector3 shootDirection = (target.transform.position - firePoint.position).normalized;
+
+        GameObject projectileObj = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
+        Projectile projectileScript = projectileObj.GetComponent<Projectile>();
+
+        if (projectileScript != null)
+        {
+            projectileScript.Initialize(this, shootDirection);
+            Debug.Log($"[Enemy] {gameObject.name}가 {target.name}에게 투사체 발사!");
+        }
+    }
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

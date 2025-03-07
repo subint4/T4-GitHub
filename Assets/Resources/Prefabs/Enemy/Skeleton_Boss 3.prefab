@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6262801575754710401}
   m_Layer: 10
   m_Name: Skeleton_Boss 3
-  m_TagString: Enemy
+  m_TagString: Boss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

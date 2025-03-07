@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -50,32 +51,57 @@ public class Tower : MonoBehaviour, IPointerClickHandler
 
     private void FindTarget()
     {
-        float detectionRange = 100000f;
-        Collider2D[] enemies = Physics2D.OverlapCircleAll(transform.position, detectionRange);
+        float detectionRange = 1000f; // 감지 거리
+        float enemyMaxYDifference = 0.5f; // 일반 적 감지 Y축 차이 허용 범위
+        float bossMaxYDifference = 1.0f; // 보스 감지 Y축 차이 허용 범위
+        Vector2 direction = Vector2.right; // 기본 감지 방향
+
+        // 기본 오른쪽 방향 감지
+        RaycastHit2D[] hitEnemies = Physics2D.RaycastAll(transform.position, direction, detectionRange);
+
+        // 보스 감지를 위한 추가 레이케스트 (위쪽, 아래쪽)
+        RaycastHit2D[] hitBossesUp = Physics2D.RaycastAll(transform.position + Vector3.up * bossMaxYDifference, direction, detectionRange);
+        RaycastHit2D[] hitBossesDown = Physics2D.RaycastAll(transform.position + Vector3.down * bossMaxYDifference, direction, detectionRange);
+
+        List<RaycastHit2D> totalHits = new List<RaycastHit2D>();
+        totalHits.AddRange(hitEnemies);
+        totalHits.AddRange(hitBossesUp);
+        totalHits.AddRange(hitBossesDown);
+
         float closestDistance = float.MaxValue;
         GameObject closestEnemy = null;
 
-        foreach (var enemy in enemies)
+        foreach (var hit in totalHits)
         {
-            if (enemy.CompareTag("Enemy") || enemy.CompareTag("Boss")) // Boss 태그도 감지
-            {
-                float xDifference = Mathf.Abs(enemy.transform.position.x - transform.position.x);
-                float yDifference = Mathf.Abs(enemy.transform.position.y - transform.position.y);
+            Collider2D enemy = hit.collider;
 
-                if (xDifference < detectionRange && yDifference < 0.5f)
+            if (enemy.CompareTag("Enemy") || enemy.CompareTag("Boss")) // "Enemy" 또는 "Boss" 태그가 있는 적만 감지
+            {
+                float yDifference = Mathf.Abs(enemy.transform.position.y - transform.position.y);
+                float maxYDifference = enemy.CompareTag("Boss") ? bossMaxYDifference : enemyMaxYDifference;
+
+                // 보스는 확장된 감지 범위를 사용하므로 별도 체크 필요 없음
+                if (!enemy.CompareTag("Boss") && yDifference > maxYDifference) continue;
+
+                float distance = Vector2.Distance(transform.position, enemy.transform.position);
+
+                // 가장 가까운 적을 타겟으로 설정
+                if (distance < closestDistance)
                 {
-                    float distance = Vector2.Distance(transform.position, enemy.transform.position);
-                    if (distance < closestDistance)
-                    {
-                        closestDistance = distance;
-                        closestEnemy = enemy.gameObject;
-                    }
+                    closestDistance = distance;
+                    closestEnemy = enemy.gameObject;
                 }
             }
         }
 
         currentTarget = closestEnemy;
+
+        if (currentTarget != null)
+        {
+            Debug.Log($"[Tower] 타겟 변경: {currentTarget.name} (Y축 차이 허용: {(currentTarget.CompareTag("Boss") ? bossMaxYDifference : enemyMaxYDifference)})");
+        }
     }
+
 
 
     private IEnumerator AttackLoop()

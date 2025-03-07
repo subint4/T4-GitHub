@@ -2,14 +2,16 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using System;
 
 public class StageManager : MonoBehaviour
 {
     public static StageManager Instance { get; private set; }
 
     public int currentStageNum { get; private set; } = 1;
-    private int currentSubStageNum = 1;
+    public int currentSubStageNum = 1;
     private StageData currentStageData;
+    public event Action<int, int> OnStageChanged;
 
     [SerializeField] private TMP_Text stageText;
 
@@ -28,7 +30,7 @@ public class StageManager : MonoBehaviour
 
     private void Start()
     {
-        LoadStageFromPrefs(); // PlayerPrefs에서 스테이지 불러오기
+        LoadStageFromPrefs();
         StartCoroutine(WaitForUIAndSetStage());
     }
 
@@ -111,6 +113,7 @@ public class StageManager : MonoBehaviour
         currentSubStageNum = stageData.SubStageNum;
         SaveStageToPrefs();
         Debug.Log($"[StageManager] 새로운 스테이지 데이터 적용됨: {stageData.StageNum}-{stageData.SubStageNum}");
+        OnStageChanged?.Invoke(currentStageNum, currentSubStageNum);
 
         UpdateStageUI();
     }
@@ -127,18 +130,45 @@ public class StageManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 다음 서브 스테이지로 이동
+    /// </summary>
+    public bool MoveToNextSubStage()
+    {
+        if (currentStageData == null)
+        {
+            Debug.LogError("[StageManager] 현재 스테이지 데이터가 설정되지 않았습니다!");
+            return false;
+        }
+
+        // 현재 스테이지에서 존재하는 최고 SubStageNum을 가져오기
+        int maxSubStageNum = DataManager.Instance.StageDataManager.GetMaxSubStageNum(currentStageNum);
+
+        if (currentSubStageNum < maxSubStageNum)
+        {
+            currentSubStageNum++;
+            Debug.Log($"[StageManager] 서브스테이지 변경: {currentStageNum}-{currentSubStageNum}");
+            SaveStageToPrefs();
+            StartCoroutine(LoadStageDataWithRetry());
+            UpdateStageUI();
+            return true; // 서브스테이지 변경 성공
+        }
+        else
+        {
+            // 서브스테이지가 마지막이면 다음 메인 스테이지로 변경
+            currentStageNum++;
+            currentSubStageNum = 1;
+
+            Debug.Log($"[StageManager] 메인 스테이지 변경: {currentStageNum}-{currentSubStageNum}");
+            SaveStageToPrefs();
+            StartCoroutine(LoadStageDataWithRetry());
+            UpdateStageUI();
+            return false; // 새로운 메인 스테이지 시작
+        }
+    }
+
     public int GetCurrentSubStageNum()
     {
         return currentSubStageNum;
-    }
-
-    public int GetMaxWaves()
-    {
-        return currentStageData?.MaxWaves ?? 0;
-    }
-
-    public List<int> GetAvailableEnemies()
-    {
-        return currentStageData?.AvailableEnemies ?? new List<int>();
     }
 }

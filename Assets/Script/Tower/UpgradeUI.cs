@@ -43,6 +43,9 @@ public class UpgradeUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// **타워 선택 시 업그레이드 UI 열기 (한 번 더 클릭하면 닫기)**
+    /// </summary>
     public void OpenUpgradeUI(Tower tower)
     {
         if (tower == null)
@@ -51,16 +54,27 @@ public class UpgradeUI : MonoBehaviour
             return;
         }
 
+        // **같은 타워를 다시 클릭하면 선택 취소**
+        if (selectedTower == tower)
+        {
+            Debug.Log($"[UpgradeUI] {tower.name} 선택 해제됨.");
+            CloseUpgradeUI();
+            return;
+        }
+
         selectedTower = tower;
         upgradePanel.SetActive(true);
 
-        // 타워의 오른쪽 위에 UI 배치
-        Vector3 newPosition = selectedTower.transform.position + new Vector3(1f, 1f, 0f);
+        // **타워의 오른쪽 위에 UI 배치**
+        Vector3 newPosition = selectedTower.transform.position + new Vector3(.5f, .5f, 0f);
         upgradePanel.transform.position = newPosition;
 
-        Debug.Log($"업그레이드 UI가 {tower.name} 위에 나타남.");
+        Debug.Log($"[UpgradeUI] 업그레이드 UI가 {tower.name} 위에 나타남.");
     }
 
+    /// <summary>
+    /// **업그레이드 버튼 클릭 시 타워 업그레이드 실행**
+    /// </summary>
     public void UpgradeSelectedTower()
     {
         if (UpgradeManager.Instance == null)
@@ -78,17 +92,21 @@ public class UpgradeUI : MonoBehaviour
         bool success = UpgradeManager.Instance.UpgradeTower(selectedTower);
         if (success)
         {
-            Debug.Log($"{selectedTower.towerStats.Name} 업그레이드 성공!");
+            Debug.Log($"[UpgradeUI] {selectedTower.towerStats.Name} 업그레이드 성공!");
         }
         else
         {
-            Debug.LogError("업그레이드 실패!");
+            Debug.LogError("[UpgradeUI] 업그레이드 실패!");
         }
     }
 
-
+    /// <summary>
+    /// **UI 닫기 및 타워 선택 해제**
+    /// </summary>
     public void CloseUpgradeUI()
     {
         upgradePanel.SetActive(false);
+        selectedTower = null;
+        Debug.Log("[UpgradeUI] 업그레이드 UI 닫힘.");
     }
 }

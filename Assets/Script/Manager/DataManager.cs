@@ -36,7 +36,7 @@ public class DataManager
 
             EnemyDataManager.LoadData();
             TowerDataManager.LoadData();
-            WaveDataManager.LoadWaveData();
+            WaveDataManager.LoadWaveDataFromJSON();
 
             Debug.Log("[DataManager] SO 기반 데이터 로드 완료.");
 
