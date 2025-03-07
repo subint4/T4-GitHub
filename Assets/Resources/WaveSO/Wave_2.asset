@@ -16,14 +16,14 @@ MonoBehaviour:
   stagenum: 0
   substagenum: 0
   wave: 2
-  interval: 6
+  interval: 3
   spawnDataList:
   - ID: 2
     stagenum: 0
     wave: 2
     enemyID: 2
-    count: 27
+    count: 15
     SpawnGroup: 0
-    SpawnDelay: 8
-    interval: 6
+    SpawnDelay: 3
+    interval: 3
     SpawnLaneID: 0

@@ -18,7 +18,7 @@
       "MovementSpeed": 0.5,
       "AttackSpeed": 1.0,
       "AttackPower": 10.0,
-      "RewardMoney": 5,
+      "RewardMoney": 20,
       "EnemyType": "Melee"
     },
     {
@@ -28,7 +28,7 @@
       "MovementSpeed": 0.4,
       "AttackSpeed": 1.0,
       "AttackPower": 15.0,
-      "RewardMoney": 6,
+      "RewardMoney": 25,
       "EnemyType": "Melee"
     },
     {
@@ -38,13 +38,13 @@
       "MovementSpeed": 0.4,
       "AttackSpeed": 1.0,
       "AttackPower": 20.0,
-      "RewardMoney": 7,
+      "RewardMoney": 35,
       "EnemyType": "Melee"
     },
     {
       "ID": 4,
       "Name": "Boss_Zombie",
-      "Health": 1000.0,
+      "Health": 300.0,
       "MovementSpeed": 0.25,
       "AttackSpeed": 1.0,
       "AttackPower": 500.0,
@@ -58,7 +58,7 @@
       "MovementSpeed": 0.5,
       "AttackSpeed": 1.0,
       "AttackPower": 10.0,
-      "RewardMoney": 5,
+      "RewardMoney": 25,
       "EnemyType": "Melee"
     },
     {
@@ -68,7 +68,7 @@
       "MovementSpeed": 0.4,
       "AttackSpeed": 1.0,
       "AttackPower": 15.0,
-      "RewardMoney": 6,
+      "RewardMoney": 30,
       "EnemyType": "Melee"
     },
     {
@@ -78,13 +78,13 @@
       "MovementSpeed": 0.4,
       "AttackSpeed": 1.0,
       "AttackPower": 20.0,
-      "RewardMoney": 7,
+      "RewardMoney": 40,
       "EnemyType": "Melee"
     },
     {
       "ID": 8,
       "Name": "Boss_Orc",
-      "Health": 1100.0,
+      "Health": 500.0,
       "MovementSpeed": 0.25,
       "AttackSpeed": 1.0,
       "AttackPower": 500.0,
@@ -98,7 +98,7 @@
       "MovementSpeed": 0.5,
       "AttackSpeed": 1.0,
       "AttackPower": 10.0,
-      "RewardMoney": 5,
+      "RewardMoney": 35,
       "EnemyType": "Melee"
     },
     {
@@ -108,7 +108,7 @@
       "MovementSpeed": 0.4,
       "AttackSpeed": 1.0,
       "AttackPower": 15.0,
-      "RewardMoney": 6,
+      "RewardMoney": 40,
       "EnemyType": "Melee"
     },
     {
@@ -118,13 +118,13 @@
       "MovementSpeed": 0.4,
       "AttackSpeed": 1.0,
       "AttackPower": 20.0,
-      "RewardMoney": 7,
+      "RewardMoney": 45,
       "EnemyType": "Melee"
     },
     {
       "ID": 12,
       "Name": "Boss_Skeleton",
-      "Health": 1200.0,
+      "Health": 800.0,
       "MovementSpeed": 0.25,
       "AttackSpeed": 1.0,
       "AttackPower": 500.0,
@@ -138,7 +138,7 @@
       "MovementSpeed": 0.5,
       "AttackSpeed": 1.0,
       "AttackPower": 10.0,
-      "RewardMoney": 5,
+      "RewardMoney": 35,
       "EnemyType": "Melee"
     },
     {
@@ -148,7 +148,7 @@
       "MovementSpeed": 0.4,
       "AttackSpeed": 1.0,
       "AttackPower": 15.0,
-      "RewardMoney": 6,
+      "RewardMoney": 40,
       "EnemyType": "Melee"
     },
     {
@@ -158,13 +158,13 @@
       "MovementSpeed": 0.4,
       "AttackSpeed": 1.0,
       "AttackPower": 20.0,
-      "RewardMoney": 7,
+      "RewardMoney": 45,
       "EnemyType": "Melee"
     },
     {
       "ID": 16,
       "Name": "Boss_Reaper",
-      "Health": 1300.0,
+      "Health": 1000.0,
       "MovementSpeed": 0.25,
       "AttackSpeed": 1.0,
       "AttackPower": 500.0,
@@ -178,7 +178,7 @@
       "MovementSpeed": 0.5,
       "AttackSpeed": 1.0,
       "AttackPower": 10.0,
-      "RewardMoney": 5,
+      "RewardMoney": 35,
       "EnemyType": "Melee"
     },
     {
@@ -188,7 +188,7 @@
       "MovementSpeed": 0.4,
       "AttackSpeed": 1.0,
       "AttackPower": 15.0,
-      "RewardMoney": 6,
+      "RewardMoney": 40,
       "EnemyType": "Melee"
     },
     {
@@ -198,13 +198,13 @@
       "MovementSpeed": 0.4,
       "AttackSpeed": 1.0,
       "AttackPower": 20.0,
-      "RewardMoney": 7,
+      "RewardMoney": 45,
       "EnemyType": "Melee"
     },
     {
       "ID": 20,
       "Name": "Boss_Minotaur",
-      "Health": 1400.0,
+      "Health": 1300.0,
       "MovementSpeed": 0.25,
       "AttackSpeed": 1.0,
       "AttackPower": 500.0,
@@ -218,7 +218,7 @@
       "MovementSpeed": 0.5,
       "AttackSpeed": 1.0,
       "AttackPower": 10.0,
-      "RewardMoney": 5,
+      "RewardMoney": 35,
       "EnemyType": "Melee"
     },
     {
@@ -228,7 +228,7 @@
       "MovementSpeed": 0.4,
       "AttackSpeed": 1.0,
       "AttackPower": 15.0,
-      "RewardMoney": 6,
+      "RewardMoney": 40,
       "EnemyType": "Melee"
     },
     {
@@ -238,7 +238,7 @@
       "MovementSpeed": 0.4,
       "AttackSpeed": 1.0,
       "AttackPower": 20.0,
-      "RewardMoney": 7,
+      "RewardMoney": 45,
       "EnemyType": "Melee"
     },
     {

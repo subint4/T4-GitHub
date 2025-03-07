@@ -15,7 +15,7 @@ MonoBehaviour:
   ID: 20
   Type: 0
   Name: Boss_Minotaur
-  Health: 1400
+  Health: 1300
   MovementSpeed: 0.25
   AttackSpeed: 1
   AttackPower: 500

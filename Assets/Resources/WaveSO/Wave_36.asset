@@ -13,16 +13,17 @@ MonoBehaviour:
   m_Name: Wave_36
   m_EditorClassIdentifier: 
   ID: 36
-  stagenum: 6
-  wave: 2
-  interval: 2
+  stagenum: 0
+  substagenum: 0
+  wave: 1
+  interval: 3
   spawnDataList:
   - ID: 36
-    stagenum: 6
-    wave: 2
-    enemyID: 24
-    count: 1
+    stagenum: 0
+    wave: 1
+    enemyID: 21
+    count: 15
     SpawnGroup: 0
-    SpawnDelay: 2
-    interval: 2
+    SpawnDelay: 4
+    interval: 3
     SpawnLaneID: 0
