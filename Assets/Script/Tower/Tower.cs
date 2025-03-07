@@ -53,7 +53,7 @@ public class Tower : MonoBehaviour, IPointerClickHandler
     {
         float detectionRange = 1000f; // 감지 거리
         float enemyMaxYDifference = 0.5f; // 일반 적 감지 Y축 차이 허용 범위
-        float bossMaxYDifference = 1.0f; // 보스 감지 Y축 차이 허용 범위
+        float bossMaxYDifference = 0.5f; // 보스 감지 Y축 차이 허용 범위
         Vector2 direction = Vector2.right; // 기본 감지 방향
 
         // 기본 오른쪽 방향 감지
