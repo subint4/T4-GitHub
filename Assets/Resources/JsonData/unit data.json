@@ -21,7 +21,7 @@
       "ID": 1,
       "Name": "1_fire_spirit",
       "nextlevelID": 2,
-      "Health": 40.0,
+      "Health": 5.0,
       "level": 1,
       "AttackPower": 5.0,
       "AttackSpeed": 1.0,
