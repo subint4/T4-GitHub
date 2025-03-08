@@ -97,7 +97,7 @@ public class Enemy : MonoBehaviour
 
     private void FindTarget()
     {
-        float detectionRange = 1f;
+        float detectionRange = attackRange;
         float maxYOffset = 0.5f; // 일반 적 탐지 Y축 허용 범위
         Collider2D[] towers = Physics2D.OverlapCircleAll(transform.position, detectionRange);
         float closestDistanceX = float.MaxValue;
@@ -214,40 +214,69 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator MeleeAttackRoutine(GameObject target)
     {
-        yield return new WaitForSeconds(enemyStats.AttackSpeed);
-
-        if (CompareTag("Boss") && bossTargets.Count > 0)
+        while (!isDead)
         {
-            Debug.Log($"[Boss] {bossTargets.Count}개의 타겟을 공격합니다.");
-            foreach (GameObject bossTarget in bossTargets)
+            if (isStunned)
             {
-                if (bossTarget != null)
+                yield return new WaitForSeconds(0.1f);
+                continue;
+            }
+
+            if (target == null || !IsTargetInRange(target))
+            {
+                isAttacking = false;
+                enemyAnimatorController.SetAttackState(false);
+                enemyAnimatorController.SetWalkingState(true);
+                yield break;
+            }
+
+            isAttacking = true;
+            MovementSpeed = 0;
+            enemyAnimatorController.SetWalkingState(false);
+            enemyAnimatorController.SetAttackState(true);
+
+            Debug.Log($"[Enemy] {gameObject.name} 공격 시작!");
+
+            // 애니메이션 실행 후 실행 상태 체크
+            yield return new WaitForSeconds(0.1f);
+
+            if (!enemyAnimatorController.IsPlayingAttackAnimation())
+            {
+                Debug.LogWarning($"[Enemy] {gameObject.name}: 애니메이션이 즉시 종료됨! 강제로 재실행");
+                enemyAnimatorController.SetAttackState(true);
+                yield return new WaitForSeconds(0.1f);
+            }
+
+            // 애니메이션이 끝날 때까지 대기
+            float attackAnimationTime = 0.5f; // 애니메이션 실행 시간 확보
+            yield return new WaitForSeconds(attackAnimationTime);
+
+            Debug.Log($"[Enemy] {gameObject.name} 공격 애니메이션 종료");
+
+            if (target != null && IsTargetInRange(target))
+            {
+                Tower targetTower = target.GetComponent<Tower>();
+                if (targetTower != null)
                 {
-                    AttackTarget(bossTarget);
+                    targetTower.TakeDamage(attackPower);
+                    Debug.Log($"[Enemy] {target.name}에게 {attackPower} 피해를 입힘!");
+
+                    if (targetTower.IsDestroyed())
+                    {
+                        Debug.Log($"[Enemy] {target.name}가 파괴됨. 새로운 타겟 탐색.");
+                        FindTarget();
+                    }
                 }
             }
-        }
-        else if (target != null)
-        {
-            Debug.Log($"[Enemy] 일반 적이 {target.name}을 공격합니다.");
-            AttackTarget(target);
-        }
-        else if (currentTarget != null)
-        {
-            Debug.Log($"[Enemy] currentTarget {currentTarget.name}을(를) 공격합니다.");
-            AttackTarget(currentTarget.gameObject);
-        }
-        else
-        {
-            Debug.LogWarning("[Enemy] 공격할 대상이 없습니다.");
-        }
 
-        yield return new WaitForSeconds(0.2f); // 공격 간격 추가
-
-        isAttacking = false; // 공격 종료 후 다시 공격 가능하도록 설정
-        enemyAnimatorController.SetWalkingState(true);
-        enemyAnimatorController.SetAttackState(false);
+            yield return new WaitForSeconds(enemyStats.AttackSpeed);
+            isAttacking = false;
+            enemyAnimatorController.SetWalkingState(true);
+            enemyAnimatorController.SetAttackState(false);
+        }
     }
+
+
 
 
     private void StartRangedAttack(GameObject target)

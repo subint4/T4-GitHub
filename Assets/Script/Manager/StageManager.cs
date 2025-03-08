@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using System;
 
@@ -13,7 +12,7 @@ public class StageManager : MonoBehaviour
     private StageData currentStageData;
     public event Action<int, int> OnStageChanged;
 
-    [SerializeField] private TMP_Text stageText;
+    [SerializeField] private TMP_Text stageText; // 스테이지 텍스트 표시 UI
 
     private void Awake()
     {
@@ -32,6 +31,9 @@ public class StageManager : MonoBehaviour
     {
         LoadStageFromPrefs();
         StartCoroutine(WaitForUIAndSetStage());
+
+        // **이벤트 등록 → 스테이지 변경 시 UI 자동 업데이트**
+        OnStageChanged += UpdateStageUI;
     }
 
     private IEnumerator WaitForUIAndSetStage()
@@ -113,16 +115,20 @@ public class StageManager : MonoBehaviour
         currentSubStageNum = stageData.SubStageNum;
         SaveStageToPrefs();
         Debug.Log($"[StageManager] 새로운 스테이지 데이터 적용됨: {stageData.StageNum}-{stageData.SubStageNum}");
-        OnStageChanged?.Invoke(currentStageNum, currentSubStageNum);
 
-        UpdateStageUI();
+        // **이벤트 호출 → 스테이지가 변경되었음을 알림**
+        OnStageChanged?.Invoke(currentStageNum, currentSubStageNum);
     }
 
-    private void UpdateStageUI()
+    /// <summary>
+    /// **스테이지 UI 업데이트 (TextMeshPro)**
+    /// </summary>
+    private void UpdateStageUI(int stage = -1, int subStage = -1)
     {
         if (stageText != null)
         {
             stageText.text = $"{currentStageNum}-{currentSubStageNum}";
+            Debug.Log($"[StageManager] 스테이지 UI 업데이트됨: {stageText.text}");
         }
         else
         {
@@ -131,7 +137,7 @@ public class StageManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 다음 서브 스테이지로 이동
+    /// **다음 서브 스테이지로 이동**
     /// </summary>
     public bool MoveToNextSubStage()
     {
@@ -150,7 +156,9 @@ public class StageManager : MonoBehaviour
             Debug.Log($"[StageManager] 서브스테이지 변경: {currentStageNum}-{currentSubStageNum}");
             SaveStageToPrefs();
             StartCoroutine(LoadStageDataWithRetry());
-            UpdateStageUI();
+
+            // **이벤트 호출 → UI 자동 업데이트**
+            OnStageChanged?.Invoke(currentStageNum, currentSubStageNum);
             return true; // 서브스테이지 변경 성공
         }
         else
@@ -162,7 +170,9 @@ public class StageManager : MonoBehaviour
             Debug.Log($"[StageManager] 메인 스테이지 변경: {currentStageNum}-{currentSubStageNum}");
             SaveStageToPrefs();
             StartCoroutine(LoadStageDataWithRetry());
-            UpdateStageUI();
+
+            // **이벤트 호출 → UI 자동 업데이트**
+            OnStageChanged?.Invoke(currentStageNum, currentSubStageNum);
             return false; // 새로운 메인 스테이지 시작
         }
     }

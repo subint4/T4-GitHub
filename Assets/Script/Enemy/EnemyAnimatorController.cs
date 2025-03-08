@@ -9,7 +9,6 @@ public class EnemyAnimatorController : MonoBehaviour
     private bool isDead = false;
     private bool isWalking = true;
     private bool isStunned = false;
-
     public void SetAttackState(bool attacking)
     {
         if (enemyAnimator == null)
@@ -19,27 +18,28 @@ public class EnemyAnimatorController : MonoBehaviour
         }
 
         isAttacking = attacking;
+        enemyAnimator.SetBool("isAttacking", attacking);
 
         if (attacking)
         {
-            string attackTrigger = (Random.value > 0.5f) ? "Attack1" : "Attack2";
+            string attackAnimation = (Random.value > 0.5f) ? "Attack1" : "Attack2";
 
-            if (AnimatorHasParameter(enemyAnimator, attackTrigger))
+            if (AnimatorHasParameter(enemyAnimator, attackAnimation))
             {
-                enemyAnimator.SetTrigger(attackTrigger);
-                enemyAnimator.SetBool("isAttacking", true);
-                Debug.Log($"[EnemyAnimator] {gameObject.name}: {attackTrigger} 애니메이션 실행!");
+                enemyAnimator.enabled = true; // Animator 활성화
+                enemyAnimator.Play(attackAnimation, 0, 0f); // 즉시 애니메이션 실행
+                Debug.Log($"[EnemyAnimator] {gameObject.name}: {attackAnimation} 애니메이션 실행!");
             }
             else
             {
-                Debug.LogError($"[EnemyAnimator] {gameObject.name}: {attackTrigger} 트리거가 존재하지 않습니다!");
+                Debug.LogError($"[EnemyAnimator] {gameObject.name}: {attackAnimation} 애니메이션이 존재하지 않습니다!");
             }
         }
         else
         {
+            Debug.Log($"[EnemyAnimator] {gameObject.name}: 공격 종료, Walking 상태로 복귀");
             enemyAnimator.SetBool("isAttacking", false);
             SetWalkingState(true);
-            Debug.Log($"[EnemyAnimator] {gameObject.name}: 공격 종료, Walking 상태로 복귀");
         }
     }
 
@@ -89,11 +89,22 @@ public class EnemyAnimatorController : MonoBehaviour
         }
 
         AnimatorStateInfo stateInfo = enemyAnimator.GetCurrentAnimatorStateInfo(0);
-        bool isPlaying = (stateInfo.IsName("attack1") || stateInfo.IsName("attack2")) && stateInfo.normalizedTime < 1.0f;
 
-        Debug.Log($"[EnemyAnimator] {gameObject.name}: 현재 애니메이션 상태 - {isPlaying}, NormalizedTime: {stateInfo.normalizedTime}");
+        // 애니메이션이 한 프레임만 실행되거나, 너무 빠르게 종료되지 않도록 설정
+        if (stateInfo.normalizedTime > 2.0f || stateInfo.normalizedTime <= 0f)
+        {
+            Debug.LogWarning($"[EnemyAnimator] {gameObject.name}: 비정상적인 normalizedTime 감지: {stateInfo.normalizedTime}. 애니메이션 종료로 간주.");
+            return false;
+        }
+
+        bool isPlaying = (stateInfo.IsName("Attack1") || stateInfo.IsName("Attack2")) &&
+                         stateInfo.normalizedTime < 1.0f && stateInfo.normalizedTime > 0.1f;
+
+        Debug.Log($"[EnemyAnimator] {gameObject.name}: 현재 애니메이션 상태 - 실행 중: {isPlaying}, NormalizedTime: {stateInfo.normalizedTime}");
+
         return isPlaying;
     }
+
 
     public void PlayDeathAnimation()
     {
@@ -104,6 +115,13 @@ public class EnemyAnimatorController : MonoBehaviour
             SetWalkingState(false);
             Debug.Log($"[EnemyAnimator] {gameObject.name}: 사망 애니메이션 실행!");
         }
+    }
+    public void OnAttackAnimationEnd()
+    {
+        isAttacking = false;
+        enemyAnimator.SetBool("isAttacking", false);
+        SetWalkingState(true);
+        Debug.Log($"[EnemyAnimator] {gameObject.name}: 공격 애니메이션 종료 후 Walking 상태 복귀");
     }
 
     public void OnDeathAnimationEnd()

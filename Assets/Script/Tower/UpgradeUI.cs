@@ -9,6 +9,8 @@ public class UpgradeUI : MonoBehaviour
     public Button upgradeButton;
     private Tower selectedTower;
 
+    private Canvas upgradeCanvas; // 업그레이드 UI가 속한 Canvas 참조
+
     private void Awake()
     {
         if (Instance == null)
@@ -29,6 +31,13 @@ public class UpgradeUI : MonoBehaviour
         if (upgradeButton == null)
         {
             Debug.LogError("Upgrade Button이 설정되지 않았습니다!");
+        }
+
+        // **업그레이드 UI의 Canvas 가져오기**
+        upgradeCanvas = upgradePanel.GetComponent<Canvas>();
+        if (upgradeCanvas == null)
+        {
+            Debug.LogError("[UpgradeUI] Canvas가 없습니다! UI 계층을 조정하려면 Canvas가 필요합니다.");
         }
     }
 
@@ -68,6 +77,13 @@ public class UpgradeUI : MonoBehaviour
         // **타워의 오른쪽 위에 UI 배치**
         Vector3 newPosition = selectedTower.transform.position + new Vector3(.5f, .5f, 0f);
         upgradePanel.transform.position = newPosition;
+
+        // **업그레이드 UI를 다른 UI 아래로 이동**
+        if (upgradeCanvas != null)
+        {
+            upgradeCanvas.sortingOrder = 1; // 다른 UI보다 아래에 배치
+        }
+        upgradePanel.transform.SetAsFirstSibling(); // UI 계층에서 맨 아래로 이동
 
         Debug.Log($"[UpgradeUI] 업그레이드 UI가 {tower.name} 위에 나타남.");
     }
