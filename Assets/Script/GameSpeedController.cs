@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -30,21 +28,6 @@ public class GameSpeedController : MonoBehaviour
         speedLevel = (speedLevel + 1) % speedValues.Length;
         Time.timeScale = speedValues[speedLevel];
 
-        // x1 -> x1.5 -> x2 순서로 변경되도록 수정
-        if (speedLevel == 0)
-        {
-            speedLevel = 1;
-        }
-        else if (speedLevel == 1)
-        {
-            speedLevel = 2;
-        }
-        else
-        {
-            speedLevel = 0;
-        }
-
-        Time.timeScale = speedValues[speedLevel];
         UpdateButtonText();
         Debug.Log("현재 속도: " + speedLabels[speedLevel]);
     }
