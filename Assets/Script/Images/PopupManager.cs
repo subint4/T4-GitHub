@@ -47,6 +47,8 @@ public class PopupManager : MonoBehaviour
     {
         HideAllPopups(); // **°ÔÀÓ ½ÃÀÛ ½Ã ¸ðµç ÆË¾÷ ¼û±è**
 
+        Debug.Log("[PopupManager] ¸ðµç ÆË¾÷ ¼û±è");
+
         if (nextStageButton != null)
             nextStageButton.onClick.AddListener(LoadNextStage);
 

@@ -1,65 +1,83 @@
 {
   "DataType": "ProjectileData",
   "Metadata": {
-    "ProjectileName": "string",
-    "Speed": "int",
+    "id": "int",
+    "Name": "string",
+    "Speed": "float",
     "Damage": "int",
     "CanPierce": "bool",
     "PierceCount": "int",
     "CanStun": "bool",
-    "StunDuration": "int",
+    "StunDuration": "float",
     "CanSlow": "bool",
-    "SlowEffect": "int",
-    "SlowDuration": "int"
+    "SlowEffect": "float",
+    "SlowDuration": "float"
   },
   "Data": [
     {
-      "ProjectileName": "DarkProjectile",
-      "Speed": 10,
+      "id": 1,
+      "Name": "FireProjectile",
+      "Speed": 10.0,
       "Damage": 0,
       "CanPierce": false,
       "PierceCount": 0,
       "CanStun": false,
-      "StunDuration": 0,
+      "StunDuration": 0.0,
       "CanSlow": false,
-      "SlowEffect": 0,
-      "SlowDuration": 0
+      "SlowEffect": 0.0,
+      "SlowDuration": 0.0
     },
     {
-      "ProjectileName": "LightProjectile",
-      "Speed": 10,
+      "id": 2,
+      "Name": "DarkProjectile",
+      "Speed": 10.0,
+      "Damage": 0,
+      "CanPierce": false,
+      "PierceCount": 0,
+      "CanStun": false,
+      "StunDuration": 0.0,
+      "CanSlow": false,
+      "SlowEffect": 0.0,
+      "SlowDuration": 0.0
+    },
+    {
+      "id": 3,
+      "Name": "LightProjectile",
+      "Speed": 10.0,
       "Damage": 0,
       "CanPierce": false,
       "PierceCount": 0,
       "CanStun": true,
-      "StunDuration": 2,
+      "StunDuration": 2.0,
       "CanSlow": false,
-      "SlowEffect": 0,
-      "SlowDuration": 0
+      "SlowEffect": 0.0,
+      "SlowDuration": 0.0
     },
     {
-      "ProjectileName": "WaterProjectile",
-      "Speed": 10,
+      "id": 4,
+      "Name": "WaterProjectile",
+      "Speed": 10.0,
       "Damage": 0,
       "CanPierce": false,
       "PierceCount": 0,
       "CanStun": false,
-      "StunDuration": 0,
+      "StunDuration": 0.0,
       "CanSlow": true,
       "SlowEffect": 0.5,
-      "SlowDuration": 3
+      "SlowDuration": 3.0
     },
     {
-      "ProjectileName": "WindProjectile",
-      "Speed": 10,
+      "id": 5,
+      "Name": "WindProjectile",
+      "Speed": 10.0,
       "Damage": 0,
       "CanPierce": true,
       "PierceCount": 3,
       "CanStun": false,
-      "StunDuration": 0,
+      "StunDuration": 0.0,
       "CanSlow": false,
-      "SlowEffect": 0,
-      "SlowDuration": 0
+      "SlowEffect": 0.0,
+      "SlowDuration": 0.0
     }
   ]
 }

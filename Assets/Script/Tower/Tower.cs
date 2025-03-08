@@ -138,16 +138,21 @@ public class Tower : MonoBehaviour, IPointerClickHandler
     {
         if (currentTarget != null && projectilePrefab != null && firePoint != null)
         {
-            Vector3 shootDirection = transform.right; 
             GameObject projectileObj = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
             Projectile projectile = projectileObj.GetComponent<Projectile>();
 
             if (projectile != null)
             {
-                projectile.Initialize(this,shootDirection); // 타워에서 발사됨
+                projectile.Initialize(
+                    attackDamage: towerStats.AttackPower,
+                    direction: (currentTarget.transform.position - firePoint.position).normalized
+                );
+
+                Debug.Log($"[Tower] {gameObject.name}가 {currentTarget.name}에게 투사체 발사!");
             }
         }
     }
+
     public void RestartAttack()
     {
         if (!isDead)

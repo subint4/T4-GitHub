@@ -97,7 +97,7 @@ public class Enemy : MonoBehaviour
 
     private void FindTarget()
     {
-        float detectionRange = 3f;
+        float detectionRange = 1f;
         float maxYOffset = 0.5f; // 일반 적 탐지 Y축 허용 범위
         Collider2D[] towers = Physics2D.OverlapCircleAll(transform.position, detectionRange);
         float closestDistanceX = float.MaxValue;
@@ -282,17 +282,20 @@ public class Enemy : MonoBehaviour
     {
         if (target == null || projectilePrefab == null || firePoint == null) return;
 
-        Vector3 shootDirection = (target.transform.position - firePoint.position).normalized;
-
         GameObject projectileObj = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
         Projectile projectileScript = projectileObj.GetComponent<Projectile>();
 
         if (projectileScript != null)
         {
-            projectileScript.Initialize(this, shootDirection);
+            projectileScript.Initialize(
+                attackDamage: enemyStats.AttackPower,
+                direction: (target.transform.position - firePoint.position).normalized
+            );
+
             Debug.Log($"[Enemy] {gameObject.name}가 {target.name}에게 투사체 발사!");
         }
     }
+
 
 
     private void OnTriggerEnter2D(Collider2D collision)

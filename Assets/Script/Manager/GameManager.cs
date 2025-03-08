@@ -15,16 +15,6 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        string currentScene = SceneManager.GetActiveScene().name;
-
-        // 특정 씬이 아니면 GameManager를 삭제 (메인메뉴에서는 유지)
-        if (!IsAllowedScene(currentScene))
-        {
-            Debug.LogWarning($"[GameManager] {currentScene}에서는 GameManager가 필요하지 않으므로 삭제됨.");
-            Destroy(gameObject);
-            return;
-        }
-
         // 싱글턴 패턴 유지 (중복 생성 방지)
         if (Instance == null)
         {
@@ -35,6 +25,16 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+        string currentScene = SceneManager.GetActiveScene().name;
+
+        // 특정 씬이 아니면 GameManager를 삭제 (메인메뉴에서는 유지)
+        if (!IsAllowedScene(currentScene))
+        {
+            Debug.LogWarning($"[GameManager] {currentScene}에서는 GameManager가 필요하지 않으므로 삭제됨.");
+            Destroy(gameObject);
+            return;
+        }
+
 
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
