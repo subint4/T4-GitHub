@@ -9,6 +9,17 @@ public class EnemyAnimatorController : MonoBehaviour
     private bool isDead = false;
     private bool isWalking = true;
     private bool isStunned = false;
+
+    private void Update()
+    {
+        if (isAttacking && !IsPlayingAttackAnimation())
+        {
+            isAttacking = false;
+            enemyAnimator.SetBool("isAttacking", false);
+            SetWalkingState(true);
+            Debug.Log($"[EnemyAnimator] {gameObject.name}: 공격 애니메이션 종료, Walking 상태로 복귀");
+        }
+    }
     public void SetAttackState(bool attacking)
     {
         if (enemyAnimator == null)
@@ -26,8 +37,11 @@ public class EnemyAnimatorController : MonoBehaviour
 
             if (AnimatorHasParameter(enemyAnimator, attackAnimation))
             {
-                enemyAnimator.enabled = true; // Animator 활성화
-                enemyAnimator.Play(attackAnimation, 0, 0f); // 즉시 애니메이션 실행
+                enemyAnimator.ResetTrigger("Attack1"); // 트리거 초기화
+                enemyAnimator.ResetTrigger("Attack2");
+
+                enemyAnimator.enabled = true;
+                enemyAnimator.SetTrigger(attackAnimation);
                 Debug.Log($"[EnemyAnimator] {gameObject.name}: {attackAnimation} 애니메이션 실행!");
             }
             else
@@ -42,6 +56,10 @@ public class EnemyAnimatorController : MonoBehaviour
             SetWalkingState(true);
         }
     }
+
+
+
+
 
     public void SetWalkingState(bool walking)
     {
@@ -90,19 +108,27 @@ public class EnemyAnimatorController : MonoBehaviour
 
         AnimatorStateInfo stateInfo = enemyAnimator.GetCurrentAnimatorStateInfo(0);
 
-        // 애니메이션이 한 프레임만 실행되거나, 너무 빠르게 종료되지 않도록 설정
-        if (stateInfo.normalizedTime > 2.0f || stateInfo.normalizedTime <= 0f)
-        {
-            Debug.LogWarning($"[EnemyAnimator] {gameObject.name}: 비정상적인 normalizedTime 감지: {stateInfo.normalizedTime}. 애니메이션 종료로 간주.");
-            return false;
-        }
-
-        bool isPlaying = (stateInfo.IsName("Attack1") || stateInfo.IsName("Attack2")) &&
-                         stateInfo.normalizedTime < 1.0f && stateInfo.normalizedTime > 0.1f;
+        // 애니메이션이 진행 중인지 체크 (normalizedTime이 1.0 이상이면 종료된 것으로 간주)
+        bool isPlaying = (stateInfo.IsName("Attack1") || stateInfo.IsName("Attack2")) && stateInfo.normalizedTime < 1.0f;
 
         Debug.Log($"[EnemyAnimator] {gameObject.name}: 현재 애니메이션 상태 - 실행 중: {isPlaying}, NormalizedTime: {stateInfo.normalizedTime}");
 
         return isPlaying;
+    }
+
+
+
+
+    public float GetCurrentAnimationTime()
+    {
+        if (enemyAnimator == null)
+        {
+            Debug.LogError($"[EnemyAnimator] {gameObject.name}: Animator가 NULL입니다!");
+            return 0.5f; // 기본값
+        }
+
+        AnimatorStateInfo stateInfo = enemyAnimator.GetCurrentAnimatorStateInfo(0);
+        return stateInfo.length; // 현재 실행 중인 애니메이션 길이 반환
     }
 
 
@@ -133,12 +159,17 @@ public class EnemyAnimatorController : MonoBehaviour
         }
     }
 
+
     private bool AnimatorHasParameter(Animator animator, string paramName)
     {
+        if (animator == null) return false;
+
         foreach (AnimatorControllerParameter param in animator.parameters)
         {
             if (param.name == paramName)
+            {
                 return true;
+            }
         }
         return false;
     }

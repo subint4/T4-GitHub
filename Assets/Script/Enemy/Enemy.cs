@@ -27,11 +27,17 @@ public class Enemy : MonoBehaviour
     private bool isStunImmune = false; // 스턴 면역 여부
     public Sprite defaultSprite;
 
-
     private void Start()
     {
         enemyAnimatorController = GetComponent<EnemyAnimatorController>() ?? GetComponentInChildren<EnemyAnimatorController>();
+        if (enemyAnimatorController.enemyAnimator == null)
+            enemyAnimatorController.enemyAnimator = GetComponent<Animator>();
 
+        if (!enemyAnimatorController.enemyAnimator.isActiveAndEnabled)
+        {
+            Debug.LogError($"[EnemyAnimator] {gameObject.name}: Animator가 비활성화되어 있음! 활성화합니다.");
+            enemyAnimatorController.enemyAnimator.enabled = true;
+        }
         if (enemyAnimatorController == null)
         {
             Debug.LogError($"[Enemy] {gameObject.name}: EnemyAnimatorController를 찾을 수 없습니다! 애니메이션 실행 불가.");
@@ -151,62 +157,83 @@ public class Enemy : MonoBehaviour
                 continue;
             }
 
-            if (!isAttacking) // 공격 중이 아닐 때만 실행
+            if (currentTarget == null || !IsTargetInRange(currentTarget.gameObject))
             {
-                if (CompareTag("Boss") && bossTargets.Count > 0)
-                {
-                    foreach (GameObject target in bossTargets)
-                    {
-                        if (target != null && IsTargetInRange(target)) // 거리 검사 추가
-                        {
-                            StartMeleeAttack(target);
-                        }
-                    }
-                }
-                else if (currentTarget != null && IsTargetInRange(currentTarget.gameObject)) // 거리 검사 추가
-                {
-                    StartMeleeAttack(currentTarget.gameObject);
-                }
-                else
-                {
-                    FindTarget(); // 새로운 타겟을 찾도록 추가
-                }
+                FindTarget();
             }
 
-            yield return new WaitForSeconds(0.1f); // 다음 루프까지 대기
+            if (currentTarget != null && IsTargetInRange(currentTarget.gameObject) && !isAttacking)
+            {
+                Debug.Log($"[Enemy] {gameObject.name} 공격 실행! 대상: {currentTarget.name}");
+
+                // **즉시 공격이 아니라 일정 시간 간격을 유지**
+                isAttacking = true;
+                AttackTarget(currentTarget.gameObject);
+
+                yield return new WaitForSeconds(enemyStats.AttackSpeed); // 공격 속도에 맞춰 대기
+                isAttacking = false;
+            }
+
+            yield return new WaitForSeconds(0.1f); // 짧은 대기 후 다시 루프
         }
     }
+
+
+
     private bool IsTargetInRange(GameObject target)
     {
+        if (target == null) return false;
+
         float distanceToTarget = Vector2.Distance(transform.position, target.transform.position);
-        return distanceToTarget <= attackRange; // 공격 범위 내에 있는지 확인
+        bool inRange = distanceToTarget <= attackRange;
+
+        Debug.Log($"[Enemy] {gameObject.name} -> {target.name} 거리: {distanceToTarget}, 공격 범위 내 여부: {inRange}");
+        return inRange;
     }
 
 
     private void AttackTarget(GameObject target)
     {
-        if (target == null) return;
-
-        float distanceToTarget = Vector2.Distance(transform.position, target.transform.position);
-
-        if (enemyStats.Type == EnemyType.Melee && distanceToTarget < 1.0f)
+        if (target == null)
         {
+            Debug.LogError($"[Enemy] {gameObject.name}: 공격 대상이 NULL입니다!");
+            return;
+        }
+
+        Tower targetTower = target.GetComponent<Tower>();
+
+        if (targetTower == null)
+        {
+            Debug.LogError($"[Enemy] {gameObject.name}: {target.name}에서 Tower 컴포넌트를 찾을 수 없습니다!");
+            return;
+        }
+
+        if (enemyStats.Type == EnemyType.Melee)
+        {
+            Debug.Log($"[Enemy] {gameObject.name} (Melee)이(가) {target.name}에게 근접 공격 실행!");
             StartMeleeAttack(target);
         }
-        else if (enemyStats.Type == EnemyType.Ranged && distanceToTarget <= attackRange)
+        else if (enemyStats.Type == EnemyType.Ranged)
         {
+            Debug.Log($"[Enemy] {gameObject.name} (Ranged)이(가) {target.name}에게 원거리 공격 실행!");
             StartRangedAttack(target);
+        }
+        else
+        {
+            Debug.LogError($"[Enemy] {gameObject.name}: 알 수 없는 공격 유형 ({enemyStats.Type})");
         }
     }
 
+
     private void StartMeleeAttack(GameObject target)
     {
-        if (isAttacking) return; // 이미 공격 중이면 실행하지 않음
+        Debug.Log($"공격상태 확인 {isAttacking}");
 
-        isAttacking = true;
         MovementSpeed = 0;
         enemyAnimatorController.SetWalkingState(false);
-        enemyAnimatorController.SetAttackState(true);
+        enemyAnimatorController.SetAttackState(true); // 애니메이션 실행
+
+        Debug.Log($"[Enemy] {gameObject.name} StartMeleeAttack 호출됨! Target: {target.name}");
 
         StartCoroutine(MeleeAttackRoutine(target));
     }
@@ -214,66 +241,44 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator MeleeAttackRoutine(GameObject target)
     {
-        while (!isDead)
+        if (target == null)
         {
-            if (isStunned)
+            isAttacking = false;
+            yield break;
+        }
+
+        // 공격 애니메이션 실행
+        enemyAnimatorController.SetAttackState(true);
+        MovementSpeed = 0;
+
+        // 공격 속도의 절반 동안 대기 (애니메이션 초기 모션)
+        yield return new WaitForSeconds(enemyStats.AttackSpeed / 2);
+
+        // 대상이 여전히 범위 내에 있는지 확인하고 데미지 적용
+        if (target != null && IsTargetInRange(target))
+        {
+            Tower targetTower = target.GetComponent<Tower>();
+            if (targetTower != null)
             {
-                yield return new WaitForSeconds(0.1f);
-                continue;
-            }
+                targetTower.TakeDamage(attackPower);
+                Debug.Log($"[Enemy] {gameObject.name}이(가) {target.name}에게 {attackPower}의 피해를 입힘!");
 
-            if (target == null || !IsTargetInRange(target))
-            {
-                isAttacking = false;
-                enemyAnimatorController.SetAttackState(false);
-                enemyAnimatorController.SetWalkingState(true);
-                yield break;
-            }
-
-            isAttacking = true;
-            MovementSpeed = 0;
-            enemyAnimatorController.SetWalkingState(false);
-            enemyAnimatorController.SetAttackState(true);
-
-            Debug.Log($"[Enemy] {gameObject.name} 공격 시작!");
-
-            // 애니메이션 실행 후 실행 상태 체크
-            yield return new WaitForSeconds(0.1f);
-
-            if (!enemyAnimatorController.IsPlayingAttackAnimation())
-            {
-                Debug.LogWarning($"[Enemy] {gameObject.name}: 애니메이션이 즉시 종료됨! 강제로 재실행");
-                enemyAnimatorController.SetAttackState(true);
-                yield return new WaitForSeconds(0.1f);
-            }
-
-            // 애니메이션이 끝날 때까지 대기
-            float attackAnimationTime = 0.5f; // 애니메이션 실행 시간 확보
-            yield return new WaitForSeconds(attackAnimationTime);
-
-            Debug.Log($"[Enemy] {gameObject.name} 공격 애니메이션 종료");
-
-            if (target != null && IsTargetInRange(target))
-            {
-                Tower targetTower = target.GetComponent<Tower>();
-                if (targetTower != null)
+                if (targetTower.IsDestroyed())
                 {
-                    targetTower.TakeDamage(attackPower);
-                    Debug.Log($"[Enemy] {target.name}에게 {attackPower} 피해를 입힘!");
-
-                    if (targetTower.IsDestroyed())
-                    {
-                        Debug.Log($"[Enemy] {target.name}가 파괴됨. 새로운 타겟 탐색.");
-                        FindTarget();
-                    }
+                    Debug.Log($"[Enemy] {target.name}가 파괴됨. 새로운 타겟 탐색.");
+                    FindTarget();
                 }
             }
-
-            yield return new WaitForSeconds(enemyStats.AttackSpeed);
-            isAttacking = false;
-            enemyAnimatorController.SetWalkingState(true);
-            enemyAnimatorController.SetAttackState(false);
         }
+
+        // 공격 속도의 나머지 절반 동안 대기 (공격 후 딜레이)
+        yield return new WaitForSeconds(enemyStats.AttackSpeed / 2);
+
+        // 공격 종료 후 상태 복구
+        isAttacking = false;
+        MovementSpeed = enemyStats.MovementSpeed;
+        enemyAnimatorController.SetWalkingState(true);
+        enemyAnimatorController.SetAttackState(false);
     }
 
 
@@ -281,31 +286,40 @@ public class Enemy : MonoBehaviour
 
     private void StartRangedAttack(GameObject target)
     {
-        if (isAttacking) return;
+        if (isAttacking || target == null) return; // 이미 공격 중이거나 대상이 없으면 실행 안 함
 
         isAttacking = true;
         enemyAnimatorController.SetAttackState(true);
 
-        StartCoroutine(RangedAttackRoutine());
+        Debug.Log($"[Enemy] {gameObject.name} StartRangedAttack 호출됨! Target: {target.name}");
+
+        StartCoroutine(RangedAttackRoutine(target));
     }
 
-    private IEnumerator RangedAttackRoutine()
-    {
-        yield return new WaitForSeconds(enemyStats.AttackSpeed);
 
-        if (CompareTag("Boss"))
+
+    private IEnumerator RangedAttackRoutine(GameObject target)
+    {
+        if (target == null)
         {
-            Debug.Log("[Enemy] 보스는 원거리 공격을 하지 않습니다.");
+            isAttacking = false;
+            yield break;
         }
-        else if (currentTarget != null)
+
+        yield return new WaitForSeconds(enemyStats.AttackSpeed / 2); // 공격 모션 시작
+
+        if (!CompareTag("Boss")) // 보스는 원거리 공격 안 함
         {
-            FireProjectile(currentTarget.gameObject);
+            FireProjectile(target);
         }
+
+        yield return new WaitForSeconds(enemyStats.AttackSpeed / 2); // 공격 종료 대기
 
         isAttacking = false;
         enemyAnimatorController.SetWalkingState(true);
         enemyAnimatorController.SetAttackState(false);
     }
+
 
     private void FireProjectile(GameObject target)
     {
@@ -316,15 +330,12 @@ public class Enemy : MonoBehaviour
 
         if (projectileScript != null)
         {
-            projectileScript.Initialize(
-                attackDamage: enemyStats.AttackPower,
-                direction: (target.transform.position - firePoint.position).normalized
-            );
+            Vector3 direction = (target.transform.position - firePoint.position).normalized;
+            projectileScript.Initialize(attackDamage: enemyStats.AttackPower, direction: direction);
 
             Debug.Log($"[Enemy] {gameObject.name}가 {target.name}에게 투사체 발사!");
         }
     }
-
 
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -466,6 +477,40 @@ public class Enemy : MonoBehaviour
         Destroy(gameObject, 1.5f); // 애니메이션 후 제거
     }
 
+    public bool IsPlayingAttackAnimation()
+    {
+        if (enemyAnimatorController.enemyAnimator == null)
+        {
+            Debug.LogError($"[EnemyAnimator] {gameObject.name}: Animator가 NULL입니다!");
+            return false;
+        }
+
+        if (!enemyAnimatorController.isActiveAndEnabled)
+        {
+            Debug.LogError($"[EnemyAnimator] {gameObject.name}: Animator가 비활성화 상태입니다!");
+            return false;
+        }
+
+        if (enemyAnimatorController.enemyAnimator.runtimeAnimatorController == null)
+        {
+            Debug.LogError($"[EnemyAnimator] {gameObject.name}: AnimatorController가 설정되지 않았습니다!");
+            return false;
+        }
+
+        // `GetCurrentAnimatorStateInfo()` 대체 코드
+        AnimatorClipInfo[] clipInfo = enemyAnimatorController.enemyAnimator.GetCurrentAnimatorClipInfo(0);
+        if (clipInfo.Length > 0)
+        {
+            string currentAnimation = clipInfo[0].clip.name;
+            bool isPlaying = currentAnimation.Contains("Attack");
+
+            Debug.Log($"[EnemyAnimator] {gameObject.name}: 현재 애니메이션 상태 - {currentAnimation}, 실행 중: {isPlaying}");
+            return isPlaying;
+        }
+
+        Debug.LogWarning($"[EnemyAnimator] {gameObject.name}: 현재 실행 중인 애니메이션이 없습니다!");
+        return false;
+    }
 
     public void OnDeathAnimationEnd()
     {

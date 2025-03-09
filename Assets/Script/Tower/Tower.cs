@@ -206,6 +206,7 @@ public class Tower : MonoBehaviour, IPointerClickHandler
         if (isDead) return;
         isDead = true;
         towerAnimatorController?.PlayDeathAnimation();
+        currentTile.isOccupied = false;
     }
 
     public void OnDeathAnimationEnd()
