@@ -22,7 +22,7 @@ public class GameSpeedController : MonoBehaviour
             UpdateButtonText();
         }
     }
-
+      
     public void ToggleSpeed()
     {
         speedLevel = (speedLevel + 1) % speedValues.Length;

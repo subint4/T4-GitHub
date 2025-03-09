@@ -9,6 +9,7 @@ public class PopupBlindnessController : MonoBehaviour
     public void OpenPopup(GameObject popup)
     {
         popup.SetActive(true);
+        blindBackground.SetActive(true);
         openPopupCount++;
 
         if (openPopupCount > 0)
