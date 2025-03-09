@@ -444,6 +444,11 @@ public class Enemy : MonoBehaviour
         if (isDead) return;
 
         health -= damage;
+
+        if (DieEffectManager.Instance != null)
+        {
+            DieEffectManager.Instance.PlayBlinkEffect(transform);  // 피격 시 깜박거림 실행
+        }
         if (health <= 0)
         {
             Die();
