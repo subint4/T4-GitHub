@@ -70,6 +70,7 @@ MonoBehaviour:
   projectilePrefab: {fileID: 0}
   firePoint: {fileID: 0}
   attackRange: 1.5
+  defaultSprite: {fileID: 0}
 --- !u!50 &3538306792262835736
 Rigidbody2D:
   serializedVersion: 4
@@ -238,7 +239,7 @@ Animator:
   m_GameObject: {fileID: 7590949469664139509}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: f099aaf26263c06418ce20c01a506bcb, type: 2}
+  m_Controller: {fileID: 9100000, guid: 53683ceb8fdd2664b83364a0870bb59f, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

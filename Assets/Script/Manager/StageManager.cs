@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using System;
 
@@ -12,7 +13,7 @@ public class StageManager : MonoBehaviour
     private StageData currentStageData;
     public event Action<int, int> OnStageChanged;
 
-    [SerializeField] private TMP_Text stageText; // 스테이지 텍스트 표시 UI
+    [SerializeField] private TMP_Text stageText;
 
     private void Awake()
     {
@@ -32,9 +33,11 @@ public class StageManager : MonoBehaviour
         LoadStageFromPrefs();
         StartCoroutine(WaitForUIAndSetStage());
 
-        // **이벤트 등록 → 스테이지 변경 시 UI 자동 업데이트**
+        // 이벤트 핸들러 등록
         OnStageChanged += UpdateStageUI;
+        OnStageChanged += WaveManager.Instance.LoadWavesForStage;  // 이벤트 등록
     }
+
 
     private IEnumerator WaitForUIAndSetStage()
     {
@@ -114,15 +117,13 @@ public class StageManager : MonoBehaviour
         currentStageNum = stageData.StageNum;
         currentSubStageNum = stageData.SubStageNum;
         SaveStageToPrefs();
+
         Debug.Log($"[StageManager] 새로운 스테이지 데이터 적용됨: {stageData.StageNum}-{stageData.SubStageNum}");
 
-        // **이벤트 호출 → 스테이지가 변경되었음을 알림**
+        // **이벤트 호출 → WaveManager가 자동으로 웨이브 데이터 로드**
         OnStageChanged?.Invoke(currentStageNum, currentSubStageNum);
     }
 
-    /// <summary>
-    /// **스테이지 UI 업데이트 (TextMeshPro)**
-    /// </summary>
     private void UpdateStageUI(int stage = -1, int subStage = -1)
     {
         if (stageText != null)
@@ -133,47 +134,6 @@ public class StageManager : MonoBehaviour
         else
         {
             Debug.LogWarning("[StageManager] Stage UI 텍스트가 할당되지 않았습니다.");
-        }
-    }
-
-    /// <summary>
-    /// **다음 서브 스테이지로 이동**
-    /// </summary>
-    public bool MoveToNextSubStage()
-    {
-        if (currentStageData == null)
-        {
-            Debug.LogError("[StageManager] 현재 스테이지 데이터가 설정되지 않았습니다!");
-            return false;
-        }
-
-        // 현재 스테이지에서 존재하는 최고 SubStageNum을 가져오기
-        int maxSubStageNum = DataManager.Instance.StageDataManager.GetMaxSubStageNum(currentStageNum);
-
-        if (currentSubStageNum < maxSubStageNum)
-        {
-            currentSubStageNum++;
-            Debug.Log($"[StageManager] 서브스테이지 변경: {currentStageNum}-{currentSubStageNum}");
-            SaveStageToPrefs();
-            StartCoroutine(LoadStageDataWithRetry());
-
-            // **이벤트 호출 → UI 자동 업데이트**
-            OnStageChanged?.Invoke(currentStageNum, currentSubStageNum);
-            return true; // 서브스테이지 변경 성공
-        }
-        else
-        {
-            // 서브스테이지가 마지막이면 다음 메인 스테이지로 변경
-            currentStageNum++;
-            currentSubStageNum = 1;
-
-            Debug.Log($"[StageManager] 메인 스테이지 변경: {currentStageNum}-{currentSubStageNum}");
-            SaveStageToPrefs();
-            StartCoroutine(LoadStageDataWithRetry());
-
-            // **이벤트 호출 → UI 자동 업데이트**
-            OnStageChanged?.Invoke(currentStageNum, currentSubStageNum);
-            return false; // 새로운 메인 스테이지 시작
         }
     }
 

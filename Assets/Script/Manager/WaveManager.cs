@@ -5,10 +5,9 @@ using System.Linq;
 
 public class WaveManager : MonoBehaviour
 {
-
     public static WaveManager Instance { get; private set; }
 
-    private int currentWaveIndex = 0; // **JSON이 0부터 시작하면 0, 1부터 시작하면 1로 변경**
+    private int currentWaveIndex = 0;
     private bool isSpawning = false;
     public Transform[] spawnPoints;
     private List<Enemy> activeEnemies = new List<Enemy>();
@@ -18,9 +17,7 @@ public class WaveManager : MonoBehaviour
     public int defeatedEnemies = 0;
     public int currentWaveDefeatedEnemies = 0;
 
-    private List<WaveData> allWaveDataList = new List<WaveData>(); // **모든 웨이브 데이터 로드**
-    private List<WaveData> currentWaveDataList = new List<WaveData>(); // **현재 웨이브 데이터만 저장**
-
+    private List<WaveData> currentWaveDataList = new List<WaveData>(); // 현재 스테이지의 웨이브 데이터 저장
 
     private void Awake()
     {
@@ -34,9 +31,18 @@ public class WaveManager : MonoBehaviour
             return;
         }
     }
-    public void LoadWavesForStage()
+
+    private void Start()
     {
-        Debug.Log("[WaveManager] LoadWavesForStage() 호출됨");
+        if (StageManager.Instance != null)
+        {
+            StageManager.Instance.OnStageChanged += LoadWavesForStage;
+        }
+    }
+
+    public void LoadWavesForStage(int stageNum, int subStageNum)
+    {
+        Debug.Log($"[WaveManager] LoadWavesForStage() 호출됨: {stageNum}-{subStageNum}");
 
         if (StageManager.Instance == null)
         {
@@ -44,12 +50,6 @@ public class WaveManager : MonoBehaviour
             return;
         }
 
-        DataManager.Instance.WaveDataManager.LoadWaveDataFromJSON();
-
-        int stageNum = StageManager.Instance.currentStageNum;
-        int subStageNum = StageManager.Instance.currentSubStageNum;
-
-        // 현재 스테이지에 해당하는 웨이브 ID 가져오기
         List<int> waveIDs = DataManager.Instance.StageDataManager.GetWaveIDsForStage(stageNum, subStageNum);
 
         if (waveIDs == null || waveIDs.Count == 0)
@@ -58,7 +58,6 @@ public class WaveManager : MonoBehaviour
             return;
         }
 
-        // `GetWaveDataList()` 사용하여 웨이브 데이터를 가져오기
         currentWaveDataList = DataManager.Instance.WaveDataManager.GetWaveDataList(waveIDs);
 
         if (currentWaveDataList == null || currentWaveDataList.Count == 0)
@@ -67,37 +66,21 @@ public class WaveManager : MonoBehaviour
             return;
         }
 
-        totalEnemiesPerStage = 0;
-        foreach (var wave in currentWaveDataList)
-        {
-            totalEnemiesPerStage += wave.count;
-        }
+        totalEnemiesPerStage = currentWaveDataList.Sum(wave => wave.count);
         Debug.Log($"[WaveManager] {stageNum}-{subStageNum} 스테이지의 총 적 수: {totalEnemiesPerStage}");
-    }
-    public List<WaveData> GetWaveDataList()
-    {
-        return currentWaveDataList;
-    }
 
+        // **현재 로드된 웨이브 데이터 출력**
+        Debug.Log($"[WaveManager] {stageNum}-{subStageNum} 스테이지에서 로드된 웨이브 데이터 목록:");
 
-    private void LoadCurrentWave()
-    {
-        currentWaveDataList = allWaveDataList.FindAll(wave => wave.wave == currentWaveIndex + 1); // **현재 웨이브 데이터 필터링**
-
-        if (currentWaveDataList == null || currentWaveDataList.Count == 0)
-        {
-            Debug.LogError($"[WaveManager] 웨이브 {currentWaveIndex + 1} 데이터를 찾을 수 없습니다!");
-            return;
-        }
-
-        currentWaveTotalEnemies = 0;
         foreach (var wave in currentWaveDataList)
         {
-            currentWaveTotalEnemies += wave.count;
+            Debug.Log($"[CurrentWaveData] Wave: {wave.wave}, EnemyID: {wave.enemyID}, Count: {wave.count}, " +
+                      $"SpawnDelay: {wave.SpawnDelay}, SpawnGroup: {wave.SpawnGroup}, Interval: {wave.interval}, " +
+                      $"SpawnLaneID: {wave.SpawnLaneID}, StageNum: {wave.stageNum}, SubStageNum: {wave.subStageNum}");
         }
-
-        Debug.Log($"[WaveManager] 웨이브 {currentWaveIndex + 1} 로드 완료! 총 적 수: {currentWaveTotalEnemies}");
     }
+
+
 
     public void StartWave()
     {
@@ -118,64 +101,38 @@ public class WaveManager : MonoBehaviour
             return;
         }
 
+        Debug.Log($"[WaveManager] 웨이브 {currentWaveIndex + 1} 시작! 적 ID: {currentWaveData.enemyID}, 총 적 수: {currentWaveData.count}");
+
         currentWaveTotalEnemies = currentWaveData.count;
-        Debug.Log($"[WaveManager] 웨이브 {currentWaveIndex + 1} 시작! 총 적 수: {currentWaveTotalEnemies}");
 
-        StartCoroutine(SpawnEnemyCoroutine(currentWaveData.enemyID, currentWaveData.count, currentWaveData.SpawnDelay));
+        StartCoroutine(SpawnWaveCoroutine());
     }
 
-    private IEnumerator SpawnWave()
+
+
+    private IEnumerator SpawnWaveCoroutine()
     {
         isSpawning = true;
 
-        foreach (var waveData in currentWaveDataList)
-        {
-            if (waveData == null)
-            {
-                Debug.LogError("[WaveManager] waveData가 null입니다!");
-                continue;
-            }
+        // 현재 웨이브 데이터 가져오기
+        WaveData waveData = currentWaveDataList[currentWaveIndex];
 
-            for (int j = 0; j < waveData.count; j++)
-            {
-                SpawnEnemy(waveData.enemyID);
-                yield return new WaitForSeconds(waveData.SpawnDelay);
-            }
-        }
-
-        isSpawning = false;
-        Debug.Log("[WaveManager] 웨이브 스폰 완료!");
-    }
-    private IEnumerator SpawnEnemies(WaveData waveData)
-    {
-        isSpawning = true;
-        Debug.Log($"[WaveManager] 웨이브 {currentWaveIndex + 1} 적 스폰 시작!");
-
-        if (waveData == null)
-        {
-            Debug.LogError("[WaveManager] waveData가 null입니다!");
-            isSpawning = false;  // 웨이브 종료를 위해 false 설정
-            yield break;
-        }
-
-        if (waveData.count <= 0)
-        {
-            Debug.LogError($"[WaveManager] 웨이브 {currentWaveIndex + 1}의 적 수가 0! 즉시 종료됨.");
-            isSpawning = false;  // 웨이브 종료
-            CheckNextWave();
-            yield break;
-        }
+        Debug.Log($"[WaveManager] 웨이브 {waveData.wave}에서 EnemyID {waveData.enemyID} 스폰 시작");
 
         for (int i = 0; i < waveData.count; i++)
         {
-            Debug.Log($"[WaveManager] 적 소환 시도 - ID: {waveData.enemyID}");
+            Debug.Log($"[WaveManager] EnemyID {waveData.enemyID} 스폰 - 남은 적 {waveData.count - i}");
+
             SpawnEnemy(waveData.enemyID);
             yield return new WaitForSeconds(waveData.SpawnDelay);
         }
 
         isSpawning = false;
-        Debug.Log($"[WaveManager] 웨이브 {currentWaveIndex + 1} 적 생성 완료! 활성 적 수: {activeEnemies.Count}");
     }
+
+
+
+
 
     private void SpawnEnemy(int enemyID)
     {
@@ -185,6 +142,9 @@ public class WaveManager : MonoBehaviour
             return;
         }
 
+        // 올바른 EnemyID가 전달되는지 확인
+        Debug.Log($"[WaveManager] SpawnEnemy 호출됨 - EnemyID: {enemyID}");
+
         // 적 프리팹 가져오기
         GameObject enemyPrefab = EnemyManager.Instance.GetEnemyPrefab(enemyID);
         if (enemyPrefab == null)
@@ -193,54 +153,95 @@ public class WaveManager : MonoBehaviour
             return;
         }
 
-        Transform selectedSpawnPoint;
+        Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
 
-        // 유니티 `Tag`를 사용하여 보스인지 판별
-        if (enemyPrefab.CompareTag("Boss"))
-        {
-            // 보스는 2번 또는 4번 스폰 포인트에서만 소환
-            List<int> bossSpawnIndexes = new List<int> { 1, 3 }; // 0부터 시작하는 인덱스 (1=2열, 3=4열)
-            int randomIndex = bossSpawnIndexes[Random.Range(0, bossSpawnIndexes.Count)];
-            selectedSpawnPoint = spawnPoints[randomIndex];
-            Debug.Log($"[WaveManager] 보스({enemyID})가 {randomIndex + 1}열에서 스폰됨!");
-        }
-        else
-        {
-            // 일반 적은 랜덤 스폰
-            selectedSpawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
-        }
-
-        // 적 생성 및 초기화
-        GameObject newEnemyObj = Instantiate(enemyPrefab, selectedSpawnPoint.position, Quaternion.identity);
+        GameObject newEnemyObj = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
         Enemy newEnemy = newEnemyObj.GetComponent<Enemy>();
 
         if (newEnemy != null)
         {
             newEnemy.Initialize(DataManager.Instance.EnemyDataManager.GetEnemyData(enemyID), EnemyType.Melee);
             activeEnemies.Add(newEnemy);
-            Debug.Log($"[WaveManager] 적 스폰 완료 - ID {enemyID}, 위치 {selectedSpawnPoint.position}");
+            Debug.Log($"[WaveManager] 적 스폰 완료 - ID {enemyID}, 위치 {spawnPoint.position}");
         }
         else
         {
             Debug.LogError("[WaveManager] 생성된 적에 Enemy 컴포넌트가 없습니다!");
         }
     }
-    private IEnumerator SpawnEnemyCoroutine(int enemyID, int count, float delay)
+
+    public void ClearEnemy(Enemy enemy)
     {
-        for (int j = 0; j < count; j++)
+        if (!activeEnemies.Contains(enemy)) return;
+
+        activeEnemies.Remove(enemy);
+        currentWaveDefeatedEnemies = Mathf.Clamp(currentWaveDefeatedEnemies + 1, 0, currentWaveTotalEnemies);
+        defeatedEnemies = Mathf.Clamp(defeatedEnemies + 1, 0, totalEnemiesPerStage);
+
+        // **게이지 업데이트: 현재 웨이브 진행도 / 전체 적 수 기준으로 업데이트**
+        GaugeManager gaugeManager = FindObjectOfType<GaugeManager>();
+        if (gaugeManager != null)
         {
-            SpawnEnemy(enemyID);
-            yield return new WaitForSeconds(delay);
+            gaugeManager.UpdateGauge(defeatedEnemies, totalEnemiesPerStage);
+        }
+
+        Debug.Log($"[WaveManager] 적 처치됨 {currentWaveDefeatedEnemies}/{currentWaveTotalEnemies}, 전체 처치: {defeatedEnemies}/{totalEnemiesPerStage}");
+
+        // **웨이브가 종료되었는지 확인**
+        if (currentWaveDefeatedEnemies >= currentWaveTotalEnemies)
+        {
+            Debug.Log($"[WaveManager] 웨이브 {currentWaveIndex + 1} 완료! 다음 웨이브 확인 중...");
+            isSpawning = false;  // 스폰 중지 신호 추가
+            CheckNextWave();
+        }
+    }
+
+    private void CheckNextWave()
+    {
+        if (isSpawning)
+        {
+            Debug.LogWarning("[WaveManager] 웨이브 진행 중인데 CheckNextWave가 호출됨! 실행 중지");
+            return;
+        }
+
+        if (currentWaveIndex + 1 < currentWaveDataList.Count)
+        {
+            StopAllCoroutines();  // 현재 실행 중인 모든 코루틴을 멈춘다.
+            isSpawning = false;   // 새로운 웨이브 시작 전에 스폰 상태를 확실히 초기화
+
+            float waveInterval = currentWaveDataList[currentWaveIndex].interval;
+            Debug.Log($"[WaveManager] 다음 웨이브 {currentWaveIndex + 2} 시작까지 {waveInterval}초 대기...");
+
+            currentWaveIndex++;
+            StartCoroutine(StartNextWaveWithDelay(waveInterval));
+        }
+        else
+        {
+            Debug.Log("[WaveManager] 모든 웨이브 종료! 게임 클리어 판정.");
+            OnAllWavesCompleted();
         }
     }
 
 
+    private IEnumerator StartNextWaveWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        StartWave();
+    }
+
+    private void OnAllWavesCompleted()
+    {
+        Debug.Log("[WaveManager] 모든 웨이브가 종료되었습니다! 게임 승리 처리.");
+        PopupManager popupManager = FindObjectOfType<PopupManager>();
+        if (popupManager != null)
+        {
+            popupManager.ShowVictoryPopup();
+        }
+    }
+
     public void ResetWaves()
     {
-        Debug.Log("[WaveManager] 웨이브 초기화 실행!");
-
         StopAllCoroutines();
-
         currentWaveIndex = 0;
         defeatedEnemies = 0;
         totalEnemiesPerStage = 0;
@@ -253,91 +254,6 @@ public class WaveManager : MonoBehaviour
             Destroy(enemy.gameObject);
         }
 
-        GaugeManager gaugeManager = FindObjectOfType<GaugeManager>();
-        if (gaugeManager != null)
-        {
-            gaugeManager.UpdateGauge(0, 1);
-        }
-
         Debug.Log("[WaveManager] 웨이브 데이터 초기화 완료.");
-    }
-
-    public void Clear(Enemy enemy)
-    {
-        if (activeEnemies.Contains(enemy))
-        {
-            activeEnemies.Remove(enemy);
-        }
-
-        currentWaveDefeatedEnemies++;
-        defeatedEnemies++;
-
-        Debug.Log($"[WaveManager] 적 처치됨 {currentWaveDefeatedEnemies}/{currentWaveTotalEnemies}, 전체 처치: {defeatedEnemies}/{totalEnemiesPerStage}");
-
-        GaugeManager gaugeManager = FindObjectOfType<GaugeManager>();
-        if (gaugeManager != null)
-        {
-            gaugeManager.UpdateGauge(defeatedEnemies, totalEnemiesPerStage);
-        }
-
-        // **현재 웨이브의 모든 적이 처치되었는지 확인**
-        if (currentWaveDefeatedEnemies >= currentWaveTotalEnemies)
-        {
-            Debug.Log($"[WaveManager] 웨이브 {currentWaveIndex + 1} 완료! 다음 웨이브 확인 중...");
-
-            // **isSpawning을 false로 설정하여 다음 웨이브 시작 가능하도록 변경**
-            isSpawning = false;
-            CheckNextWave();
-        }
-
-        // **전체 스테이지의 적이 모두 처치되었는지 확인**
-        if (defeatedEnemies >= totalEnemiesPerStage)
-        {
-            Debug.Log("[WaveManager] 모든 웨이브의 적 처치 완료! 게임 승리 판정.");
-            OnAllWavesCompleted();
-        }
-    }
-
-
-    private void CheckNextWave()
-    {
-        Debug.Log($"[WaveManager] CheckNextWave() 호출됨! 현재 웨이브 인덱스: {currentWaveIndex}, 총 웨이브 개수: {currentWaveDataList.Count}");
-
-        if (isSpawning)
-        {
-            Debug.LogWarning("[WaveManager] 웨이브 진행 중인데 CheckNextWave가 호출됨! 실행 중지");
-            return;
-        }
-
-        if (currentWaveIndex + 1 < currentWaveDataList.Count)
-        {
-            float waveInterval = currentWaveDataList[currentWaveIndex].interval; // interval 값 가져오기
-            Debug.Log($"[WaveManager] 다음 웨이브 {currentWaveIndex + 2} 시작까지 {waveInterval}초 대기...");
-
-            currentWaveIndex++;
-            StartCoroutine(StartNextWaveWithDelay(waveInterval));
-        }
-        else
-        {
-            Debug.Log("[WaveManager] 모든 웨이브 종료! 게임 클리어 판정.");
-            OnAllWavesCompleted();
-        }
-    }
-    private IEnumerator StartNextWaveWithDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        StartWave();
-    }
-
-
-
-    private void OnAllWavesCompleted()
-    {
-        Debug.Log("[WaveManager] 모든 웨이브가 종료되었습니다! 게임 승리 처리.");
-        PopupManager popupManager = FindObjectOfType<PopupManager>();
-        if (popupManager != null)
-        {
-            popupManager.ShowVictoryPopup();
-        }
     }
 }

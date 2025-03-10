@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
         // 씬 변경 후 웨이브 재로딩
         if (waveManager != null)
         {
-            waveManager.LoadWavesForStage();
+            WaveManager.Instance.LoadWavesForStage(StageManager.Instance.currentStageNum, StageManager.Instance.currentSubStageNum);
         }
     }
 
@@ -84,7 +84,7 @@ public class GameManager : MonoBehaviour
 
         Debug.Log($"[GameManager] 현재 스테이지: {currentStage}, 서브 스테이지: {currentSubStage}");
 
-        waveManager.LoadWavesForStage();
+        WaveManager.Instance.LoadWavesForStage(StageManager.Instance.currentStageNum, StageManager.Instance.currentSubStageNum);
 
         StartCoroutine(GameStartCountdown());
         StartCoroutine(DelayedStart());
@@ -112,7 +112,7 @@ public class GameManager : MonoBehaviour
         waveManager = FindObjectOfType<WaveManager>();
         if (waveManager != null)
         {
-            waveManager.LoadWavesForStage();
+            WaveManager.Instance.LoadWavesForStage(StageManager.Instance.currentStageNum, StageManager.Instance.currentSubStageNum);
             Debug.Log("[GameManager] 웨이브 데이터 로드 완료!");
         }
         else
