@@ -3970,6 +3970,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1640325486994226926, guid: fca10bfe6c7988944b990edce1c9b4ed, type: 3}
+      propertyPath: stageText
+      value: 
+      objectReference: {fileID: 457813713}
     - target: {fileID: 3457814001051694787, guid: fca10bfe6c7988944b990edce1c9b4ed, type: 3}
       propertyPath: spawnPoints.Array.data[0]
       value: 

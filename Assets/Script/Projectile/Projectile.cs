@@ -16,6 +16,8 @@ public class Projectile : MonoBehaviour
     private float slowDuration;
     private bool canStun;
     private float stunDuration;
+    public bool isSpecialItemProjectile = false;
+
 
     private Vector3 moveDirection;
     private float distanceTraveled = 0f;
@@ -74,7 +76,16 @@ public class Projectile : MonoBehaviour
 
                 if (canStun)
                 {
-                    enemy.ApplyStun(stunDuration);
+                    if (isSpecialItemProjectile)
+                    {
+                        // 아이템 투사체 스턴 (보스 포함)
+                        enemy.ApplyStun(stunDuration, true);
+                    }
+                    else
+                    {
+                        // 일반 공격 투사체 스턴 (보스 제외)
+                        enemy.ApplyStun(stunDuration);
+                    }
                 }
 
                 if (canPierce)
@@ -95,6 +106,7 @@ public class Projectile : MonoBehaviour
             }
         }
     }
+
 
     private void LoadProjectileDataFromJson()
     {

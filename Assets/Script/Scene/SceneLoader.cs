@@ -93,7 +93,7 @@ private void Awake()
         WaveManager waveManager = FindObjectOfType<WaveManager>();
         if (waveManager != null)
         {
-            waveManager.LoadWavesForStage();
+            WaveManager.Instance.LoadWavesForStage(StageManager.Instance.currentStageNum, StageManager.Instance.currentSubStageNum);
             Debug.Log($"[SceneLoader] {stageNum}-{subStageNum} 웨이브 데이터 로드 완료!");
         }
         else

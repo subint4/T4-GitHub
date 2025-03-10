@@ -382,13 +382,17 @@ public class Enemy : MonoBehaviour
     }
 
 
-    public void ApplyStun(float duration)
+    public void ApplyStun(float duration, bool isFromItem = false)
     {
         if (isDead) return; // 이미 죽은 상태라면 스턴 적용하지 않음
-        if (CompareTag("Boss")) return; // 보스는 스턴에 면역
-        if (isStunned || isStunImmune) return; // 이미 스턴 중이거나 스턴 면역 상태라면 적용 안 함
 
-        Debug.Log($"[Enemy] {gameObject.name}: 스턴 적용 - {duration}초 동안 행동 불가");
+        // 공격으로 거는 스턴은 보스에게 적용되지 않음
+        if (!isFromItem && CompareTag("Boss")) return;
+
+        // 이미 스턴 중이거나 스턴 면역이면 적용 안 함
+        if (isStunned || isStunImmune) return;
+
+        Debug.Log($"[Enemy] {gameObject.name}: 스턴 적용 - {duration}초 동안 행동 불가 (출처: {(isFromItem ? "아이템" : "공격")})");
 
         isStunned = true;
         MovementSpeed = 0f;
@@ -471,7 +475,7 @@ public class Enemy : MonoBehaviour
         // WaveManager에 적 처치 알림
         if (WaveManager.Instance != null)
         {
-            WaveManager.Instance.Clear(this); // 적 객체 전달
+            WaveManager.Instance.ClearEnemy(this); // 적 객체 전달
         }
         // **골드 지급 기능 추가**
         if (GoldManager.Instance != null)
