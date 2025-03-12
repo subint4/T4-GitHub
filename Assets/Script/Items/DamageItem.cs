@@ -11,7 +11,7 @@ public class DamageItemManager : MonoBehaviour
     public Button StunButton;
 
     private DamageItemSettings settings;
-    private string selectedItemName = ""; // 선택된 아이템 이름 저장
+    public string selectedItemName = ""; // 선택된 아이템 이름 저장
 
     private void Awake()
     {
@@ -33,104 +33,132 @@ public class DamageItemManager : MonoBehaviour
 
         Debug.Log($"[DamageItemManager] JSON에서 {settings.Data.Count}개의 아이템이 로드됨.");
 
-        // 버튼 클릭 시 아이템 선택 (즉시 공격 X)
         if (BombButton != null)
-            BombButton.onClick.AddListener(() => SelectItem("Bomb"));
+            BombButton.onClick.AddListener(() => UseItem("Bomb"));
 
         if (RocketButton != null)
             RocketButton.onClick.AddListener(() => SelectItem("Rocket"));
 
         if (StunButton != null)
-            StunButton.onClick.AddListener(() => SelectItem("Stun"));
+            StunButton.onClick.AddListener(() => UseItem("Stun"));
     }
 
-    private void SelectItem(string itemName)
+    public void SelectItem(string itemName)
     {
-        selectedItemName = itemName; // 사용자가 선택한 아이템 저장
-        Debug.Log($"[DamageItemManager] {itemName} 아이템 선택됨! 타일을 클릭하세요.");
+        selectedItemName = itemName;
+        Debug.Log($"[DamageItemManager] {itemName} 아이템 선택됨! 화면을 터치하여 사용하세요.");
     }
-
-    public string GetSelectedItemName()
+    private void HandleScreenClick(Vector3 clickPosition)
     {
-        return selectedItemName;
+        if (string.IsNullOrEmpty(selectedItemName))
+        {
+            Debug.Log("[DamageItemManager] 선택된 아이템이 없습니다!");
+            return;
+        }
+
+        Debug.Log($"[DamageItemManager] {selectedItemName} 아이템 사용 시도! 클릭 위치: {clickPosition}");
+
+        if (selectedItemName == "Rocket")
+        {
+            UseItemOnTile(clickPosition);
+        }
+
+        selectedItemName = ""; // 아이템 사용 후 초기화
     }
 
+
+    public void UseItem(string itemName)
+    {
+        if (settings == null || settings.Data == null)
+        {
+            Debug.LogError("[DamageItemManager] JSON 데이터가 로드되지 않았습니다!");
+            return;
+        }
+
+        DamageItemData itemData = settings.Data.Find(item => item.ItemName == itemName);
+
+        if (itemData == null)
+        {
+            Debug.LogError($"[DamageItemManager] {itemName}에 대한 데이터가 JSON에서 발견되지 않았습니다!");
+            return;
+        }
+
+        GameObject[] allEnemies = GameObject.FindGameObjectsWithTag("Enemy");
+        GameObject[] allBosses = GameObject.FindGameObjectsWithTag("Boss");
+
+        // **적이 없으면 아이템 발동 안함**
+        if ((itemName == "Bomb" && allEnemies.Length == 0 && allBosses.Length == 0) ||
+            (itemName == "Stun" && allBosses.Length == 0))
+        {
+            Debug.LogWarning($"[DamageItemManager] {itemName} 아이템이 사용할 대상이 없어 발동되지 않음.");
+            return;
+        }
+
+        Debug.Log($"[DamageItemManager] {itemName} 즉시 발동!");
+
+        bool targetHit = false;
+
+        if (itemName == "Bomb")
+        {
+            EffectManager.Instance.PlayEffect(Vector3.zero, "Bomb");
+
+            foreach (GameObject target in allEnemies)
+            {
+                target.GetComponent<Enemy>()?.TakeDamage(itemData.Damage);
+                targetHit = true;
+            }
+
+            foreach (GameObject boss in allBosses)
+            {
+                boss.GetComponent<Enemy>()?.TakeDamage(itemData.Damage);
+                targetHit = true;
+            }
+
+            Debug.Log($"[DamageItemManager] 폭탄 피해 적용 완료!");
+        }
+        else if (itemName == "Stun")
+        {
+            EffectManager.Instance.PlayEffect(Vector3.zero, "Stun");
+
+            foreach (GameObject boss in allBosses)
+            {
+                boss.GetComponent<Enemy>()?.ApplyStun(itemData.StunDuration);
+                targetHit = true;
+            }
+
+            Debug.Log($"[DamageItemManager] 보스에게 스턴 적용 완료!");
+        }
+
+        if (!targetHit)
+        {
+            Debug.LogWarning($"[DamageItemManager] {itemName} 아이템이 아무 적도 맞추지 못해 발동되지 않음.");
+        }
+    }
     public void UseItemOnTile(Vector3 tilePosition)
     {
-        Debug.Log($"[DamageItemManager] UseItemOnTile 호출됨 - 대상 타일 위치: {tilePosition}, 선택된 아이템: {selectedItemName}");
-
         if (string.IsNullOrEmpty(selectedItemName))
         {
             Debug.LogError("[DamageItemManager] 아이템이 선택되지 않았습니다!");
             return;
         }
 
-        if (settings == null || settings.Data == null)
-        {
-            Debug.LogError("[DamageItemManager] JSON 데이터가 로드되지 않았습니다! `settings`를 확인하세요.");
-            return;
-        }
-
-        DamageItemData itemData = settings.Data.Find(item => item.ItemName == selectedItemName);
-
-        if (itemData == null)
-        {
-            Debug.LogError($"[DamageItemManager] {selectedItemName}에 해당하는 데이터가 JSON에서 발견되지 않았습니다! JSON을 확인하세요.");
-            return;
-        }
-
-        Debug.Log($"[DamageItemManager] {selectedItemName} 사용 시작! 대상 타일: {tilePosition}");
-
-        GameObject[] allEnemies = GameObject.FindGameObjectsWithTag("Enemy");
-        GameObject[] allBosses = GameObject.FindGameObjectsWithTag("Boss");
-
-        if (allEnemies.Length == 0 && allBosses.Length == 0)
-        {
-            Debug.Log($"[DamageItemManager] {selectedItemName}: 현재 씬에 공격할 대상이 없습니다.");
-            return;
-        }
-
-        bool targetHit = false;
-
-        if (selectedItemName == "Bomb")
-        {
-            // **EffectManager에서 이펙트 실행**
-            EffectManager.Instance.PlayEffect(tilePosition, "Bomb");
-
-            foreach (GameObject target in allEnemies)
-            {
-                Enemy enemyComponent = target.GetComponent<Enemy>();
-                if (enemyComponent != null)
-                {
-                    enemyComponent.TakeDamage(itemData.Damage);
-                    targetHit = true;
-                    Debug.Log($"[DamageItemManager] {target.name}에게 {itemData.Damage} 폭탄 피해!");
-                }
-            }
-
-            foreach (GameObject boss in allBosses)
-            {
-                Enemy bossComponent = boss.GetComponent<Enemy>();
-                if (bossComponent != null)
-                {
-                    bossComponent.TakeDamage(itemData.Damage);
-                    targetHit = true;
-                    Debug.Log($"[DamageItemManager] {boss.name}에게 {itemData.Damage} 폭탄 피해!");
-                }
-            }
-        }
-        else if (selectedItemName == "Rocket")
+        if (selectedItemName == "Rocket")
         {
             EffectManager.Instance.PlayEffect(tilePosition, "Rocket");
+
+            GameObject[] allEnemies = GameObject.FindGameObjectsWithTag("Enemy");
+            GameObject[] allBosses = GameObject.FindGameObjectsWithTag("Boss");
+
+            bool targetHit = false;
 
             foreach (GameObject target in allEnemies)
             {
                 Enemy enemyComponent = target.GetComponent<Enemy>();
                 if (enemyComponent != null && Mathf.Abs(enemyComponent.transform.position.y - tilePosition.y) < 0.5f)
                 {
-                    enemyComponent.TakeDamage(itemData.Damage);
+                    enemyComponent.TakeDamage(settings.Data.Find(item => item.ItemName == "Rocket").Damage);
                     targetHit = true;
-                    Debug.Log($"[DamageItemManager] {target.name}에게 {itemData.Damage} 로켓 피해!");
+                    Debug.Log($"[DamageItemManager] {target.name}에게 로켓 피해!");
                 }
             }
 
@@ -139,34 +167,16 @@ public class DamageItemManager : MonoBehaviour
                 Enemy bossComponent = boss.GetComponent<Enemy>();
                 if (bossComponent != null && Mathf.Abs(bossComponent.transform.position.y - tilePosition.y) < 0.5f)
                 {
-                    bossComponent.TakeDamage(itemData.Damage);
+                    bossComponent.TakeDamage(settings.Data.Find(item => item.ItemName == "Rocket").Damage);
                     targetHit = true;
-                    Debug.Log($"[DamageItemManager] {boss.name}에게 {itemData.Damage} 로켓 피해!");
+                    Debug.Log($"[DamageItemManager] {boss.name}에게 로켓 피해!");
                 }
             }
-        }
-        else if (selectedItemName == "Stun")
-        {
-            EffectManager.Instance.PlayEffect(tilePosition, "Stun");
 
-            foreach (GameObject boss in allBosses)
+            if (!targetHit)
             {
-                Enemy bossComponent = boss.GetComponent<Enemy>();
-                if (bossComponent != null &&
-                    Mathf.Abs(bossComponent.transform.position.x - tilePosition.x) < 0.5f &&
-                    Mathf.Abs(bossComponent.transform.position.y - tilePosition.y) < 0.5f)
-                {
-                    bossComponent.TakeDamage(itemData.Damage);
-                    bossComponent.ApplyStun(itemData.StunDuration);
-                    targetHit = true;
-                    Debug.Log($"[DamageItemManager] {boss.name}에게 {itemData.Damage} 피해 및 {itemData.StunDuration}초 스턴 적용!");
-                }
+                Debug.LogWarning($"[DamageItemManager] Rocket 아이템이 타일({tilePosition})에서 아무 적도 맞추지 못함.");
             }
-        }
-
-        if (!targetHit)
-        {
-            Debug.LogWarning($"[DamageItemManager] {selectedItemName} 아이템이 타일({tilePosition})에서 아무 적도 맞추지 못함.");
         }
 
         selectedItemName = ""; // 아이템 사용 후 선택 해제

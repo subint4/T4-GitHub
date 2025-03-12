@@ -104,7 +104,7 @@ public class Enemy : MonoBehaviour
     private void FindTarget()
     {
         float detectionRange = attackRange;
-        float maxYOffset = 0.5f; // 일반 적 탐지 Y축 허용 범위
+        float maxYOffset = 0.3f; // 일반 적 탐지 Y축 허용 범위
         Collider2D[] towers = Physics2D.OverlapCircleAll(transform.position, detectionRange);
         float closestDistanceX = float.MaxValue;
         Tower closestTower = null;

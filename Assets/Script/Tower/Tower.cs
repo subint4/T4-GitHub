@@ -6,7 +6,6 @@ using UnityEngine.EventSystems;
 public class Tower : MonoBehaviour, IPointerClickHandler
 {
     public int TowerID;
-    private int currentLevel;
 
     public TowerSO towerStats;
     public Tiles currentTile;
@@ -18,10 +17,14 @@ public class Tower : MonoBehaviour, IPointerClickHandler
     public GameObject projectilePrefab;
     public Transform firePoint;
 
+    public int currentUpgradeLevel;
+    public int NextUpgradeLevel;
+
     private void Start()
     {
         if (towerStats != null)
         {
+            NextUpgradeLevel = towerStats.NextLevelID;
             health = towerStats.Health;
         }
         StartCoroutine(AttackLoop());
@@ -33,6 +36,7 @@ public class Tower : MonoBehaviour, IPointerClickHandler
         if (towerStats != null)
         {
             health = towerStats.Health;
+            currentUpgradeLevel = towerStats.Level; // SO에서 현재 레벨을 가져와 설정
             Debug.Log($"[Tower] {gameObject.name}: {towerStats.Name} 데이터로 초기화 완료!");
         }
         else
@@ -52,8 +56,8 @@ public class Tower : MonoBehaviour, IPointerClickHandler
     private void FindTarget()
     {
         float detectionRange = 1000f; // 감지 거리
-        float enemyMaxYDifference = 0.5f; // 일반 적 감지 Y축 차이 허용 범위
-        float bossMaxYDifference = 0.5f; // 보스 감지 Y축 차이 허용 범위
+        float enemyMaxYDifference = 0.3f; // 일반 적 감지 Y축 차이 허용 범위
+        float bossMaxYDifference = 0.1f; // 보스 감지 Y축 차이 허용 범위
         Vector2 direction = Vector2.right; // 기본 감지 방향
 
         // 기본 오른쪽 방향 감지
@@ -176,19 +180,71 @@ public class Tower : MonoBehaviour, IPointerClickHandler
             Debug.LogError("UpgradeUI 인스턴스를 찾을 수 없습니다!");
         }
     }
-
-    public void UpgradeTower(TowerSO newStats)
+    /// <summary>
+    /// 타워 업그레이드 로직 (다음 레벨 ID 기반)
+    /// </summary>
+    public void UpgradeTower()
     {
-        if (newStats == null)
+        if (towerStats == null)
         {
-            Debug.LogError("새로운 타워 데이터가 없습니다!");
+            Debug.LogError("[Tower] 타워 데이터가 없습니다!");
             return;
         }
 
-        towerStats = newStats;
+        if (currentUpgradeLevel >= NextUpgradeLevel)
+        {
+            Debug.LogWarning($"[Tower] {towerStats.Name} 최대 업그레이드 레벨({NextUpgradeLevel}) 도달! 더 이상 업그레이드할 수 없습니다.");
+            return;
+        }
+
+        if (towerStats.NextLevelID == 0)
+        {
+            Debug.LogWarning($"[Tower] {towerStats.Name}은(는) 최종 업그레이드 단계입니다. 업그레이드 불가!");
+            return;
+        }
+
+        TowerSO nextStats = Resources.Load<TowerSO>($"TowerSO/Tower_{towerStats.NextLevelID}");
+
+        if (nextStats == null)
+        {
+            Debug.LogError($"[Tower] 다음 레벨 {towerStats.NextLevelID}의 데이터를 찾을 수 없습니다!");
+            return;
+        }
+
+        towerStats = nextStats;
+        currentUpgradeLevel = towerStats.Level;
+        NextUpgradeLevel = towerStats.NextLevelID;
         transform.localScale *= 1.1f;
-        Debug.Log($"{towerStats.Name} 업그레이드 완료! 새로운 공격력: {towerStats.AttackPower}");
+
+        Debug.Log($"[Tower] 업그레이드 완료! 새로운 타워: {towerStats.Name} (레벨 {currentUpgradeLevel}) 공격력: {towerStats.AttackPower}");
     }
+
+
+    public bool CanUpgrade()
+    {
+        if (towerStats == null)
+        {
+            Debug.LogError("[Tower] 타워 데이터가 없습니다!");
+            return false;
+        }
+
+        if (towerStats.NextLevelID == 0)
+        {
+            Debug.LogWarning($"[Tower] {towerStats.Name}은(는) 최종 레벨이며 업그레이드할 수 없습니다!");
+            return false;
+        }
+
+        if (currentUpgradeLevel >= NextUpgradeLevel)
+        {
+            Debug.LogWarning($"[Tower] {towerStats.Name} 최대 업그레이드 레벨({NextUpgradeLevel}) 도달! 업그레이드 불가.");
+            return false;
+        }
+
+        return true;
+    }
+
+
+
 
     public void TakeDamage(float damage)
     {
