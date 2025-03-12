@@ -17,59 +17,55 @@ public class TowerButton : MonoBehaviour, IPointerClickHandler
     // 현재 선택된 버튼을 추적하는 static 변수
     private static TowerButton selectedButton = null;
 
-    private void Start()
+    private void Awake()
     {
-        AssignTowerIDByUnitDataOrder();
-        UpdateCostText();
-
         if (buttonComponent == null)
         {
             buttonComponent = GetComponent<Button>();
         }
     }
 
-    private void AssignTowerIDByUnitDataOrder()
+    private void Start()
+    {
+        AssignTowerIDByOrder();
+        UpdateCostText();
+    }
+
+    private void AssignTowerIDByOrder()
     {
         if (TowerManager.Instance == null)
         {
-            Debug.LogError("TowerManager가 존재하지 않습니다!");
+            Debug.LogError("[TowerButton] TowerManager가 존재하지 않습니다!");
             return;
         }
 
+        // **ID 리스트를 한 번만 로드**
         if (assignedTowerIDs == null)
         {
             assignedTowerIDs = TowerManager.Instance.GetAllLevel1TowerIDs();
         }
 
+        // **현재 버튼이 속한 부모 안의 모든 버튼을 가져와 정렬**
         Transform parentTransform = transform.parent;
         if (parentTransform == null)
         {
-            Debug.LogError("부모 Transform이 존재하지 않습니다!");
+            Debug.LogError("[TowerButton] 부모 Transform이 존재하지 않습니다!");
             return;
         }
 
-        List<TowerButton> buttons = new List<TowerButton>();
-        foreach (Transform child in parentTransform)
-        {
-            TowerButton button = child.GetComponent<TowerButton>();
-            if (button != null)
-            {
-                buttons.Add(button);
-            }
-        }
+        TowerButton[] buttons = parentTransform.GetComponentsInChildren<TowerButton>();
+        System.Array.Sort(buttons, (a, b) => a.transform.GetSiblingIndex().CompareTo(b.transform.GetSiblingIndex()));
 
-        buttons.Sort((a, b) => a.transform.GetSiblingIndex().CompareTo(b.transform.GetSiblingIndex()));
-
-        int buttonIndex = buttons.IndexOf(this);
+        int buttonIndex = System.Array.IndexOf(buttons, this);
         if (buttonIndex >= 0 && buttonIndex < assignedTowerIDs.Count)
         {
-            towerID = assignedTowerIDs[buttonIndex];
+            towerID = assignedTowerIDs[buttonIndex]; // 정렬된 순서대로 ID 배정
             towerCost = TowerManager.Instance.GetTowerDeployCost(towerID);
-            Debug.Log($"버튼 {gameObject.name}에 Tower ID {towerID} 할당 (Index: {buttonIndex})");
+            Debug.Log($"[TowerButton] 버튼 {gameObject.name}에 Tower ID {towerID} 할당됨 (Index: {buttonIndex})");
         }
         else
         {
-            Debug.LogWarning($"{gameObject.name} 버튼의 인덱스 {buttonIndex}가 Level 1 타워 목록보다 큽니다.");
+            Debug.LogWarning($"[TowerButton] {gameObject.name} 버튼의 Index({buttonIndex})가 ID 목록보다 큽니다.");
         }
     }
 
@@ -122,22 +118,20 @@ public class TowerButton : MonoBehaviour, IPointerClickHandler
         }
         else
         {
-            // 여기에서 골드 차감을 제거 → 선택만 수행
             TowerManager.Instance.SelectTower(towerID);
             isSelected = true;
             selectedButton = this;
-            Debug.Log($"[TowerButton] 타워 {towerID} 선택됨 (골드 차감 없음)");
+            Debug.Log($"[TowerButton] 타워 {towerID} 선택됨");
         }
 
         UpdateButtonVisual(isSelected);
     }
 
-
     private void UpdateButtonVisual(bool selected)
     {
         if (buttonComponent != null)
         {
-            buttonComponent.interactable = !selected; // 선택되면 비활성화, 취소되면 활성화
+            buttonComponent.interactable = !selected;
         }
     }
 

@@ -6,7 +6,8 @@ public class Tiles : MonoBehaviour, IPointerClickHandler
     public bool isOccupied = false;
     public Tower currentTower = null;
     public int tileIndex; // 타일의 고유 인덱스 (1부터 시작)
-
+    
+    public DamageItemManager item;
     private void Start()
     {
         AssignTileIndex(); // 타일 인덱스 자동 배치
@@ -38,52 +39,53 @@ public class Tiles : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        // **DamageItemManager가 존재하는지 확인 후 아이템 사용 로직 실행**
-        if (DamageItemManager.Instance != null)
-        {
-            string selectedItem = DamageItemManager.Instance.GetSelectedItemName();
-            if (!string.IsNullOrEmpty(selectedItem))
-            {
-                Debug.Log($"[Tiles] 아이템 사용 시도 - 타일 {tileIndex}에서 {selectedItem} 실행");
-                DamageItemManager.Instance.UseItemOnTile(transform.position);
-                return;
-            }
-        }
-
-        // **타워 배치 로직 실행**
         if (TowerManager.Instance == null)
         {
-            Debug.LogError("[Tiles] TowerManager가 존재하지 않습니다!");
+            Debug.LogError("[Tiles] TowerManager가 존재하지 않습니다! 씬에서 활성화되어 있는지 확인하세요.");
             return;
         }
 
         int selectedTowerID = TowerManager.Instance.GetSelectedTowerID();
         if (selectedTowerID == -1)
         {
-            Debug.LogWarning("[Tiles] 선택된 타워가 없습니다!");
+            Debug.LogWarning("[Tiles] 선택된 타워가 없습니다! 먼저 타워를 선택하세요.");
             return;
         }
 
         if (isOccupied)
         {
-            Debug.LogWarning($"[Tiles] 타워 배치 불가: {transform.position} (isOccupied: {isOccupied})");
+            Debug.LogWarning($"[Tiles] 타워 배치 불가: {transform.position} (이미 점유됨)");
             return;
         }
 
         int towerCost = TowerManager.Instance.GetTowerDeployCost(selectedTowerID);
-
-        // 타워 배치 전 골드 차감 (차감 실패 시 배치 취소)
         if (!GoldManager.Instance.SpendGold(towerCost))
         {
             Debug.LogError($"[Tiles] 골드 부족! (필요: {towerCost}, 보유: {GoldManager.Instance.GetGold()})");
             return;
         }
 
-        Debug.Log($"[Tiles] 타워 배치 시도: ID {selectedTowerID}, 위치 {transform.position}");
+        // **타워 프리팹 가져오기**
+        GameObject towerPrefab = TowerManager.Instance.GetTowerPrefab(selectedTowerID)?.gameObject;
+        if (towerPrefab == null)
+        {
+            Debug.LogError($"[Tiles] 선택된 타워 ID {selectedTowerID}에 해당하는 프리팹을 찾을 수 없습니다.");
+            return;
+        }
 
-        // 타워 배치는 `TowerManager`에서 수행
-        TowerManager.Instance.SpawnTower(this);
+        // **타워 배치**
+        GameObject newTowerObj = Instantiate(towerPrefab, transform.position, Quaternion.identity);
+        Tower newTower = newTowerObj.GetComponent<Tower>();
+
+        if (newTower == null)
+        {
+            Debug.LogError("[Tiles] 생성된 오브젝트에서 Tower 컴포넌트를 찾을 수 없습니다! 프리팹에 Tower 컴포넌트가 있는지 확인하세요.");
+            return;
+        }
+
+        PlaceTower(newTower);
     }
+
 
     public void PlaceTower(Tower tower)
     {

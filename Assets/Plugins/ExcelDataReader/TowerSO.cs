@@ -42,6 +42,7 @@ public class TowerSO : ScriptableObject
         SlowDuration = data.SlowDuration;
         PierceCount = data.PierceCount;
         StunDuration = data.StunDuration;
+       
 
         if (System.Enum.TryParse(data.Type.Trim(), true, out TowerType parsedType))
         {

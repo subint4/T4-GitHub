@@ -23,7 +23,7 @@ public class GoldManager : MonoBehaviour
     private int currentStage;
     private int currentSubStage;
 
-    public event System.Action<int> OnGoldChanged;
+    public event Action<int> OnGoldChanged;
 
     private void Awake()
     {
@@ -43,20 +43,20 @@ public class GoldManager : MonoBehaviour
     {
         Debug.Log("[GoldManager] 골드 매니저 시작됨");
 
-        // **StageManager의 이벤트 구독**
         if (StageManager.Instance != null)
         {
             StageManager.Instance.OnStageChanged += SetStage;
         }
 
-        // 초기 스테이지 값 설정
         SetStage(StageManager.Instance?.currentStageNum ?? 1, StageManager.Instance?.GetCurrentSubStageNum() ?? 1);
 
         StartCoroutine(AutoGainGold());
         UpdateGoldUI();
     }
 
-
+    /// <summary>
+    /// **골드 데이터 JSON 로드**
+    /// </summary>
     private void LoadGoldData()
     {
         TextAsset jsonFile = Resources.Load<TextAsset>("JsonData/GoldData");
@@ -84,13 +84,13 @@ public class GoldManager : MonoBehaviour
         Debug.Log($"[GoldManager] {goldDataDictionary.Count}개의 골드 데이터 로드 완료.");
     }
 
+    /// <summary>
+    /// **스테이지별 골드 설정**
+    /// </summary>
     public void SetStage(int stage, int subStage)
     {
         currentStage = stage;
         currentSubStage = subStage;
-
-        // **StageDataManager에서 스테이지 정보만 가져옴**
-        StageData stageData = DataManager.Instance.StageDataManager.GetStageData(stage, subStage);
 
         var key = (stage, subStage);
         if (goldDataDictionary.TryGetValue(key, out GoldData data))
@@ -111,6 +111,9 @@ public class GoldManager : MonoBehaviour
         UpdateGoldUI();
     }
 
+    /// <summary>
+    /// **자동 골드 획득 (주기적)**
+    /// </summary>
     private IEnumerator AutoGainGold()
     {
         while (true)
@@ -120,11 +123,22 @@ public class GoldManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// **현재 보유 골드 반환**
+    /// </summary>
     public int GetGold() => currentGold;
 
+    /// <summary>
+    /// **골드 사용 가능 여부 확인**
+    /// </summary>
+    public bool CanAfford(int amount) => currentGold >= amount;
+
+    /// <summary>
+    /// **골드 사용 (차감)**
+    /// </summary>
     public bool SpendGold(int amount)
     {
-        if (currentGold >= amount)
+        if (CanAfford(amount))
         {
             currentGold -= amount;
             UpdateGoldUI();
@@ -133,11 +147,14 @@ public class GoldManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("골드가 부족합니다!");
+            Debug.LogWarning("[GoldManager] 골드가 부족합니다!");
             return false;
         }
     }
 
+    /// <summary>
+    /// **골드 추가**
+    /// </summary>
     public void AddGold(int amount, bool useAnimation = false)
     {
         currentGold += amount;
@@ -149,6 +166,9 @@ public class GoldManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// **UI 업데이트**
+    /// </summary>
     private void UpdateGoldUI()
     {
         OnGoldChanged?.Invoke(currentGold);
@@ -158,11 +178,14 @@ public class GoldManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// **골드 획득 애니메이션**
+    /// </summary>
     private void PlayGoldAnimation(int amount)
     {
         if (goldEffectPrefab == null || goldUIPosition == null)
         {
-            Debug.LogError("골드 애니메이션 프리팹 또는 UI 위치가 설정되지 않았습니다!");
+            Debug.LogError("[GoldManager] 골드 애니메이션 프리팹 또는 UI 위치가 설정되지 않았습니다!");
             return;
         }
 
@@ -183,6 +206,9 @@ public class GoldManager : MonoBehaviour
         StartCoroutine(FadeOutGoldEffect(goldEffect, canvasGroup, endPosition));
     }
 
+    /// <summary>
+    /// **골드 애니메이션 페이드 아웃**
+    /// </summary>
     private IEnumerator FadeOutGoldEffect(GameObject effect, CanvasGroup canvasGroup, Vector3 endPosition)
     {
         float duration = 1f;

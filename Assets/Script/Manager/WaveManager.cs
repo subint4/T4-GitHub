@@ -153,8 +153,24 @@ public class WaveManager : MonoBehaviour
             return;
         }
 
-        Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+        Transform spawnPoint;
 
+        // 보스는 2번 또는 4번 스폰 포인트에서만 소환
+        if (enemyPrefab.CompareTag("Boss"))
+        {
+            List<int> bossSpawnIndexes = new List<int> { 1, 3 }; // 1=2열, 3=4열 (0부터 시작하는 인덱스)
+            int randomIndex = bossSpawnIndexes[Random.Range(0, bossSpawnIndexes.Count)];
+            spawnPoint = spawnPoints[randomIndex];
+
+            Debug.Log($"[WaveManager] 보스({enemyID})가 {randomIndex + 1}열에서 스폰됨!");
+        }
+        else
+        {
+            // 일반 적은 기존 방식대로 랜덤 스폰
+            spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+        }
+
+        // 적 생성 및 초기화
         GameObject newEnemyObj = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
         Enemy newEnemy = newEnemyObj.GetComponent<Enemy>();
 
@@ -169,6 +185,7 @@ public class WaveManager : MonoBehaviour
             Debug.LogError("[WaveManager] 생성된 적에 Enemy 컴포넌트가 없습니다!");
         }
     }
+
 
     public void ClearEnemy(Enemy enemy)
     {

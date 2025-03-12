@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class UpgradeUI : MonoBehaviour
 {
@@ -7,9 +8,9 @@ public class UpgradeUI : MonoBehaviour
 
     public GameObject upgradePanel;
     public Button upgradeButton;
+    public TextMeshProUGUI upgradeCostText;
     private Tower selectedTower;
-
-    private Canvas upgradeCanvas; // 업그레이드 UI가 속한 Canvas 참조
+    private Canvas upgradeCanvas;
 
     private void Awake()
     {
@@ -23,17 +24,10 @@ public class UpgradeUI : MonoBehaviour
             return;
         }
 
-        if (upgradePanel == null)
-        {
-            Debug.LogError("Upgrade Panel이 설정되지 않았습니다!");
-        }
+        if (upgradePanel == null) Debug.LogError("Upgrade Panel이 설정되지 않았습니다!");
+        if (upgradeButton == null) Debug.LogError("Upgrade Button이 설정되지 않았습니다!");
+        if (upgradeCostText == null) Debug.LogError("[UpgradeUI] UpgradeCostText가 설정되지 않았습니다!");
 
-        if (upgradeButton == null)
-        {
-            Debug.LogError("Upgrade Button이 설정되지 않았습니다!");
-        }
-
-        // **업그레이드 UI의 Canvas 가져오기**
         upgradeCanvas = upgradePanel.GetComponent<Canvas>();
         if (upgradeCanvas == null)
         {
@@ -43,8 +37,7 @@ public class UpgradeUI : MonoBehaviour
 
     private void Start()
     {
-        upgradePanel.SetActive(false); // UI 초기 상태 비활성화
-
+        upgradePanel.SetActive(false);
         if (upgradeButton != null)
         {
             upgradeButton.onClick.RemoveAllListeners();
@@ -53,20 +46,19 @@ public class UpgradeUI : MonoBehaviour
     }
 
     /// <summary>
-    /// **타워 선택 시 업그레이드 UI 열기 (한 번 더 클릭하면 닫기)**
+    /// 타워 선택 시 업그레이드 UI 표시
     /// </summary>
     public void OpenUpgradeUI(Tower tower)
     {
         if (tower == null)
         {
-            Debug.LogError("선택된 타워가 없습니다!");
+            Debug.LogError("[UpgradeUI] 선택된 타워가 없습니다!");
             return;
         }
 
-        // **같은 타워를 다시 클릭하면 선택 취소**
-        if (selectedTower == tower)
+        // 같은 타워를 다시 클릭하면 UI 닫기
+        if (selectedTower == tower && upgradePanel.activeSelf)
         {
-            Debug.Log($"[UpgradeUI] {tower.name} 선택 해제됨.");
             CloseUpgradeUI();
             return;
         }
@@ -74,50 +66,103 @@ public class UpgradeUI : MonoBehaviour
         selectedTower = tower;
         upgradePanel.SetActive(true);
 
-        // **타워의 오른쪽 위에 UI 배치**
-        Vector3 newPosition = selectedTower.transform.position + new Vector3(.5f, .5f, 0f);
-        upgradePanel.transform.position = newPosition;
-
-        // **업그레이드 UI를 다른 UI 아래로 이동**
+        // Canvas가 비활성화 상태일 경우 활성화
         if (upgradeCanvas != null)
         {
-            upgradeCanvas.sortingOrder = 1; // 다른 UI보다 아래에 배치
+            upgradeCanvas.enabled = true;
+            upgradeCanvas.sortingOrder = 50; // UI를 최상단에 표시
         }
-        upgradePanel.transform.SetAsFirstSibling(); // UI 계층에서 맨 아래로 이동
 
-        Debug.Log($"[UpgradeUI] 업그레이드 UI가 {tower.name} 위에 나타남.");
+        // UI를 타워의 우측 대각선(0.5f, 0.5f) 위치에 배치
+        Vector3 newPosition = tower.transform.position + new Vector3(0.5f, 0.5f, 0f);
+
+        // RectTransform을 사용하여 UI 배치
+        RectTransform rectTransform = upgradePanel.GetComponent<RectTransform>();
+        if (rectTransform != null)
+        {
+            rectTransform.position = newPosition;
+        }
+
+        UpdateUpgradeCostUI();
+
+        Debug.Log($"[UpgradeUI] 업그레이드 UI가 {tower.name} 우측 대각선에 나타남. (위치: {newPosition})");
+    }
+
+    private TowerSO GetNextLevelStats()
+    {
+        if (selectedTower == null || selectedTower.towerStats == null)
+        {
+            Debug.LogError("[UpgradeUI] 선택된 타워 데이터가 없습니다! 다음 레벨을 가져올 수 없음.");
+            return null;
+        }
+
+        int nextLevelID = selectedTower.towerStats.NextLevelID;
+        return (nextLevelID > 0) ? DataManager.Instance.TowerDataManager.GetTowerData(nextLevelID) : null;
     }
 
     /// <summary>
-    /// **업그레이드 버튼 클릭 시 타워 업그레이드 실행**
+    /// 업그레이드 비용 UI 업데이트
+    /// </summary>
+    private void UpdateUpgradeCostUI()
+    {
+        if (selectedTower == null || selectedTower.towerStats == null)
+        {
+            Debug.LogWarning("[UpgradeUI] 선택된 타워 데이터가 없습니다. UI 업데이트 중단.");
+            upgradeButton.interactable = false;
+            upgradeCostText.text = "업그레이드 불가";
+            return;
+        }
+        TowerSO nextLevelStats = GetNextLevelStats();
+
+        // 다음 레벨이 없으면 업그레이드 불가 처리
+        if (nextLevelStats == null)
+        {
+            Debug.Log($"[UpgradeUI] {selectedTower.towerStats.Name}은(는) 최대 레벨입니다. 업그레이드 불가.");
+            upgradeButton.interactable = false;
+            upgradeCostText.text = "최대 레벨 도달";
+            return;
+        }
+
+        // 다음 레벨의 업그레이드 비용을 UI에 표시
+        int upgradeCost = nextLevelStats.UpgradeCost;
+        upgradeCostText.text = $"업그레이드 비용: {upgradeCost} 골드";
+
+        // 업그레이드 가능 여부에 따라 버튼 활성화
+        upgradeButton.interactable = selectedTower.CanUpgrade();
+    }
+
+
+    /// <summary>
+    /// 업그레이드 버튼 클릭 시 실행
     /// </summary>
     public void UpgradeSelectedTower()
     {
-        if (UpgradeManager.Instance == null)
-        {
-            Debug.LogError("UpgradeManager가 존재하지 않습니다. 씬에 추가되었는지 확인하세요.");
-            return;
-        }
-
         if (selectedTower == null)
         {
-            Debug.LogError("업그레이드할 타워가 선택되지 않았습니다.");
+            Debug.LogError("[UpgradeUI] 업그레이드할 타워가 선택되지 않았습니다.");
+            return;
+        }
+        TowerSO nextLevelStats = GetNextLevelStats();
+
+        int upgradeCost = nextLevelStats.UpgradeCost;
+
+        // 골드 확인 및 차감
+        if (!GoldManager.Instance.SpendGold(upgradeCost))
+        {
+            Debug.LogError("[UpgradeUI] 골드 부족! 업그레이드 실패.");
             return;
         }
 
-        bool success = UpgradeManager.Instance.UpgradeTower(selectedTower);
-        if (success)
-        {
-            Debug.Log($"[UpgradeUI] {selectedTower.towerStats.Name} 업그레이드 성공!");
-        }
-        else
-        {
-            Debug.LogError("[UpgradeUI] 업그레이드 실패!");
-        }
+        // 타워의 업그레이드 함수 직접 호출
+        selectedTower.UpgradeTower();
+
+        Debug.Log($"[UpgradeUI] {selectedTower.towerStats.Name} 업그레이드 성공!");
+
+        OpenUpgradeUI(selectedTower); // 업그레이드 후 UI 갱신
     }
 
     /// <summary>
-    /// **UI 닫기 및 타워 선택 해제**
+    /// UI 닫기 및 선택 해제
     /// </summary>
     public void CloseUpgradeUI()
     {
