@@ -15,9 +15,9 @@ MonoBehaviour:
   ID: 6
   Type: 0
   Name: Orc2
-  Health: 35
-  MovementSpeed: 0.4
+  Health: 70
+  MovementSpeed: 0.6
   AttackSpeed: 1
   AttackPower: 15
   SpawnCount: 0
-  RewardMoney: 25
+  RewardMoney: 15

@@ -17,7 +17,7 @@ MonoBehaviour:
   NextLevelID: 9
   Health: 65
   Level: 2
-  AttackPower: 6
+  AttackPower: 11
   AttackSpeed: 1
   DeployCost: 0
   UpgradeCost: 70

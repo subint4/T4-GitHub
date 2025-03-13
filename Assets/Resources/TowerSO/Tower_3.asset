@@ -15,7 +15,7 @@ MonoBehaviour:
   ID: 3
   Name: 3_fire_spirit
   NextLevelID: 0
-  Health: 50
+  Health: 30
   Level: 3
   AttackPower: 11
   AttackSpeed: 1

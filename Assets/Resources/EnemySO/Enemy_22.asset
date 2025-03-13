@@ -15,9 +15,9 @@ MonoBehaviour:
   ID: 22
   Type: 0
   Name: FallenAngel2
-  Health: 40
-  MovementSpeed: 0.4
+  Health: 120
+  MovementSpeed: 0.6
   AttackSpeed: 1
   AttackPower: 15
   SpawnCount: 0
-  RewardMoney: 40
+  RewardMoney: 25

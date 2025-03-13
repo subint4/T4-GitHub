@@ -15,9 +15,9 @@ MonoBehaviour:
   ID: 19
   Type: 0
   Name: Minotaur3
-  Health: 55
-  MovementSpeed: 0.4
+  Health: 120
+  MovementSpeed: 0.7
   AttackSpeed: 1
   AttackPower: 20
   SpawnCount: 0
-  RewardMoney: 40
+  RewardMoney: 30
