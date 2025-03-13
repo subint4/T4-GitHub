@@ -26,6 +26,7 @@ public class Enemy : MonoBehaviour
     private Coroutine stunCoroutine; // 현재 실행 중인 스턴 코루틴 저장
     private bool isStunImmune = false; // 스턴 면역 여부
     public Sprite defaultSprite;
+    private Animator animator;
 
     private void Start()
     {
@@ -449,10 +450,10 @@ public class Enemy : MonoBehaviour
 
         health -= damage;
 
-        if (DieEffectManager.Instance != null)
-        {
-            DieEffectManager.Instance.PlayBlinkEffect(transform);  // 피격 시 깜박거림 실행
-        }
+        Debug.Log("TakeDamage 호출됨!");
+        animator.SetTrigger("BlinkTrigger");
+        Debug.Log("BlinkTrigger 실행됨!");
+
         if (health <= 0)
         {
             Die();
@@ -468,10 +469,7 @@ public class Enemy : MonoBehaviour
         enemyAnimatorController.PlayDeathAnimation();
 
 
-        if (DieEffectManager.Instance != null)
-        {
-            DieEffectManager.Instance.PlayBlinkEffect(transform);  // 깜박거림 실행
-        }
+        
         // WaveManager에 적 처치 알림
         if (WaveManager.Instance != null)
         {
