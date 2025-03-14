@@ -15,9 +15,9 @@ MonoBehaviour:
   ID: 10
   Type: 0
   Name: Skeleton2
-  Health: 32.5
-  MovementSpeed: 0.4
+  Health: 75
+  MovementSpeed: 0.6
   AttackSpeed: 1
   AttackPower: 15
   SpawnCount: 0
-  RewardMoney: 30
+  RewardMoney: 20

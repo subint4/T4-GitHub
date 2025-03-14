@@ -15,7 +15,7 @@ MonoBehaviour:
   ID: 2
   Name: 2_fire_spirit
   NextLevelID: 3
-  Health: 45
+  Health: 25
   Level: 2
   AttackPower: 8
   AttackSpeed: 1

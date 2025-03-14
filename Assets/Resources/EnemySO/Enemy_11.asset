@@ -15,9 +15,9 @@ MonoBehaviour:
   ID: 11
   Type: 0
   Name: Skeleton3
-  Health: 42.5
-  MovementSpeed: 0.4
+  Health: 100
+  MovementSpeed: 0.7
   AttackSpeed: 1
   AttackPower: 20
   SpawnCount: 0
-  RewardMoney: 35
+  RewardMoney: 25

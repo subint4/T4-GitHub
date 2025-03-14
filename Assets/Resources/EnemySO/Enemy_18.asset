@@ -15,9 +15,9 @@ MonoBehaviour:
   ID: 18
   Type: 0
   Name: Minotaur2
-  Health: 35
-  MovementSpeed: 0.4
+  Health: 100
+  MovementSpeed: 0.6
   AttackSpeed: 1
   AttackPower: 15
   SpawnCount: 0
-  RewardMoney: 35
+  RewardMoney: 25

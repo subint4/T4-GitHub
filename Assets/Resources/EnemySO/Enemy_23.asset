@@ -15,9 +15,9 @@ MonoBehaviour:
   ID: 23
   Type: 0
   Name: FallenAngel3
-  Health: 60
-  MovementSpeed: 0.4
+  Health: 150
+  MovementSpeed: 0.7
   AttackSpeed: 1
   AttackPower: 20
   SpawnCount: 0
-  RewardMoney: 45
+  RewardMoney: 30

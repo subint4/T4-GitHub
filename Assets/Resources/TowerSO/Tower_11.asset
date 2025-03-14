@@ -15,7 +15,7 @@ MonoBehaviour:
   ID: 11
   Name: 2_earth_spirit
   NextLevelID: 12
-  Health: 800
+  Health: 500
   Level: 2
   AttackPower: 0
   AttackSpeed: 0
