@@ -1089,8 +1089,8 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
-  m_VerticalAlignment: 512
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -4226,7 +4226,8 @@ PrefabInstance:
       propertyPath: RocketButton
       value: 
       objectReference: {fileID: 411269797}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6189324136188343677, guid: fca10bfe6c7988944b990edce1c9b4ed, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

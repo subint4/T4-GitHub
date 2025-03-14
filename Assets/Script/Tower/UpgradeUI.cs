@@ -125,7 +125,7 @@ public class UpgradeUI : MonoBehaviour
 
         // 다음 레벨의 업그레이드 비용을 UI에 표시
         int upgradeCost = nextLevelStats.UpgradeCost;
-        upgradeCostText.text = $"업그레이드 비용: {upgradeCost} 골드";
+        upgradeCostText.text = $"{upgradeCost}";
 
         // 업그레이드 가능 여부에 따라 버튼 활성화
         upgradeButton.interactable = selectedTower.CanUpgrade();

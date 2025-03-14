@@ -3,31 +3,91 @@
   "Metadata": {
     "ID": "int",
     "ItemName": "string",
-    "MaxCount": "int",
+    "itemID": "int",
+    "Type": "string",
+    "UseType": "string",
     "Damage": "float",
-    "StunDuration": "float"
+    "Duration": "float",
+    "CoolDonw": "float",
+    "Amount": "int"
   },
   "Data": [
     {
       "ID": 1,
-      "ItemName": "Bomb",
-      "MaxCount": 1,
-      "Damage": 50.0,
-      "StunDuration": 0.0
+      "ItemName": "Star",
+      "itemID": 1,
+      "Type": "Goods",
+      "UseType": "none",
+      "Damage": 0.0,
+      "Duration": 0.0,
+      "CoolDonw": 0.0,
+      "Amount": 0
     },
     {
       "ID": 2,
-      "ItemName": "Rocket",
-      "MaxCount": 1,
-      "Damage": 100.0,
-      "StunDuration": 0.0
+      "ItemName": "Diamond",
+      "itemID": 2,
+      "Type": "Goods",
+      "UseType": "none",
+      "Damage": 0.0,
+      "Duration": 0.0,
+      "CoolDonw": 0.0,
+      "Amount": 0
     },
     {
       "ID": 3,
-      "ItemName": "Stun",
-      "MaxCount": 1,
+      "ItemName": "Heart",
+      "itemID": 3,
+      "Type": "Goods",
+      "UseType": "none",
       "Damage": 0.0,
-      "StunDuration": 5.0
+      "Duration": 0.0,
+      "CoolDonw": 0.0,
+      "Amount": 0
+    },
+    {
+      "ID": 4,
+      "ItemName": "Rocket",
+      "itemID": 101,
+      "Type": "Usable",
+      "UseType": "Instant",
+      "Damage": 50.0,
+      "Duration": 0.0,
+      "CoolDonw": 0.0,
+      "Amount": 0
+    },
+    {
+      "ID": 5,
+      "ItemName": "Bomb",
+      "itemID": 102,
+      "Type": "Usable",
+      "UseType": "Instant",
+      "Damage": 50.0,
+      "Duration": 0.0,
+      "CoolDonw": 0.0,
+      "Amount": 0
+    },
+    {
+      "ID": 6,
+      "ItemName": "Stun",
+      "itemID": 103,
+      "Type": "Usable",
+      "UseType": "Instant",
+      "Damage": 0.0,
+      "Duration": 5.0,
+      "CoolDonw": 5.0,
+      "Amount": 0
+    },
+    {
+      "ID": 7,
+      "ItemName": "Delete",
+      "itemID": 104,
+      "Type": "Usable",
+      "UseType": "OnClick",
+      "Damage": 0.0,
+      "Duration": 0.0,
+      "CoolDonw": 0.0,
+      "Amount": 0
     }
   ]
 }

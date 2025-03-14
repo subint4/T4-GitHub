@@ -122,7 +122,7 @@ public class Enemy : MonoBehaviour
                 if (towerComponent == null)
                     continue;
 
-                if (tower.CompareTag("Boss"))
+                if (CompareTag("Boss"))
                 {
                     // 보스는 Y축 관계없이 모든 감지된 타워 저장
                     bossTargets.Add(tower.gameObject);
@@ -139,14 +139,15 @@ public class Enemy : MonoBehaviour
             }
         }
 
-        if (bossTargets.Count > 0)
+        if (CompareTag("Boss") && bossTargets.Count > 0)
         {
-            Debug.Log($"[Enemy] 보스가 {bossTargets.Count}개의 타워를 감지함.");
+            Debug.Log($"[Boss] {gameObject.name}이(가) {bossTargets.Count}개의 타워를 감지함.");
         }
 
         // 일반 타워 타겟 설정
         currentTarget = closestTower;
     }
+
     private IEnumerator AttackLoop()
     {
         while (!isDead)
@@ -157,40 +158,48 @@ public class Enemy : MonoBehaviour
                 continue;
             }
 
-            if (currentTarget == null || !IsTargetInRange(currentTarget.gameObject))
+            if (CompareTag("Boss") && bossTargets.Count > 0)
             {
-                FindTarget();
+                Debug.Log($"[Boss] {gameObject.name}이(가) {bossTargets.Count}개의 타워를 동시에 공격!");
+
+                // 보스는 감지한 모든 타워를 동시에 공격
+                AttackMultipleTargets();
+
+                yield return new WaitForSeconds(enemyStats.AttackSpeed);
+            }
+            else
+            {
+                if (currentTarget == null || !IsTargetInRange(currentTarget.gameObject))
+                {
+                    FindTarget();
+                }
+
+                if (currentTarget != null && IsTargetInRange(currentTarget.gameObject) && !isAttacking)
+                {
+                    Debug.Log($"[Enemy] {gameObject.name} 공격 실행! 대상: {currentTarget.name}");
+                    isAttacking = true;
+                    AttackTarget(currentTarget.gameObject);
+                    yield return new WaitForSeconds(enemyStats.AttackSpeed);
+                    isAttacking = false;
+                }
             }
 
-            if (currentTarget != null && IsTargetInRange(currentTarget.gameObject) && !isAttacking)
-            {
-                Debug.Log($"[Enemy] {gameObject.name} 공격 실행! 대상: {currentTarget.name}");
-
-                // **즉시 공격이 아니라 일정 시간 간격을 유지**
-                isAttacking = true;
-                AttackTarget(currentTarget.gameObject);
-
-                yield return new WaitForSeconds(enemyStats.AttackSpeed); // 공격 속도에 맞춰 대기
-                isAttacking = false;
-            }
-
-            yield return new WaitForSeconds(0.1f); // 짧은 대기 후 다시 루프
+            yield return new WaitForSeconds(0.1f);
         }
     }
 
-
-
-    private bool IsTargetInRange(GameObject target)
+    private void AttackMultipleTargets()
     {
-        if (target == null) return false;
+        if (bossTargets.Count == 0) return;
 
-        float distanceToTarget = Vector2.Distance(transform.position, target.transform.position);
-        bool inRange = distanceToTarget <= attackRange;
-
-        Debug.Log($"[Enemy] {gameObject.name} -> {target.name} 거리: {distanceToTarget}, 공격 범위 내 여부: {inRange}");
-        return inRange;
+        foreach (var target in bossTargets)
+        {
+            if (target != null && IsTargetInRange(target))
+            {
+                AttackTarget(target);
+            }
+        }
     }
-
 
     private void AttackTarget(GameObject target)
     {
@@ -223,6 +232,24 @@ public class Enemy : MonoBehaviour
             Debug.LogError($"[Enemy] {gameObject.name}: 알 수 없는 공격 유형 ({enemyStats.Type})");
         }
     }
+
+
+
+
+
+    private bool IsTargetInRange(GameObject target)
+    {
+        if (target == null) return false;
+
+        float distanceToTarget = Vector2.Distance(transform.position, target.transform.position);
+        bool inRange = distanceToTarget <= attackRange;
+
+        Debug.Log($"[Enemy] {gameObject.name} -> {target.name} 거리: {distanceToTarget}, 공격 범위 내 여부: {inRange}");
+        return inRange;
+    }
+
+
+
 
 
     private void StartMeleeAttack(GameObject target)
