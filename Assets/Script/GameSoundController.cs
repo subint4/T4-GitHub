@@ -6,8 +6,6 @@ using UnityEngine.UI;
 public class GameSoundController : MonoBehaviour
 {
     public Button toggleButton;
-    public Sprite soundOnImage;
-    public Sprite soundOffImage;
     // 오디오 소스
     public AudioSource audioSource;
 
@@ -15,7 +13,7 @@ public class GameSoundController : MonoBehaviour
     private bool isMuted = false;
 
     void Start()
-    {
+    {        
         toggleButton.onClick.AddListener(ToggleSound);
     }
 
