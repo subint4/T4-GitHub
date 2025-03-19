@@ -128,7 +128,7 @@ public class StageManager : MonoBehaviour
     {
         if (stageText != null)
         {
-            stageText.text = $"{currentStageNum}-{currentSubStageNum}";
+            stageText.text = $"{currentStageNum}-{currentSubStageNum} Stage";
             Debug.Log($"[StageManager] 스테이지 UI 업데이트됨: {stageText.text}");
         }
         else
