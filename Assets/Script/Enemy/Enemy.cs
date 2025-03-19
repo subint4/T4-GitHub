@@ -478,7 +478,6 @@ public class Enemy : MonoBehaviour
         health -= damage;
 
         Debug.Log("TakeDamage 호출됨!");
-        animator.SetTrigger("BlinkTrigger");
         Debug.Log("BlinkTrigger 실행됨!");
 
         if (health <= 0)
