@@ -72,6 +72,18 @@ public class WaveManager : MonoBehaviour
         // **현재 로드된 웨이브 데이터 출력**
         Debug.Log($"[WaveManager] {stageNum}-{subStageNum} 스테이지에서 로드된 웨이브 데이터 목록:");
 
+        BackgroundMusicManager bgmManager = FindObjectOfType<BackgroundMusicManager>();
+
+        if (bgmManager != null)
+        {
+            bgmManager.SetStageBGM(stageNum, subStageNum);
+            Debug.Log($"[WaveManager] BackgroundMusicManager를 통해 StageText & BGM 설정 완료: {stageNum}-{subStageNum}");
+        }
+        else
+        {
+            Debug.LogError("[WaveManager] BackgroundMusicManager를 찾을 수 없습니다!");
+        }
+
         foreach (var wave in currentWaveDataList)
         {
             Debug.Log($"[CurrentWaveData] Wave: {wave.wave}, EnemyID: {wave.enemyID}, Count: {wave.count}, " +
