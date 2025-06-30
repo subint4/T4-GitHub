@@ -494,8 +494,12 @@ public class Enemy : MonoBehaviour
         enemyAnimatorController.SetWalkingState(false);
         enemyAnimatorController.PlayDeathAnimation();
 
+        // WaveManager에 적 처치 알림
+        if (WaveManager.Instance != null)
+        {
+            WaveManager.Instance.ClearEnemy(this); // 적 객체 전달
+        }
 
-        
 
         // **골드 지급 기능 추가**
         if (GoldManager.Instance != null)
@@ -542,11 +546,7 @@ public class Enemy : MonoBehaviour
     }
 
     public void OnDeathAnimationEnd()
-    {        // WaveManager에 적 처치 알림
-        if (WaveManager.Instance != null)
-        {
-            WaveManager.Instance.ClearEnemy(this); // 적 객체 전달
-        }
+    { 
         Destroy(gameObject);
     }
 }
