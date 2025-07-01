@@ -6,6 +6,10 @@ using System;
 
 public class StageManager : MonoBehaviour
 {
+    public interface IResettableManager
+    {
+        void ResetManager();
+    }
     public static StageManager Instance { get; private set; }
 
     public int currentStageNum { get; private set; } = 1;

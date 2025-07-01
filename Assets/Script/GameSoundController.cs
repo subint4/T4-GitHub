@@ -4,13 +4,11 @@ using UnityEngine.UI;
 public class GameSoundController : MonoBehaviour
 {
     public Button toggleButton;
-    // 오디오 소스
     public AudioSource audioSource;
 
     public Sprite soundOnSprite;
     public Sprite soundOffSprite;
 
-    //음소거 상태
     private bool isMuted = false;
     private Image buttonImage;
 
@@ -24,15 +22,20 @@ public class GameSoundController : MonoBehaviour
 
     public void ToggleSound()
     {
-        // 음소거 상태 토글
         isMuted = !isMuted;
 
-        // 오디오 음소거 설정
-        audioSource.mute = isMuted;
+        if (isMuted)
+        {
+            audioSource.Pause(); // 일시정지
+        }
+        else
+        {
+            audioSource.UnPause(); // 다시 재생
+        }
 
         UpdateButtonImage();
 
-        Debug.Log($"음소거 상태: {isMuted}, AudioSource Mute 상태: {audioSource.mute}");
+        Debug.Log($"음소거 상태: {isMuted}, AudioSource.isPlaying 상태: {audioSource.isPlaying}");
     }
 
     void UpdateButtonImage()

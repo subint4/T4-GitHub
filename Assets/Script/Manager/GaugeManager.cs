@@ -1,8 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
+using static GaugeManager;
 
-public class GaugeManager : MonoBehaviour
+public class GaugeManager : MonoBehaviour, IResettableManager
 {
+
+
     public Image gaugeFill;  // **파란색으로 차오르는 게이지 바**
     private int totalEnemies = 0;
     private int defeatedEnemies = 0;
@@ -90,4 +93,21 @@ public class GaugeManager : MonoBehaviour
 
         UpdateGauge(WaveManager.Instance.defeatedEnemies, WaveManager.Instance.totalEnemiesPerStage);
     }
+    public void ResetManager()
+    {
+        if (gaugeFill == null)
+        {
+            Debug.LogError("[GaugeManager] gaugeFill이 설정되지 않았습니다!");
+            return;
+        }
+
+        totalEnemies = WaveManager.Instance?.totalEnemiesPerStage ?? 0;
+        defeatedEnemies = 0;
+
+        gaugeFill.fillAmount = 0f;
+        gaugeFill.color = Color.blue;
+
+        Debug.Log("[GaugeManager] 게이지 초기화 완료");
+    }
+
 }

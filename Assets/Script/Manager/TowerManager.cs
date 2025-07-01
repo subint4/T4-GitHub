@@ -1,9 +1,14 @@
-using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using static TowerManager;
 
-public class TowerManager : MonoBehaviour
+public class TowerManager : MonoBehaviour, IResettableManager
 {
+    public interface IResettableManager
+    {
+        void ResetManager();
+    }
     public static TowerManager Instance { get; private set; }
 
     private Dictionary<int, GameObject> towerPrefabDictionary = new Dictionary<int, GameObject>();
@@ -151,4 +156,20 @@ public class TowerManager : MonoBehaviour
     {
         return activeTowers.Count;
     }
+    public void ResetManager()
+    {
+        selectedTowerID = -1;
+
+        foreach (Tower tower in activeTowers)
+        {
+            if (tower != null)
+            {
+                Destroy(tower.gameObject);
+            }
+        }
+        activeTowers.Clear();
+
+        Debug.Log("[TowerManager] 리셋 완료: 선택한 타워 및 배치된 타워 제거됨");
+    }
+
 }

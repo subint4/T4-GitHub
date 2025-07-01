@@ -1,12 +1,13 @@
+using DG.Tweening; // DOTween 사용
+using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using System.Collections;
-using DG.Tweening; // DOTween 사용
 
 public class PopupManager : MonoBehaviour
 {
+
     public static PopupManager Instance { get; private set; }
 
     [Header("UI Popups")]
@@ -20,7 +21,7 @@ public class PopupManager : MonoBehaviour
     public Button victoryMenuButton;
 
     [Header("Defeat Popup Buttons")]
-    public Button retryButton;
+    public Button ReplayButton;
     public Button defeatMenuButton;
 
     [Header("Home Popup Buttons")]
@@ -28,6 +29,44 @@ public class PopupManager : MonoBehaviour
     public Button homeCancelButton;
 
     private bool isGameOver = false;
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("[PopupManager] OnSceneLoaded 실행됨"); // 반드시 찍히는지 확인
+
+        Debug.Log($"[PopupManager] 씬 변경 감지: {scene.name} - 팝업 초기화 실행");
+
+        ReconnectButtons(); // 새로 생성된 버튼에 다시 연결
+        HideAllPopups();
+    }
+
+    private void ReconnectButtons()
+    {
+        // 새 씬의 버튼들을 다시 찾아서 연결
+        ReplayButton = GameObject.Find("ReplayButton")?.GetComponent<Button>();
+        defeatMenuButton = GameObject.Find("DefeatMenuButton")?.GetComponent<Button>();
+
+        if (ReplayButton != null)
+        {
+            ReplayButton.onClick.RemoveAllListeners();
+            ReplayButton.onClick.AddListener(RestartCurrentStage);
+            Debug.Log("[PopupManager] retryButton 연결 완료");
+        }
+        else
+        {
+            Debug.LogWarning("[PopupManager] retryButton 찾을 수 없음");
+        }
+
+        if (defeatMenuButton != null)
+        {
+            defeatMenuButton.onClick.RemoveAllListeners();
+            defeatMenuButton.onClick.AddListener(ReturnToMainMenu);
+            Debug.Log("[PopupManager] defeatMenuButton 연결 완료");
+        }
+        else
+        {
+            Debug.LogWarning("[PopupManager] defeatMenuButton 찾을 수 없음");
+        }
+    }
 
     private void Awake()
     {
@@ -55,8 +94,8 @@ public class PopupManager : MonoBehaviour
         if (victoryMenuButton != null)
             victoryMenuButton.onClick.AddListener(ReturnToMainMenu);
 
-        if (retryButton != null)
-            retryButton.onClick.AddListener(RestartCurrentStage);
+        if (ReplayButton != null)
+            ReplayButton.onClick.AddListener(RestartCurrentStage);
 
         if (defeatMenuButton != null)
             defeatMenuButton.onClick.AddListener(ReturnToMainMenu);
@@ -77,12 +116,6 @@ public class PopupManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        Debug.Log($"[PopupManager] 씬 변경 감지: {scene.name} - 팝업 초기화 실행");
-
-        HideAllPopups(); // **씬 변경 시 모든 팝업 숨기기**
-    }
 
     /// <summary>
     /// **모든 팝업 숨기기**
@@ -162,7 +195,7 @@ public class PopupManager : MonoBehaviour
         DOTween.KillAll(); // 모든 DOTween 애니메이션 정리
 
         Debug.Log("[PopupManager] 메인 메뉴로 이동");
-
+        
         Destroy(gameObject); // 중복 방지
         SceneManager.LoadScene("MainMenu");
     }
@@ -172,16 +205,21 @@ public class PopupManager : MonoBehaviour
     /// </summary>
     private void RestartCurrentStage()
     {
-        HideAllPopups(); // **기존 팝업 숨김**
-        Debug.Log("[PopupManager] 현재 스테이지 다시 시작!");
-
+        HideAllPopups();
         Time.timeScale = 1f;
-        DOTween.KillAll(); // 모든 DOTween 애니메이션 정리
 
-        Destroy(gameObject); // 기존 PopupManager 삭제 (씬 재시작 시 중복 방지)
+        GameManager.Instance.ResetAllManagers();
 
+        WaveManager.Instance.StartWave(); // 다시 웨이브 시작
+    }
+
+
+    private IEnumerator RestartStageRoutine()
+    {
+        yield return null;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+
 
     /// <summary>
     /// **홈 팝업 닫기**

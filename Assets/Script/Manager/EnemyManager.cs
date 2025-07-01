@@ -1,8 +1,13 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
+using static EnemyManager;
 
-public class EnemyManager : MonoBehaviour
+public class EnemyManager : MonoBehaviour, IResettableManager
 {
+    public interface IResettableManager
+    {
+        void ResetManager();
+    }
     public static EnemyManager Instance { get; private set; }
     private Dictionary<int, GameObject> enemyPrefabDictionary = new Dictionary<int, GameObject>();
     private List<Enemy> activeEnemies = new List<Enemy>();
@@ -68,4 +73,16 @@ public class EnemyManager : MonoBehaviour
             WaveManager.Instance.ClearEnemy(enemy);
         }
     }
+    public void ResetManager()
+    {
+        foreach (var enemy in activeEnemies)
+        {
+            if (enemy != null)
+                Destroy(enemy.gameObject);
+        }
+        activeEnemies.Clear();
+
+        Debug.Log("[EnemyManager] 모든 적 제거 및 초기화 완료");
+    }
+
 }

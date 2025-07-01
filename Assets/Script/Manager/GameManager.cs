@@ -1,12 +1,18 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections;
+using System.Linq;
+using static GameManager;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour, IResettableManager
 {
+
     public static GameManager Instance { get; private set; }
     public WaveManager waveManager;
     public EnemyManager enemyManager;
+    public GoldManager goldManager;
+    public GaugeManager gaugeManager;
+
 
     private bool isGameOver = false;
 
@@ -19,6 +25,7 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -55,6 +62,8 @@ public class GameManager : MonoBehaviour
         // 새로운 씬에서 WaveManager, EnemyManager 자동 할당
         waveManager = FindObjectOfType<WaveManager>();
         enemyManager = FindObjectOfType<EnemyManager>();
+        goldManager = FindObjectOfType<GoldManager>();
+        gaugeManager = FindObjectOfType<GaugeManager>();
 
         // 씬 변경 후 웨이브 재로딩
         if (waveManager != null)
@@ -166,4 +175,37 @@ public class GameManager : MonoBehaviour
         }
         return false;
     }
+    public void ResetManager()
+    {
+        Debug.Log("[GameManager] ResetManager 호출됨 - 게임 상태 초기화");
+
+        StopAllCoroutines();
+        isGameOver = false;
+
+        if (waveManager != null)
+            waveManager.ResetManager();
+
+        if (enemyManager != null)
+            enemyManager.ResetManager();
+        if (goldManager != null)
+            goldManager.ResetManager();
+        if (gaugeManager != null)
+            gaugeManager.ResetManager();
+
+
+        // 다른 관련 매니저 리셋도 필요하면 여기에 추가
+    }
+    public void ResetAllManagers()
+    {
+        Debug.Log("[GameManager] 전체 매니저 리셋 시작");
+
+        foreach (var manager in FindObjectsOfType<MonoBehaviour>().OfType<IResettableManager>())
+        {
+            manager.ResetManager();
+        }
+
+        Debug.Log("[GameManager] 전체 매니저 리셋 완료");
+    }
+
+
 }

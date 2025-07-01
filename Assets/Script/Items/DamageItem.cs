@@ -1,6 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
+
 
 public class DamageItemManager : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class DamageItemManager : MonoBehaviour
     public Button RocketButton;
     public Button StunButton;
 
+    public bool IsItemSelected;
     private ItemSettings settings;
     public int selectedItemID = 0;
 
@@ -49,6 +51,7 @@ public class DamageItemManager : MonoBehaviour
     public void SelectItem(int itemID)
     {
         selectedItemID = itemID;
+        IsItemSelected = true;
         Debug.Log($"[DamageItemManager] 아이템 {itemID} 선택됨! 화면을 터치하여 사용하세요.");
     }
 
@@ -182,6 +185,7 @@ public class DamageItemManager : MonoBehaviour
             }
         }
 
+        IsItemSelected = false;
         selectedItemID = 0;
     }
 }

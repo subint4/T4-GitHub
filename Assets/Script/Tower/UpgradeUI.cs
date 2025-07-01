@@ -28,10 +28,10 @@ public class UpgradeUI : MonoBehaviour
         if (upgradeButton == null) Debug.LogError("Upgrade Button이 설정되지 않았습니다!");
         if (upgradeCostText == null) Debug.LogError("[UpgradeUI] UpgradeCostText가 설정되지 않았습니다!");
 
-        upgradeCanvas = upgradePanel.GetComponent<Canvas>();
+        upgradeCanvas = upgradePanel.GetComponentInParent<Canvas>();
         if (upgradeCanvas == null)
         {
-            Debug.LogError("[UpgradeUI] Canvas가 없습니다! UI 계층을 조정하려면 Canvas가 필요합니다.");
+            Debug.LogError("[UpgradeUI] 부모 계층에서 Canvas를 찾을 수 없습니다!");
         }
     }
 

@@ -1,8 +1,10 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
+using static EffectManager;
 
 public class EffectManager : MonoBehaviour
 {
+
     public static EffectManager Instance { get; private set; }
 
     public GameObject effectPrefab; // 하나의 이펙트 프리팹만 사용

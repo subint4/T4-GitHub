@@ -1,13 +1,18 @@
-﻿using UnityEngine;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
-using Newtonsoft.Json;
 using System.IO;
-using System;
+using TMPro;
+using UnityEngine;
+using static GoldManager;
 
-public class GoldManager : MonoBehaviour
+public class GoldManager : MonoBehaviour, IResettableManager
 {
+    public interface IResettableManager
+    {
+        void ResetManager();
+    }
     public static GoldManager Instance { get; private set; }
 
     [SerializeField] private TMP_Text goldText;
@@ -224,6 +229,28 @@ public class GoldManager : MonoBehaviour
 
         Destroy(effect);
     }
+    public void ResetManager()
+    {
+        StopAllCoroutines();
+
+        currentGold = 0;
+        gainGold = 0;
+        gainInterval = 0;
+        currentStage = 0;
+        currentSubStage = 0;
+
+        UpdateGoldUI();
+
+        if (StageManager.Instance != null)
+        {
+            SetStage(StageManager.Instance.currentStageNum, StageManager.Instance.GetCurrentSubStageNum());
+        }
+
+        StartCoroutine(AutoGainGold());
+
+        Debug.Log("[GoldManager] 리셋 완료");
+    }
+
 }
 
 // JSON 데이터를 저장할 클래스들

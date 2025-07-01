@@ -36,7 +36,15 @@ public class Tiles : MonoBehaviour, IPointerClickHandler
             Debug.Log($"[Tiles] 타일 인덱스 설정됨 - Name: {allTiles[i].gameObject.name}, Index: {allTiles[i].tileIndex}");
         }
     }
-
+    void OnMouseDown()
+    {
+        // 아이템 선택 중이라면 타워 클릭 로직 무시
+        if (DamageItemManager.Instance.IsItemSelected)
+        {
+            DamageItemManager.Instance.UseItemOnTile(transform.position);
+            return;
+        }
+    }
     public void OnPointerClick(PointerEventData eventData)
     {
         if (TowerManager.Instance == null)

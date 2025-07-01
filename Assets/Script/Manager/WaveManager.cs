@@ -1,10 +1,15 @@
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using static WaveManager;
 
-public class WaveManager : MonoBehaviour
+public class WaveManager : MonoBehaviour, IResettableManager
 {
+    public interface IResettableManager
+    {
+        void ResetManager();
+    }
     public static WaveManager Instance { get; private set; }
 
     private int currentWaveIndex = 0;
@@ -284,5 +289,19 @@ public class WaveManager : MonoBehaviour
         }
 
         Debug.Log("[WaveManager] 웨이브 데이터 초기화 완료.");
+    }
+    public void ResetManager()
+    {
+        Debug.Log("[WaveManager] ResetManager 호출됨");
+
+        StopAllCoroutines(); // 웨이브 스폰 중지
+        totalEnemiesPerStage = 0;
+        defeatedEnemies = 0;
+
+        // 필요 시 현재 웨이브 재로드
+        int stage = StageManager.Instance?.currentStageNum ?? 1;
+        int subStage = StageManager.Instance?.GetCurrentSubStageNum() ?? 1;
+
+        LoadWavesForStage(stage, subStage);
     }
 }
