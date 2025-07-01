@@ -4967,6 +4967,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1101826745}
   m_OnClick:
     m_PersistentCalls:
+<<<<<<< Updated upstream
       m_Calls:
       - m_Target: {fileID: 1101826747}
         m_TargetAssemblyTypeName: BackButtonController, Assembly-CSharp
@@ -4980,6 +4981,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+=======
+      m_Calls: []
+>>>>>>> Stashed changes
 --- !u!114 &1101826745
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6170,7 +6174,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1447395082}
   m_CullTransparentMesh: 1
+<<<<<<< Updated upstream
 --- !u!1 &1478604898
+=======
+--- !u!1 &1558893823
+>>>>>>> Stashed changes
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6178,18 +6186,30 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
+<<<<<<< Updated upstream
   - component: {fileID: 1478604899}
   - component: {fileID: 1478604902}
   - component: {fileID: 1478604901}
   - component: {fileID: 1478604900}
   m_Layer: 0
   m_Name: RightButton
+=======
+  - component: {fileID: 1558893824}
+  - component: {fileID: 1558893826}
+  - component: {fileID: 1558893825}
+  m_Layer: 5
+  m_Name: Text (TMP)
+>>>>>>> Stashed changes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+<<<<<<< Updated upstream
 --- !u!224 &1478604899
+=======
+--- !u!224 &1558893824
+>>>>>>> Stashed changes
 RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

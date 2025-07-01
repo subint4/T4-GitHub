@@ -28,16 +28,3 @@ public class WaveSO : ScriptableObject
     }
 
 }
-[Serializable]
-public class WaveSpawnData
-{
-    public int ID;
-    public int stagenum;
-    public int wave;
-    public int enemyID;
-    public int count;
-    public int SpawnGroup;
-    public float SpawnDelay;
-    public float interval;
-    public int SpawnLaneID;
-}

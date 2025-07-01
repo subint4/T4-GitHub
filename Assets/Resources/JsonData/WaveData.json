@@ -1,6 +1,7 @@
 {
   "DataType": "WaveData",
   "Metadata": {
+<<<<<<< Updated upstream
     "ID": "int",
     "wave": "int",
     "enemyID": "int",
@@ -250,6 +251,42 @@
       "SpawnDelay": 0.0,
       "interval": 3.0,
       "SpawnLaneID": 0
+=======
+    "waveCount": "int",
+    "EnemyID": "int",
+    "Count": "int"
+  },
+  "Data": [
+    {
+      "waveCount": 1,
+      "EnemyID": 1,
+      "Count": 5
+    },
+    {
+      "waveCount": 1,
+      "EnemyID": 2,
+      "Count": 3
+    },
+    {
+      "waveCount": 2,
+      "EnemyID": 1,
+      "Count": 6
+    },
+    {
+      "waveCount": 2,
+      "EnemyID": 3,
+      "Count": 4
+    },
+    {
+      "waveCount": 3,
+      "EnemyID": 2,
+      "Count": 5
+    },
+    {
+      "waveCount": 3,
+      "EnemyID": 4,
+      "Count": 2
+>>>>>>> Stashed changes
     }
   ]
 }

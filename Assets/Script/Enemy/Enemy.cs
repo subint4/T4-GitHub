@@ -41,7 +41,18 @@ public class Enemy : MonoBehaviour
         }
         if (enemyAnimatorController == null)
         {
+<<<<<<< Updated upstream
             Debug.LogError($"[Enemy] {gameObject.name}: EnemyAnimatorController를 찾을 수 없습니다! 애니메이션 실행 불가.");
+=======
+            EnemyID = enemyStats.EnemyID;
+
+            health = enemyStats.Health;
+            rewardMoney = enemyStats.RewardMoney;
+            attackPower = enemyStats.AttackPower;
+            attackSpeed = enemyStats.AttackSpeed;
+            movementSpeed = enemyStats.MovementSpeed;
+            originalSpeed = movementSpeed;
+>>>>>>> Stashed changes
         }
         else
         {
@@ -494,13 +505,13 @@ public class Enemy : MonoBehaviour
         enemyAnimatorController.SetWalkingState(false);
         enemyAnimatorController.PlayDeathAnimation();
 
-
-        
         // WaveManager에 적 처치 알림
         if (WaveManager.Instance != null)
         {
             WaveManager.Instance.ClearEnemy(this); // 적 객체 전달
         }
+
+
         // **골드 지급 기능 추가**
         if (GoldManager.Instance != null)
         {
@@ -546,7 +557,7 @@ public class Enemy : MonoBehaviour
     }
 
     public void OnDeathAnimationEnd()
-    {
+    { 
         Destroy(gameObject);
     }
 }

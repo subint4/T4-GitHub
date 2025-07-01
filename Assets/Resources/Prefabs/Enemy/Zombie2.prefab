@@ -61,6 +61,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c90e63840947131459fd3fa8b81f71b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< Updated upstream
   EnemyID: 2
   enemyStats: {fileID: 11400000, guid: 100c5500e587d954ea7af12ca672f1bc, type: 2}
   isDead: 0
@@ -70,6 +71,16 @@ MonoBehaviour:
   projectilePrefab: {fileID: 0}
   firePoint: {fileID: 0}
   attackRange: 1.5
+=======
+  enemyStats: {fileID: 11400000, guid: 7074d171ff024c34892c2c1a8f845a42, type: 2}
+  enemyRigidbody: {fileID: 3538306792262835736}
+  attackSpeed: 0
+  movementSpeed: 0
+  originalSpeed: 0
+  isAttacking: 0
+  isSlowed: 0
+  controller: {fileID: 6764469391364196977}
+>>>>>>> Stashed changes
 --- !u!50 &3538306792262835736
 Rigidbody2D:
   serializedVersion: 4
