@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,3 +42,26 @@ public class WaveSpawnData
     public float interval;
     public int SpawnLaneID;
 }
+=======
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "Wave", menuName = "ScriptableObjects/WaveSO", order = 2)]
+public class WaveSO : ScriptableObject
+{
+    public int waveCount;
+    public float spawnRate;
+
+    // 이제 Unity에서 직렬화 가능
+    public SerializableDictionary<int, int> enemyCounts = new SerializableDictionary<int, int>();
+
+    public int GetTotalEnemies()
+    {
+        int totalEnemies = 0;
+        foreach (var enemy in enemyCounts)
+        {
+            totalEnemies += enemy.Value;
+        }
+        return totalEnemies;
+    }
+}
+>>>>>>> Stashed changes

@@ -41,7 +41,18 @@ public class Enemy : MonoBehaviour
         }
         if (enemyAnimatorController == null)
         {
+<<<<<<< Updated upstream
             Debug.LogError($"[Enemy] {gameObject.name}: EnemyAnimatorController를 찾을 수 없습니다! 애니메이션 실행 불가.");
+=======
+            EnemyID = enemyStats.EnemyID;
+
+            health = enemyStats.Health;
+            rewardMoney = enemyStats.RewardMoney;
+            attackPower = enemyStats.AttackPower;
+            attackSpeed = enemyStats.AttackSpeed;
+            movementSpeed = enemyStats.MovementSpeed;
+            originalSpeed = movementSpeed;
+>>>>>>> Stashed changes
         }
         else
         {

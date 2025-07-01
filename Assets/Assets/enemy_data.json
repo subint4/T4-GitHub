@@ -1,0 +1,56 @@
+{
+  "Enemies": [
+    {
+      "RewardMoney": 15,
+      "EnemyType": "Zombie",
+      "SpawnCount": 0,
+      "MovementSpeed": 3.0,
+      "SpawnRate": 0.0,
+      "key": 2001,
+      "UnitName": "1_zombie",
+      "Health": 30,
+      "AttackPower": 25,
+      "AttackSpeed": 1.0,
+      "DeployCost": 0
+    },
+    {
+      "RewardMoney": 20,
+      "EnemyType": "Zombie",
+      "SpawnCount": 0,
+      "MovementSpeed": 2.0,
+      "SpawnRate": 0.0,
+      "key": 2002,
+      "UnitName": "2_zombie",
+      "Health": 50,
+      "AttackPower": 25,
+      "AttackSpeed": 1.0,
+      "DeployCost": 0
+    },
+    {
+      "RewardMoney": 30,
+      "EnemyType": "Zombie",
+      "SpawnCount": 0,
+      "MovementSpeed": 1.0,
+      "SpawnRate": 0.0,
+      "key": 2003,
+      "UnitName": "3_zombie",
+      "Health": 100,
+      "AttackPower": 25,
+      "AttackSpeed": 1.0,
+      "DeployCost": 0
+    },
+    {
+      "RewardMoney": 100,
+      "EnemyType": "Zombie",
+      "SpawnCount": 0,
+      "MovementSpeed": 1.0,
+      "SpawnRate": 0.0,
+      "key": 2004,
+      "UnitName": "boss_zombie",
+      "Health": 1000,
+      "AttackPower": 300,
+      "AttackSpeed": 0.5,
+      "DeployCost": 0
+    }
+  ]
+}

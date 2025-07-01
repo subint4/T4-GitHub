@@ -15,7 +15,11 @@ GameObject:
   - component: {fileID: 5419687302756438685}
   m_Layer: 10
   m_Name: Zombie_Boss
+<<<<<<< Updated upstream
   m_TagString: Boss
+=======
+  m_TagString: Enemy
+>>>>>>> Stashed changes
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -61,6 +65,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c90e63840947131459fd3fa8b81f71b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< Updated upstream
   EnemyID: 4
   enemyStats: {fileID: 11400000, guid: 4a51c4776f59335499657bc3d7b88101, type: 2}
   isDead: 0
@@ -70,6 +75,16 @@ MonoBehaviour:
   projectilePrefab: {fileID: 0}
   firePoint: {fileID: 0}
   attackRange: 1.5
+=======
+  enemyStats: {fileID: 11400000, guid: 203402c607c881f40809cdbf16dfcd2e, type: 2}
+  enemyRigidbody: {fileID: 3538306792262835736}
+  attackSpeed: 0
+  movementSpeed: 0
+  originalSpeed: 0
+  isAttacking: 0
+  isSlowed: 0
+  controller: {fileID: 1958865530240314543}
+>>>>>>> Stashed changes
 --- !u!50 &3538306792262835736
 Rigidbody2D:
   serializedVersion: 4
@@ -129,7 +144,11 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
+<<<<<<< Updated upstream
   m_Offset: {x: 0, y: -0.3}
+=======
+  m_Offset: {x: 0, y: 0}
+>>>>>>> Stashed changes
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}

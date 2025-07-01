@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 078fc7eee979b8c41a9f103040b3448a, type: 3}
   m_Name: Wave_3
   m_EditorClassIdentifier: 
+<<<<<<< Updated upstream
   ID: 3
   stagenum: 0
   substagenum: 0
@@ -27,3 +28,10 @@ MonoBehaviour:
     SpawnDelay: 1.5
     interval: 3
     SpawnLaneID: 0
+=======
+  waveCount: 3
+  spawnRate: 0
+  enemyCounts:
+    keys: 0200000004000000
+    values: 0500000002000000
+>>>>>>> Stashed changes
