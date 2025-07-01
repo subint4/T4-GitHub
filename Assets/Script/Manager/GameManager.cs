@@ -195,6 +195,11 @@ public class GameManager : MonoBehaviour, IResettableManager
 
         // 다른 관련 매니저 리셋도 필요하면 여기에 추가
     }
+    public void RestartWaveFlow()
+    {
+        StopAllCoroutines();
+        WaveManager.Instance.StartWave(); // 이 타이밍에 명시적으로 시작
+    }
     public void ResetAllManagers()
     {
         Debug.Log("[GameManager] 전체 매니저 리셋 시작");

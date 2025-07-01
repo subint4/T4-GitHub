@@ -290,18 +290,44 @@ public class WaveManager : MonoBehaviour, IResettableManager
 
         Debug.Log("[WaveManager] 웨이브 데이터 초기화 완료.");
     }
+    private IEnumerator RestartWaveFlowAfterDelay()
+    {
+        Debug.Log("[WaveManager] 3초 후 웨이브 자동 시작 준비 중...");
+
+        yield return new WaitForSeconds(3f); // 카운트다운 대신 고정 대기
+
+        Debug.Log("[WaveManager] 리셋 후 웨이브 시작!");
+        StartWave();
+    }
+
     public void ResetManager()
     {
         Debug.Log("[WaveManager] ResetManager 호출됨");
 
-        StopAllCoroutines(); // 웨이브 스폰 중지
-        totalEnemiesPerStage = 0;
+        // 코루틴 정지 및 상태 초기화
+        StopAllCoroutines();
+        isSpawning = false;
+        currentWaveIndex = 0;
         defeatedEnemies = 0;
+        totalEnemiesPerStage = 0;
+        currentWaveTotalEnemies = 0;
+        currentWaveDefeatedEnemies = 0;
 
-        // 필요 시 현재 웨이브 재로드
+        // 스폰된 적 제거
+        foreach (var enemy in activeEnemies)
+        {
+            if (enemy != null)
+                Destroy(enemy.gameObject);
+        }
+        activeEnemies.Clear();
+
+        // 웨이브 데이터 로드
         int stage = StageManager.Instance?.currentStageNum ?? 1;
         int subStage = StageManager.Instance?.GetCurrentSubStageNum() ?? 1;
-
         LoadWavesForStage(stage, subStage);
+
+        // 타이머 후 웨이브 자동 시작
+        StartCoroutine(RestartWaveFlowAfterDelay());
     }
+
 }
