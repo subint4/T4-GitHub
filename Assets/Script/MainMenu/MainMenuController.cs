@@ -24,6 +24,9 @@ public class MainMenuController : MonoBehaviour
 
         // 화면에 데이터 반영
         UpdateUI();
+
+        AudioListener.pause = true; // 전체 소리 정지
+        Debug.Log("메인화면 - 소리 자동 음소거");
     }
 
     private void UpdateUI()

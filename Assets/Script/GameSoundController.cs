@@ -14,6 +14,14 @@ public class GameSoundController : MonoBehaviour
 
     void Start()
     {
+        // 메인에서 넘어왔을 때 전체 음소거가 남아 있을 수 있으니 해제
+        AudioListener.pause = false;
+
+        // 오디오 처음부터 재생
+        audioSource.Stop();      // 혹시 남아있는 재생이 있으면 정지
+        audioSource.time = 0f;   // 재생 위치 0으로
+        audioSource.Play();      // 처음부터 재생
+
         buttonImage = toggleButton.GetComponent<Image>();
         toggleButton.onClick.AddListener(ToggleSound);
 
